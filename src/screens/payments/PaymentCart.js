@@ -490,6 +490,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   image: {
+    backgroundColor:"rgba(0,0,0,0.05)",
     width: 60,
     height: 60,
     overflow: "hidden",

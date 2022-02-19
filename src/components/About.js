@@ -34,7 +34,7 @@ function About(props) {
     <Modal animationType="slide" transparent={true} visible={props.open} >
       <View style={styles.wrapper}>
         <View style={styles.wrap}>
-          <TouchableOpacity onPress={() => props.close(false)} style={{ backgroundColor: "red", padding: 5, position: "absolute", right: 5, top: 2.5 }}>
+          <TouchableOpacity onPress={() => props.close(false)} style={{ padding: 5, position: "absolute", right: 5, top: 2.5 }}>
             <Icon name="close-outline" fill="silver" width={30} height={30} />
           </TouchableOpacity>
           <TouchableOpacity style={styles.opt}

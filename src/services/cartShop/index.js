@@ -6,8 +6,8 @@ const CARTSHOP = () => ({
 
   insertcartshop: async (data) => {
     let res
-    // console.log(" ____url: ",base_url(serverCrm, 'insertcartshop'))
-    // console.log("____data: ", data)
+     console.log(" ____url: ",base_url(serverCrm, 'insertcartshop'))
+     console.log("____data: ", data)
     await axios.post(base_url(serverCrm, 'insert/cart/shop'), data)
       .then(function (response) {
         res = response.data

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SafeAreaView, ActivityIndicator, View, Text, Modal, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { SafeAreaView, ScrollView, ActivityIndicator, View, Text, Modal, Image, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import { Icon } from 'react-native-eva-icons';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,9 @@ import {
   color_grey_dark,
 } from '../../styles/Colors.js'
 import { file_server1 } from '../../../Env'
+
+import styles from '../../styles/styles.js'
+
 
 function SimpleForm(props) {
   const { t, i18n } = useTranslation();
@@ -39,6 +42,11 @@ function SimpleForm(props) {
     })
   }
 
+
+
+
+  console.log("....... img: ",)
+
   async function sendForm() {
     const data = { ...formInfo }
     if (
@@ -59,6 +67,11 @@ function SimpleForm(props) {
       const response = await formularios.SimpleFormulario(data);
 
       if (response !== false) {
+        let imagen = ""
+        if (props.route.params.data.foto === undefined) { imagen = `${file_server1}/img/category/picture/${props.route.params.data.foto}` }
+        else {
+          imagen = "https://wellezy.com/wp-content/uploads/2020/12/Logo-final-wellezy-blanco.png"
+        }
         const toCar = {
           id_client: userDetails.id,
           items: [
@@ -70,14 +83,14 @@ function SimpleForm(props) {
               description: "solicitud de video valoracion",
               price: 50,
               qty: 1,
-              img: `${file_server1}/img/category/picture/${props.route.params.data.foto}`,
+              img: imagen,
               coin: "$"
             }
           ]
         }
         const res = await cartShop.insertcartshop(toCar);
-       
-       
+
+
         if (res === true) {
           setLoad(false);
           setTimeout(() => {
@@ -87,7 +100,15 @@ function SimpleForm(props) {
         }
 
         else {
+
+
+
           Toast.show("Error");
+          console.error("error al enviar formulario")
+          console.log("error al enviar formulario")
+
+
+
           setTimeout(() => {
             goToScreen("Home", null);
           }, 3000);
@@ -110,62 +131,66 @@ function SimpleForm(props) {
         show={vertical}
         action={setvertical}
       />
-      <View style={styles.wrap}>
-        <View style={styles.head}>
-          <TouchableOpacity
-            onPress={() => [setFormOn(false), props.navigation.goBack()]}
-            style={{
-              position: "absolute",
-              top: 10,
-              left: 15
-            }}>
-            <Icon name="arrow-ios-back-outline" width={30} height={30} fill={"white"} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Complete el formulario</Text>
+      <ScrollView>
+        <View style={styles2.wrap}>
+          <View style={styles2.head}>
+            <TouchableOpacity
+              onPress={() => [setFormOn(false), props.navigation.goBack()]}
+              style={{
+                position: "absolute",
+                top: 10,
+                left: 15
+              }}>
+              <Icon name="arrow-ios-back-outline" width={30} height={30} fill={"white"} />
+            </TouchableOpacity>
+            <Text style={styles2.title}>Complete el formulario</Text>
+          </View>
+          <Text style={{ color: color_grey_dark, marginTop: 10 }}>(*) todos los campos son obligatorios.</Text>
+
+
+          <View style={styles.formBody}>
+            <View style={styles.formRow}>
+              <Text style={styles.formLabel}>* Nombres</Text>
+              <TextInput
+                style={styles.formText}
+                placeholder="Ej."
+                value={formInfo.Nombres}
+                onChangeText={text => onChangeText(text, 'Nombres')}
+              />
+            </View>
+            <View style={styles.formRow}>
+              <Text style={styles.formLabel}>* Apellidos</Text>
+              <TextInput
+                style={styles.formText}
+                placeholder="Ej."
+                value={formInfo.Apellidos}
+                onChangeText={text => onChangeText(text, 'Apellidos')}
+              />
+            </View>
+            <View style={styles.formRow}>
+              <Text style={styles.formLabel}>* Telefono</Text>
+              <TextInput
+                style={styles.formText}
+                placeholder="Ej."
+                value={formInfo.Phone}
+                onChangeText={text => onChangeText(text, 'Phone')}
+              />
+            </View>
+            <View style={styles.formRow}>
+              <Text style={styles.formLabel}>* Email</Text>
+              <TextInput
+                style={styles.formText}
+                placeholder="Ej."
+                value={formInfo.Email}
+                onChangeText={text => onChangeText(text, 'Email')}
+              />
+            </View>
+            <TouchableOpacity onPress={() => sendForm()} style={{ ...styles.bigButton, width: "60%" }}>
+              <Text style={styles.bigButtonText}>{t("applyFor")}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text style={{ color: color_grey_dark, marginTop: 10 }}>(*) todos los campos son obligatorios.</Text>
-        <View style={styles.body}>
-          <View style={styles.row}>
-            <Text style={styles.label}>* Nombres</Text>
-            <TextInput
-              style={styles.text}
-              placeholder="Ej."
-              value={formInfo.Nombres}
-              onChangeText={text => onChangeText(text, 'Nombres')}
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>* Apellidos</Text>
-            <TextInput
-              style={styles.text}
-              placeholder="Ej."
-              value={formInfo.Apellidos}
-              onChangeText={text => onChangeText(text, 'Apellidos')}
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>* Telefono</Text>
-            <TextInput
-              style={styles.text}
-              placeholder="Ej."
-              value={formInfo.Phone}
-              onChangeText={text => onChangeText(text, 'Phone')}
-            />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>* Email</Text>
-            <TextInput
-              style={styles.text}
-              placeholder="Ej."
-              value={formInfo.Email}
-              onChangeText={text => onChangeText(text, 'Email')}
-            />
-          </View>
-          <TouchableOpacity onPress={() => sendForm()} style={styles.btnSend}>
-            <Text style={styles.btnText}>{t("applyFor")}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
       <Menu props={props} option={0} />
       {vertical === true &&
         <MenuVertical
@@ -222,7 +247,7 @@ function SimpleForm(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
   wrap: {
     alignSelf: "center",
     borderRadius: 12,
@@ -254,30 +279,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-  body: {
-    alignSelf: "center",
-    borderRadius: 12,
-    width: "100%",
-    padding: 20,
-    alignContent: "center",
-    alignItems: "center",
-  },
-  row: {
-    marginVertical: 10,
-    width: "100%",
-    flexDirection: "column"
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: "600",
-    marginBottom: 5
-  },
-  text: {
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    height: 40,
-    backgroundColor: "#eee"
-  },
+  // body: {
+  //   alignSelf: "center",
+  //   borderRadius: 12,
+  //   width: "100%",
+  //   padding: 20,
+  //   alignContent: "center",
+  //   alignItems: "center",
+  // },
+  // row: {
+  //   marginVertical: 10,
+  //   width: "100%",
+  //   flexDirection: "column"
+  // },
+  // label: {
+  //   fontSize: 12,
+  //   fontWeight: "600",
+  //   marginBottom: 5
+  // },
+  // text: {
+  //   borderRadius: 8,
+  //   paddingHorizontal: 10,
+  //   height: 40,
+  //   backgroundColor: "#eee"
+  // },
   terminos: {
     marginTop: 20,
     flexDirection: "row"

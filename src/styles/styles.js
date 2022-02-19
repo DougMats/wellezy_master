@@ -1,24 +1,14 @@
-import { StyleSheet } from "react-native";
-import {
-  color_primary,
-  color_secondary,
-  color_tertiary,
-  color_quarter,
-  color_fifth,
-  color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
-  color_screen,
-  color_star
-} from './Colors.js';
+import sidebar from './sidebar.js'
+import profile from './profile.js'
+import forms from './forms.js'
+import buttons from './buttons.js'
+import cards from './cards.js'
 
-const styles = StyleSheet.create({
-
-})
-
+const styles = {
+  ...buttons,
+  ...sidebar,
+  ...profile,
+  ...forms,
+  ...cards
+} 
 export default styles;

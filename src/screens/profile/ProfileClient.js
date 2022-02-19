@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react'
-import { Image, SafeAreaView, ScrollView, Text, View, Dimensions, TouchableOpacity, StatusBar, ActivityIndicator, StyleSheet } from 'react-native'
+import { RefreshControl, Image, SafeAreaView, ScrollView, Text, View, Dimensions, TouchableOpacity, StatusBar, ActivityIndicator, StyleSheet } from 'react-native'
 import UserContext from '../../../contexts/UserContext'
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-community/async-storage'
@@ -29,7 +29,12 @@ import { file_server1 } from '.././../../Env.js'
 // import { MyValorationScheduled, getMyProfile, updateMyProfile, mySharedExperiences, MyProceduresPerformed } from '../../src/api/https.js'
 // import { NotNetwork } from '../components/generic/NotNetwork';
 
-import ProfileHeader from './ProfileHeader.js';
+
+
+
+
+import Head from './components/Head.js'
+import HorizontalMenu from './components/HorizontalMenu.js'
 
 import ProfileInfo from './pages/ProfileInfo.js';
 import ProfileConfig from './pages/ProfileConfig.js';
@@ -42,18 +47,16 @@ const windowHeight = Dimensions.get('window').height;
 
 
 function ProfileClient(props) {
-  //const { userDetails, setUserDetails } = React.useContext(UserContext);
-
+  console.log("*** ------------------- profile client ------------------- ***")
   const { t, i18n } = useTranslation();
-  const { UserDetails, setUserDetails } = useContext(UserContext);
-  const { userDetails } = useContext(UserContext);
+  const { userDetails, setUserDetails } = useContext(UserContext);
   const [Load, setLoad] = useState(true);
   const [Data, setData] = useState(false);
   const [vertical, setvertical] = useState(false);
+  const [Page, setPage] = useState(1);
 
   // const [menu, setmenu] = useState(false);
   // const [Editing, setEditing] = useState(false);
-  const [Page, setPage] = useState(1);
   // const [connet, setconnet] = useState(null);
   // const [myData, setmyData] = useState(null)
   // const [Valoraciones, setValoraciones] = useState(null);
@@ -65,28 +68,23 @@ function ProfileClient(props) {
 
 
 
-
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
 
   useEffect(() => {
-
-
-    if (randomCode = props.route.params.page) {
-      console.log("not page")
-      //setPage(1)
+    if (props.route.params.data) {
+      setPage(props.route.params.data)
     }
     else {
-      console.log("....")
-      //setPage(1)
+      setPage(1)
     }
-
-
     get()
   }, [randomCode]);
 
+
   async function get() {
+    setLoad(true)
     const res = await profile.getProfile(userDetails.id, userDetails.rol)
     setData(res)
     setLoad(false)
@@ -94,31 +92,11 @@ function ProfileClient(props) {
 
 
 
+
   const [colorStickerMenu, setcolorStickerMenu] = useState(color_primary);
 
-  // {
-  // "adress": null,
-  // "date_of_birth": null,
-  // "email": "dougrafic.art@gmail.com",
-  // "email_verified_at": "2021-12-02 16:34:21",
-  // "facebook": null,
-  // "id": 1,
-  // "id_city": null,
-  // "id_country": null,
-  // "id_perfil": 1,
-  // "identificacion": "1123009452",
-  // "photo_profile": "default-user.png",
-  // "instagram": null,
-  // "language": "en",
-  // "name": "angie katherine",
-  // "password": "e10adc3949ba59abbe56e057f20f883e",
-  // "phone": "3127023197",
-  // "rol": "client",
-  // "status": 1,
-  // "surname": "acosta henao",
-  // "twitter": null,
-  // "youtube": null
-  // }
+
+
 
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
@@ -142,84 +120,91 @@ function ProfileClient(props) {
 
 
 
+
+  const HorizontalMenuOpntionList = [
+    { value: 1, name: 'person-outline' },       //perfil
+    { value: 2, name: 'settings-outline' },
+    { value: 3, name: 'message-circle-outline' },
+    { value: 4, name: 'folder-add-outline' },
+    { value: 5, name: 'bell-outline' },
+    { value: 6, name: 'heart' }
+  ]
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_white }}>
-      <StatusBar backgroundColor={color_secondary} barStyle='light-content' />
       <ScrollView
         scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={Load}
+            onRefresh={get}
+          />
+        }
         stickyHeaderIndices={[1]}
         onScroll={event => {
           const y = event.nativeEvent.contentOffset.y;
           if (y >= windowWidth / 1.3) { setcolorStickerMenu(color_secondary) }
           else { setcolorStickerMenu(color_primary) }
         }}>
+        <Head
+          user={userDetails}
+          color_primary={color_primary}
+          color_secondary={color_secondary}
+          color_white={color_white}
+          back={props.navigation.goBack}
+          setvertical={setvertical}
+        />
+        {
+          !Load &&
+          <HorizontalMenu
+            colorActive={color_white}
+            color={color_white_a}
+            Page={Page}
+            setPage={setPage}
+            list={HorizontalMenuOpntionList}
+            maxWidth={windowWidth}
+          />
+        }
 
-
-
-
-        {/* <ProfileHeader /> */}
-
-
-
-        <LinearGradient style={styles.header} colors={[color_secondary, color_primary, color_primary]} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}>
-          <TouchableOpacity onPress={() => setvertical(!vertical)} style={{ position: "absolute", zIndex: 99, top: 20, right: 20 }}>
-            <Icon name="more-vertical" width={30} height={30} fill={color_white} />
-          </TouchableOpacity>
-          <View style={styles.wrapAvatar}>
-            <Image style={styles.img} source={{ uri: `${file_server1}/img/wellezy/users/${userDetails.photo_profile}` }} />
-          </View>
-          <View style={styles.wrapInfo}>
-            <Text style={styles.headerTextBig}>{userDetails.name} {userDetails.surname}</Text>
-            <Text style={styles.headerTextSmall}>{userDetails.email}</Text>
-          </View>
-        </LinearGradient>
-
-
-
-
-
+        {/* 
         {!Load &&
           <View>
             <View style={{ ...styles.scrollpage, backgroundColor: colorStickerMenu }}>
               <TouchableOpacity onPress={() => setPage(1)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 1 ? color_white : '', borderBottomWidth: Page === 1 ? 1 : 0 }}>
                 <Icon name='person-outline' height={25} width={25} fill={Page === 1 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => setPage(3)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 3 ? color_white : '', borderBottomWidth: Page === 3 ? 1 : 0 }}>
                 <Icon name='message-circle-outline' height={25} width={25} fill={Page === 3 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => setPage(4)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 4 ? color_white : '', borderBottomWidth: Page === 4 ? 1 : 0 }}>
                 <Icon name='folder-add-outline' height={25} width={25} fill={Page === 4 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => setPage(5)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 5 ? color_white : '', borderBottomWidth: Page === 5 ? 1 : 0 }}>
                 <Icon name='bell-outline' height={25} width={25} fill={Page === 5 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => setPage(6)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 6 ? color_white : '', borderBottomWidth: Page === 6 ? 1 : 0 }}>
                 <Icon name='heart' height={25} width={25} fill={Page === 6 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
-
               <TouchableOpacity onPress={() => setPage(2)} style={{ width: "24%", alignItems: "center", borderBottomColor: Page === 2 ? color_white : '', borderBottomWidth: Page === 2 ? 1 : 0 }}>
                 <Icon name='settings-outline' height={25} width={25} fill={Page === 2 ? color_white : 'rgba(255,255,255,0.3)'} />
               </TouchableOpacity>
             </View>
           </View>
-        }
+        } */}
+
+
+
 
 
 
         {Load && <View style={{ marginTop: 80 }}><ActivityIndicator color={color_primary} size={40} /></View>}
+
+
         {!Load && Page === 1 && <ProfileInfo data={Data} goToScreen={goToScreen} />}
-        {!Load && Page === 2 && <ProfileConfig data={Data} goToScreen={goToScreen} />}
-
+        {/* {!Load && Page === 2 && <ProfileConfig data={Data} goToScreen={goToScreen} />}
         {!Load && Page === 3 && <ProfileShares data={Data} goToScreen={goToScreen} />}
-
         {!Load && Page === 5 && <ProfileNotifications data={Data} goToScreen={goToScreenData} />}
-        {!Load && Page === 6 && <ProfileFavorites data={Data} goToScreen={goToScreen} />}
-
-        <View style={{ height: 60 }}></View>
+        {!Load && Page === 6 && <ProfileFavorites data={Data} goToScreen={goToScreen} />} */}
       </ScrollView>
       {vertical === true &&
         <MenuVertical
@@ -236,13 +221,7 @@ export default ProfileClient;
 
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "column",
-    width: "100%",
-    height: windowWidth / 1.3,
-    alignItems: "center",
-    justifyContent: "center"
-  },
+
   wrapAvatar: {
     backgroundColor: "red",
     marginTop: 20,
@@ -272,6 +251,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "100%"
   },
+
+
   headerTextBig: {
     textTransform: "capitalize",
     color: color_white,

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { View, Modal, Text, TouchableWithoutFeedback, Image, TouchableOpacity, StyleSheet, Button, Dimensions, Animated } from 'react-native';
+import { ScrollView, View, Text, TouchableWithoutFeedback, Image, TouchableOpacity, Animated } from 'react-native';
 import { Icon } from 'react-native-eva-icons';
 import AsyncStorage from '@react-native-community/async-storage'
 import UserContext from '../../../contexts/UserContext'
@@ -8,30 +8,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import About from '../About';
 import { InitialsName } from '../Logic.js';
 import { file_server1 } from '../../../Env.js';
-import {
-  color_star,
-  color_primary,
-  color_secondary,
-  color_tertiary,
-  color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
-  color_screen
-} from '../../styles/Colors.js'
-
-
-
-
-
-import { ScrollView } from 'react-native-gesture-handler';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import {color_primary, color_secondary, color_white, color_grey_half } from '../../styles/Colors.js'
+import styles from '../../styles/styles.js'
 
 function Menu(props) {
   const WIDTH = props.width;
@@ -110,293 +88,167 @@ function Menu(props) {
     }).start();
   };
 
-
-  function Go(screen) {
+  function Go(screen,data) {
     closet()
     setTimeout(() => {
-      props.goToScreen(screen)
+      props.goToScreen(screen, data)
     }, 500);
   }
 
-
   return (
-    <View style={[styles.wrapper, { display: props.show === true ? "flex" : "none" }]}>
-      <Animated.View style={[styles.wrap, { width: WIDTH, transform: [{ translateX: fadeWidth }] }]}>
-        <ScrollView>
-        
-        
-          <LinearGradient colors={[color_secondary, color_primary]} style={styles.head}>
-           
-            <TouchableOpacity onPress={() => closet()} style={{ position: "absolute", zIndex: 999, top: 20, right: 10 }}>
+    <View style={[styles.sidebar, { display: props.show === true ? "flex" : "none" }]}>
+      <Animated.View style={[styles.sidebarContained, { width: WIDTH, transform: [{ translateX: fadeWidth }] }]}>
+        <ScrollView scrollEventThrottle={16}>
+          <LinearGradient colors={[color_secondary, color_primary]} style={styles.sidebarHead}>
+            <TouchableOpacity onPress={() => closet()} style={styles.sidebarHeadBtnUp}>
               <Icon name='close-outline' fill={"white"} width={30} height={30} />
             </TouchableOpacity>
 
-
-
-
-            <View style={[styles.avatar, { width: WIDTH / 3, height: WIDTH / 3, borderRadius: WIDTH / 2 }]}>
+            <View style={[styles.sidebarHeadAvatar, { width: WIDTH / 3, height: WIDTH / 3, borderRadius: WIDTH / 2 }]}>
               {userDetails.photo_profile !== "" &&
                 <Image
-                  style={styles.img}
+                  style={styles.sidebarHeadAvatarImg}
                   source={{ uri: `${file_server1}/img/wellezy/users/${userDetails.photo_profile}` }}
                 />
               }
 
               {userDetails.photo_profile === "" &&
-                <Text style={{
-                  textTransform: "uppercase",
-                  backgroundColor: color_star,
-                  width: WIDTH / 2,
-                  height: WIDTH / 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  lineHeight: 130,
-                  fontSize: 70,
-                  fontWeight: "bold",
-                }} >
+                <Text style={{ ...styles.sidebarHeadTitle, width: WIDTH / 2, height: WIDTH / 2 }}>
                   {InitialsName(userDetails.name, userDetails.surname)}
                 </Text>
               }
+              
             </View>
-
-            <Text style={styles.name}>{userDetails.surname} {userDetails.name}</Text>
-            <View style={{ flexDirection: "row", alignItems: "center"}}>
-            <Icon name='email-outline' fill={color_white} width={18} height={18} />
-              <Text style={styles.email}>{userDetails.email}</Text>
+            <Text style={styles.sidebarHeadName}>{userDetails.surname} {userDetails.name}</Text>
+            <View style={styles.sidebarHeadEmailWrap}>
+              <Icon name='email-outline' fill={color_white} width={18} height={18} />
+              <Text style={styles.sidebarHeadEmail}>{userDetails.email}</Text>
             </View>
           </LinearGradient>
-
-
-
-
-          <View style={{ paddingBottom: 40 }}>
-
+          <View style={styles.sidebarBody}>
             <TouchableOpacity
-              onPress={() => Go("Profile")}
-              style={styles.opt}>
+              onPress={() => Go("Profile", 1)}
+              style={styles.sidebarbodyLabel}>
               <Icon name='person-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Mi Perfil</Text>
+              <Text style={styles.sidebarbodyLabelText}>Mi Perfil</Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='bell-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Notificaciones</Text>
-            </TouchableOpacity> */}
-
             <TouchableOpacity
-              onPress={() => Go("ClinicList")}
-              style={styles.opt}>
+              onPress={() => Go("ClinicList", null)}
+              style={styles.sidebarbodyLabel}>
               <Icon name='video-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Clinic List</Text>
+              <Text style={styles.sidebarbodyLabelText}>Clinic List</Text>
             </TouchableOpacity>
-
             <TouchableOpacity
-              onPress={() => Go("Sala")}
-              style={styles.opt}>
+              onPress={() => Go("Sala", null)}
+              style={styles.sidebarbodyLabel}>
               <Icon name='video-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Video llamada</Text>
+              <Text style={styles.sidebarbodyLabelText}>Video llamada</Text>
             </TouchableOpacity>
-
-            {/* <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='folder-add-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Mis Valoraciones</Text>
-            </TouchableOpacity> */}
-
-            {/* <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Carrito de compras</Text>
-            </TouchableOpacity> */}
-
             <TouchableOpacity
-              onPress={() => Go("MedicsList")}
-              style={styles.opt}>
+              onPress={() => Go("MedicsList", null)}
+              style={styles.sidebarbodyLabel}>
               <Icon name='activity-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Lista de Médicos</Text>
+              <Text style={styles.sidebarbodyLabelText}>Lista de Médicos</Text>
             </TouchableOpacity>
-            {/* 
             <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='heart-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Mis Favoritos</Text>
-            </TouchableOpacity> */}
-
-            {/* <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='keypad-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Procedimientos</Text>
-            </TouchableOpacity> */}
-
-            <TouchableOpacity
-              onPress={() => Go("DashboardFly")}
-              style={styles.opt}>
+              onPress={() => Go("DashboardFly", null)}
+              style={styles.sidebarbodyLabel}>
               <Icon name='briefcase-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Vuelos</Text>
+              <Text style={styles.sidebarbodyLabelText}>Vuelos</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => Go("DashboardServices", null)}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='bookmark-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Servicios</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sidebarbodyLabel} onPress={() => Go("PurchaseOrder", null)}>
+              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Orden de compra</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sidebarbodyLabel} onPress={() => Go("PaymentCart", null)}>
+              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Payment Cart</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.sidebarbodyLabel} onPress={() => logOut()}>
+              <Icon name='power-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Cerrar Sesión</Text>
+            </TouchableOpacity>
+
+
 
             {/* <TouchableOpacity
-              onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='calendar-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Mis recervaciones</Text>
+              onPress={() => Go("text", null)}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='bell-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Notificaciones</Text>
             </TouchableOpacity> */}
-
-            <TouchableOpacity
-              onPress={() => Go("DashboardServices")}
-              style={styles.opt}>
-              <Icon name='bookmark-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Servicios</Text>
-            </TouchableOpacity>
-
-
+            {/* <TouchableOpacity
+              onPress={() => Go("text")}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='folder-add-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Mis Valoraciones</Text>
+            </TouchableOpacity> */}
+            {/* <TouchableOpacity
+              onPress={() => Go("text")}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Carrito de compras</Text>
+            </TouchableOpacity> */}
             {/* 
             <TouchableOpacity
               onPress={() => Go("text")}
-              style={styles.opt}>
-              <Icon name='gift-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Ofertas / especiales</Text>
+              style={styles.sidebarbodyLabel}>
+              <Icon name='heart-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Mis Favoritos</Text>
             </TouchableOpacity> */}
-
-
+            {/* <TouchableOpacity
+              onPress={() => Go("text")}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='keypad-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Procedimientos</Text>
+            </TouchableOpacity> */}
+            {/* <TouchableOpacity
+              onPress={() => Go("text")}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='calendar-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Mis recervaciones</Text>
+            </TouchableOpacity> */}
+            {/* 
+            <TouchableOpacity
+              onPress={() => Go("text")}
+              style={styles.sidebarbodyLabel}>
+              <Icon name='gift-outline' fill={color_grey_half} width={30} height={30} />
+              <Text style={styles.sidebarbodyLabelText}>Ofertas / especiales</Text>
+            </TouchableOpacity> */}
             {/* <TouchableOpacity
               onPress={() => Go("Configurations")}
-              style={styles.opt}>
+              style={styles.sidebarbodyLabel}>
               <Icon name='settings-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Configuraciones</Text>
+              <Text style={styles.sidebarbodyLabelText}>Configuraciones</Text>
             </TouchableOpacity> */}
 
-
-
-
-
-            {/* <TouchableOpacity
-              style={styles.opt} onPress={() => setAboutModal()}>
+             {/* <TouchableOpacity
+              style={styles.sidebarbodyLabel} onPress={() => setAboutModal()}>
               <Icon name='question-mark-circle-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Acerca de</Text>
-            </TouchableOpacity> */}
-
-
-
-            <TouchableOpacity
-              style={styles.opt} onPress={() => Go("PurchaseOrder")}>
-              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Orden de compra</Text>
+              <Text style={styles.sidebarbodyLabelText}>Acerca de</Text>
             </TouchableOpacity>
-
-
-
-            <TouchableOpacity
-              style={styles.opt} onPress={() => Go("PaymentCart")}>
-              <Icon name='shopping-cart-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Payment Cart</Text>
-            </TouchableOpacity>
-
-
-
-
-            
-
-
-
-
-            <TouchableOpacity
-              style={styles.opt} onPress={() => logOut()}>
-              <Icon name='power-outline' fill={color_grey_half} width={30} height={30} />
-              <Text style={styles.optText}>Cerrar Sesión</Text>
-            </TouchableOpacity>
+            <About open={AboutModal} close={setAboutModal}/> */}
 
 
           </View>
         </ScrollView>
       </Animated.View>
 
-      <About
-        open={AboutModal}
-        close={setAboutModal}
-      />
 
       <TouchableWithoutFeedback onPress={() => closet()}>
-        <Animated.View style={[styles.back, { opacity: fadeAnim }]}></Animated.View>
+        <Animated.View style={[styles.sidebarBack, { opacity: fadeAnim }]}></Animated.View>
       </TouchableWithoutFeedback>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    width: windowWidth,
-    height: windowHeight,
-    position: "absolute",
-    zIndex: 999999,
-    flex: 1,
-    top: 0,
-    right: 0,
-  },
-  wrap: {
-    backgroundColor: color_white,
-    position: "absolute",
-    zIndex: 1,
-    top: 0,
-    right: 0,
-    flexDirection: "column",
-    height: "100%",
-  },
-  head: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "silver",
-    paddingVertical: 20,
-  },
-  avatar: {
-    backgroundColor: color_white,
-    overflow: "hidden",
-  },
-  img: {
-    width: null,
-    height: null,
-    flex: 1,
-    resizeMode: "cover"
-  },
-  name: {
-    marginTop: 15,
-    fontWeight: "bold",
-    fontSize: 14,
-    textTransform: "capitalize",
-    color: color_white,
-  },
-  email: {
-    lineHeight:15,
-    marginLeft:5,
-    color: color_white,
-    fontSize: 14,
-  },
-  opt: {
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: color_grey_light,
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  optText: {
-    marginLeft: 15,
-    fontWeight: "400",
-    fontSize: 14,
-    color: color_grey_dark
-  },
-  back: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0,0,0,0.8)",
-  }
-});
 
 export default Menu;
