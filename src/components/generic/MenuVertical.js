@@ -18,6 +18,10 @@ function Menu(props) {
   const fadeWidth = useRef(new Animated.Value(WIDTH)).current;
   const [AboutModal, setAboutModal] = useState(false);
 
+const rol = userDetails.rol
+
+
+
   function closet() {
     fadeOut()
     small()
@@ -95,6 +99,7 @@ function Menu(props) {
     }, 500);
   }
 
+
   return (
     <View style={[styles.sidebar, { display: props.show === true ? "flex" : "none" }]}>
       <Animated.View style={[styles.sidebarContained, { width: WIDTH, transform: [{ translateX: fadeWidth }] }]}>
@@ -124,6 +129,9 @@ function Menu(props) {
               <Icon name='email-outline' fill={color_white} width={18} height={18} />
               <Text style={styles.sidebarHeadEmail}>{userDetails.email}</Text>
             </View>
+
+            <Text>{rol}</Text>
+
           </LinearGradient>
           <View style={styles.sidebarBody}>
             <TouchableOpacity
@@ -138,6 +146,26 @@ function Menu(props) {
               <Icon name='video-outline' fill={color_grey_half} width={30} height={30} />
               <Text style={styles.sidebarbodyLabelText}>Clinic List</Text>
             </TouchableOpacity>
+
+
+
+
+
+            {//rol === "medic" &&
+  <TouchableOpacity
+  style={styles.sidebarbodyLabel} onPress={() => Go("ManageOrders", null)}>
+  <Icon name='list-outline' fill={color_grey_half} width={30} height={30} />
+  <Text style={styles.sidebarbodyLabelText}>Manage Orders</Text>
+</TouchableOpacity>
+}
+
+
+
+
+
+
+
+
             <TouchableOpacity
               onPress={() => Go("Sala", null)}
               style={styles.sidebarbodyLabel}>
@@ -177,6 +205,12 @@ function Menu(props) {
               <Icon name='power-outline' fill={color_grey_half} width={30} height={30} />
               <Text style={styles.sidebarbodyLabelText}>Cerrar Sesión</Text>
             </TouchableOpacity>
+
+
+
+
+
+
 
 
 

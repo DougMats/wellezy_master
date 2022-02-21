@@ -1,8 +1,12 @@
 import React, { useState, useContext } from 'react';
-import { StatusBar, ScrollView, Text, View, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
+import { StatusBar, Text, View, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
 import { Icon } from 'react-native-eva-icons';
 import UserContext from '../../../contexts/UserContext';
 import { useTranslation } from 'react-i18next';
+import CartShop from '../icons/CartShop.js'
+import Alert from '../icons/Alert.js'
+import { file_server1 } from '../../../Env.js';
+import { InitialsName } from '../Logic.js';
 
 import {
   color_primary,
@@ -22,38 +26,11 @@ import {
   color_star
 } from '../../styles/Colors';
 
-import CartShop from '../icons/CartShop.js'
-
-import Alert from '../icons/Alert.js'
-
-
-import { file_server1 } from '../../../Env.js';
-import { InitialsName } from '../Logic.js';
-import { TextInput } from 'react-native-gesture-handler';
-import { touch } from 'react-native-fs';
-import { useEffect } from 'react';
-
 function Index(props) {
-
-
   const { t, i18n } = useTranslation();
   const [notificationToken, setNotificationToken] = useState('')
-  const { userDetails } = React.useContext(UserContext)
+  const { userDetails } = useContext(UserContext)
   const [modal, setmodal] = useState(false)
-  //const [search, setsearch] = useState({text:null})
-
-
-
-
-  // useEffect(() => {
-  //   if (search.text !== null) {
-  //     let data = search.text
-  //     console.log("data: ", data)
-  //     props.props.navigation.navigate("Search", { randomCode: Math.random(), data })
-  //   }
-  // }, [search]);
-
-
 
   function goToScreen(screen) {
     props.props.navigation.navigate(screen, { randomCode: Math.random() })
@@ -64,75 +41,34 @@ function Index(props) {
   if (userDetails.rol === "service") { colorUser = "orange" }
   if (userDetails.rol === "medic") { colorUser = "red" }
 
-
-
-
-  // function onChangeText(text, key) {
-  //   setsearch({
-  //     ...search,
-  //     [key]: text
-  //   })
-  // }
-
   function onChangeText(text, key) {
     let data = text
     props.props.navigation.navigate("Search", { randomCode: Math.random(), data })
-
   }
 
   return (
-    <View style={{
-      flexDirection: "column",
-      backgroundColor: color_white,
-      paddingBottom: 10,
-      paddingTop: 20,
-      // borderBottomWidth:0.5,
-      // borderBottomColor:"silver",
-      // height: 200
-    }}>
+    <View style={{ flexDirection: "column", backgroundColor: color_white, paddingBottom: 10, paddingTop: 20 }}>
       <StatusBar backgroundColor={color_white} barStyle='dark-content' translucent={false} />
       <View style={{ flexDirection: "row", paddingHorizontal: 20 }}>
-       
-       
-       <View style={{ paddingVertical: 2, justifyContent: "center", alignItems: "center", width: "70%" }}>
+        <View style={{ paddingVertical: 2, justifyContent: "center", alignItems: "center", width: "70%" }}>
           <TouchableOpacity onPress={() => goToScreen("Search")}
             style={{ width: "90%", height: 40, paddingHorizontal: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#F0F0F0", borderRadius: 8 }}>
             <Text style={{ color: "silver" }}>Search...</Text>
-            {/* <TextInput
-              placeholder='Search...'
-              style={{ width: "90%" }} 
-              onChangeText={text => onChangeText(text, 'text')}
-              //value={search.text}
-            /> */}
             <Icon name={"search-outline"} width={30} height={30} fill={"silver"} />
           </TouchableOpacity>
         </View>
-
-<View style={{justifyContent: "center", alignItems: "center", width: "10%"}}>
-  <CartShop user={userDetails.id} goToScreen={goToScreen}/>
-</View>
-
-      
-<View style={{justifyContent: "center", alignItems: "center", width: "10%"}}>
-  <Alert user={userDetails.id} goToScreen={goToScreen}/>
-</View>
-
-
-       
-
-
-        
-
-
-
+        <View style={{ justifyContent: "center", alignItems: "center", width: "10%" }}>
+          <CartShop user={userDetails.id} goToScreen={goToScreen} />
+        </View>
+        <View style={{ justifyContent: "center", alignItems: "center", width: "10%" }}>
+          <Alert user={userDetails.id} goToScreen={goToScreen} />
+        </View>
         <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", width: "10%", }} onPress={() => props.action(true)}>
           <Icon name={"menu-outline"} width={30} height={30} fill={"silver"} />
         </TouchableOpacity>
       </View>
-
     </View>
   )
-
 
   return (
     <View style={{
@@ -192,6 +128,5 @@ function Index(props) {
     </View>
   );
 }
-
 const stylesHead = StyleSheet.create({});
 export default React.memo(Index);

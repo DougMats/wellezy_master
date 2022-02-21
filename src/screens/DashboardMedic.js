@@ -24,25 +24,13 @@ function DashboardMedic(props) {
         action={setvertical}
       />
       <ScrollView scrollEventThrottle={16}>
-
-
-
-
-
-
-
-
-   <ValorationsListMedic goToScreen={goToScreen}/>
-
-
+        <ValorationsListMedic goToScreen={goToScreen}/>
       {/*
         <View style={{ paddingBottom: 60 }}>
           <ProcessList goToScreen={goToScreen} />
           <SpecialsList goToScreen={goToScreen} /> 
         </View
       */}
-
-
       </ScrollView>
       <Menu
         props={props}

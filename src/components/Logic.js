@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import { showLocation } from 'react-native-map-link'
 
-function zfill(number, width) {
+function zfill(number=0, width=0) {
   var numberOutput = Math.abs(number);
   var length = number.toString().length;
   var zero = "0";
@@ -76,7 +76,7 @@ function GetDiference2(dias, horas) {
 
 
 
-function currencyFormat(coin, num) {
+function currencyFormat(coin="$", num=0) {
   return coin+' '+num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 

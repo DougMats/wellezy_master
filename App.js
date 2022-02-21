@@ -63,12 +63,14 @@ import CheckOut from './src/screens/payments/CheckOut.js'
 import MethodPay from './src/screens/payments/MethodPay.js'
 
 import PayToCard from './src/screens/payments/PayToCard.js'
-
 import PaymentSummary from './src/screens/payments/PaymentSummary.js'
 
 
 
 
+
+
+import ManageOrders from './src/screens/payments/ManageOrders.js'
 
 // Quotation.js
 // QuotationList.js
@@ -160,7 +162,7 @@ function App() {
             
             <Stack.Screen headerMode={'none'} name="PaymentSummary" component={PaymentSummary} />
             
-
+            <Stack.Screen headerMode={'none'} name="ManageOrders" component={ManageOrders} />
 
             
             

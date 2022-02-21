@@ -34,11 +34,6 @@ function ValorationsListMedic(props) {
     setpage(p)
   }
 
-//   function goToScreen(screen, data) {
-// console.log("go go go ...")
-//     //props.props.navigation.navigate(screen, { randomCode: Math.random(), data })
-//   }
-
   function getSearch(v) {
     setpage(1);
     if (v === "") { setsearch(null) }
@@ -56,8 +51,6 @@ function ValorationsListMedic(props) {
     setpage(1);
     setorderBy(v)
   }
-  
-
 
   return (
     <View style={{
@@ -65,14 +58,14 @@ function ValorationsListMedic(props) {
       alignItems: "center",
       paddingBottom: 70
     }}>
-      <Filter
+      {/* <Filter
         getSearch={getSearch}
         getFilterBy={getFilterBy}
         getOrderBy={getOrderBy}
         search={search}
         filter={filterBy}
         order={orderBy}
-      />
+      /> */}
       {Load && <ActivityIndicator color={colorAlfa} size={40} style={{ marginTop: 200 }} />}
       {!Load && Data !== null &&
         Data.data.map((i, key) => {
@@ -83,20 +76,20 @@ function ValorationsListMedic(props) {
       }
       {!Load && Data !== null && Data.data.length === 0 &&
         <View style={{
-          marginTop:50,
-          borderColor:color_grey_half,
-          borderWidth:1,
-          borderRadius:12,
-          paddingHorizontal:40,
-          paddingVertical:10,
-          borderStyle:"dashed",
-          flexDirection:"column",
-          justifyContent:"center",
-          alignItems:"center"
+          marginTop: 50,
+          borderColor: color_grey_half,
+          borderWidth: 1,
+          borderRadius: 12,
+          paddingHorizontal: 40,
+          paddingVertical: 10,
+          borderStyle: "dashed",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center"
         }}>
-           <Icon name='alert-triangle' width={80} height={80} fill={color_grey_half} />
+          <Icon name='alert-triangle' width={80} height={80} fill={color_grey_half} />
 
-          <Text style={{color: color_grey_half}}>No tienes valoraciones</Text>
+          <Text style={{ color: color_grey_half }}>No tienes valoraciones</Text>
         </View>
       }
       {!Load && Data.last_page > 0 && Data.data.length !== 0 &&

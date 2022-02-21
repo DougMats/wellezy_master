@@ -59,6 +59,9 @@ if(userDetails.rol==="medic"){rolColor = "green"}
 if(userDetails.rol==="service"){rolColor = "blue"}
 
 
+
+const IconSize = 28
+
   return (
     <View style={styles.wrap}>
 
@@ -68,7 +71,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
 {/* 
       <TouchableOpacity onPress={() => { goToScreen("Reservation") }}
         style={[styles.opt, { width: props.option === 1 ? null : 40, backgroundColor: props.option === 1 ? "rgba(0,175,232,0.3)" : color_transparent }]}>
-        <Icon name='home-outline' width={30} height={30} fill={color_primary} />
+        <Icon name='home-outline' width={IconSize} height={IconSize} fill={color_primary} />
         <Text style={styles.text}>Reservation</Text>
       </TouchableOpacity> 
  */}
@@ -76,7 +79,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
 
       <TouchableOpacity onPress={() => { goToScreen("Dashboard") }}
         style={[styles.opt, { width: props.option === 1 ? null : 40, backgroundColor: props.option === 1 ? "rgba(0,175,232,0.3)" : color_transparent }]}>
-        <Icon name='home-outline' width={30} height={30} fill={color_primary} />
+        <Icon name='home-outline' width={IconSize} height={IconSize} fill={color_primary} />
         <Text style={styles.text}>home</Text>
       </TouchableOpacity>
 
@@ -84,7 +87,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
 
       <TouchableOpacity onPress={() => { goToScreen("Profile") }}
         style={[styles.opt, { width: props.option === 2 ? null : 40, backgroundColor: props.option === 2 ? "rgba(0,175,232,0.3)" : color_transparent }]}>
-        <Icon name='person-outline' width={30} height={30} fill={color_primary} />
+        <Icon name='person-outline' width={IconSize} height={IconSize} fill={color_primary} />
         <Text style={styles.text}>Profile</Text>
       </TouchableOpacity>
 
@@ -103,7 +106,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
             <Icon name='alert-circle' width={20} height={20} fill={"red"} />
           </Animated.View>
         }
-        <Icon name='briefcase-outline' width={30} height={30} fill={color_primary} />
+        <Icon name='briefcase-outline' width={IconSize} height={IconSize} fill={color_primary} />
         <Text style={styles.text}>Services</Text>
       </TouchableOpacity>
 
@@ -111,7 +114,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
       {userDetails.rol === "client" &&
         <TouchableOpacity onPress={() => { goToScreen("ClinicList") }}
           style={[styles.opt, { width: props.option === 4 ? null : 40, backgroundColor: props.option === 4 ? "rgba(0,175,232,0.3)" : color_transparent }]}>
-          <Icon name='activity-outline' width={30} height={30} fill={color_primary} />
+          <Icon name='activity-outline' width={IconSize} height={IconSize} fill={color_primary} />
           <Text style={styles.text}>Clínicas</Text>
         </TouchableOpacity>
       }
@@ -140,7 +143,7 @@ if(userDetails.rol==="service"){rolColor = "blue"}
             <Icon name='alert-circle' width={10} height={10} fill={"red"} />
           </Animated.View>
         }
-        <Icon name='video-outline' width={30} height={30} fill={color_primary} />
+        <Icon name='video-outline' width={IconSize} height={IconSize} fill={color_primary} />
         <Text style={styles.text}>Meet</Text>
       </TouchableOpacity>
 }
@@ -167,6 +170,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
   },
+  
   opt: {
     height: 40,
     borderRadius: 40,
@@ -180,7 +184,7 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     fontWeight: "700",
     fontSize: 16,
-    marginHorizontal: 5,
+    marginHorizontal: 8,
     color: color_primary
   }
 })

@@ -7,7 +7,7 @@ import { color_screen } from '../styles/Colors'
 import ProcessList from '../components/horizontalList/ProcessList.js'
 import SpecialsList from '../components/horizontalList/SpecialsList.js'
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-
+import SVG from '../components/SVG.js'
 function DashboardClient(props) {
   const [vertical, setvertical] = useState(false);
 
@@ -42,9 +42,9 @@ function DashboardClient(props) {
             onPress={() => goToScreen("NotNetwork", null)}>
             <Text>not network</Text>
           </TouchableOpacity> */}
-
           <ProcessList goToScreen={goToScreen} />
           <SpecialsList goToScreen={goToScreen} />
+          {/* <SVG name={'alert-circle-outline'} width={30} height={30} fill={'red'}/> */}
         </View>
       </ScrollView>
       <Menu
