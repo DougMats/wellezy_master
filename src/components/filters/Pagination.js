@@ -44,7 +44,7 @@ function Pagination(props) {
   }
 
   return (
-    <View style={{ width: "100%", padding: 20 }}>
+    <View style={{ width: "100%", padding: 20}}>
       <View style={{ width: "100%", paddingHorizontal: "5%", justifyContent: "center", flexDirection: "row" }}>
         {page !== 1 &&
           <TouchableOpacity style={styles.btn} onPress={() => setpage(1)}>

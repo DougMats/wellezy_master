@@ -25,6 +25,7 @@ function DashboardMedic(props) {
       />
       <ScrollView scrollEventThrottle={16}>
         <ValorationsListMedic goToScreen={goToScreen}/>
+        
       {/*
         <View style={{ paddingBottom: 60 }}>
           <ProcessList goToScreen={goToScreen} />

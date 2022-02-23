@@ -184,7 +184,6 @@ function PaymentCart(props) {
             </View>
           }
 
-          <Text>count select: {itemsSelect.length}</Text>
 
           {!Load && products.length > 0 && products.map((i, key) => {
             return (

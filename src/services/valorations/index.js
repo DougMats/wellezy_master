@@ -5,7 +5,7 @@ const VALORATIONS = () => ({
   valorationsList: async (len, id, text, filter, order, page) => {
     let res
     //console.log("get url")
-    console.log("___valorationsList____",base_url(serverCrm, `wellezy/med/get/valorations/${len}/${id}/${text}/${filter}/${order}?page=${page}`))
+    //console.log("___valorationsList____",base_url(serverCrm, `wellezy/med/get/valorations/${len}/${id}/${text}/${filter}/${order}?page=${page}`))
     await axios.get(base_url(serverCrm, `wellezy/med/get/valorations/${len}/${id}/${text}/${filter}/${order}?page=${page}`)).then(function (response) {
       res = response.data
     })

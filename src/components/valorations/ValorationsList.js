@@ -58,14 +58,16 @@ function ValorationsListMedic(props) {
       alignItems: "center",
       paddingBottom: 70
     }}>
-      {/* <Filter
+
+
+ <Filter
         getSearch={getSearch}
         getFilterBy={getFilterBy}
         getOrderBy={getOrderBy}
         search={search}
         filter={filterBy}
         order={orderBy}
-      /> */}
+      /> 
       {Load && <ActivityIndicator color={colorAlfa} size={40} style={{ marginTop: 200 }} />}
       {!Load && Data !== null &&
         Data.data.map((i, key) => {

@@ -76,7 +76,8 @@ function GetDiference2(dias, horas) {
 
 
 
-function currencyFormat(coin="$", num=0) {
+//function currencyFormat(coin="$", num=0) {
+  function currencyFormat(coin, num) {
   return coin+' '+num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
