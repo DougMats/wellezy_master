@@ -5,6 +5,7 @@ import { currencyFormat } from '../../components/Logic.js';
 import UserContext from '../../../contexts/UserContext'
 import { Icon } from 'react-native-eva-icons';
 import Toast from 'react-native-simple-toast';
+import LinearGradient from 'react-native-linear-gradient';
 import MenuVertical from '../../components/generic/MenuVertical.js';
 import SimpleAlert from '../../components/alerts/SimpleAlert.js'
 import {
@@ -25,7 +26,7 @@ import {
   color_star
 } from '../../styles/Colors.js';
 
-function PayToCard(props) {
+function PayToPayPal(props) {
   const { navigation } = props
   const userDetails = useContext(UserContext).userDetails;
   const { t, i18n } = useTranslation(); //variables de lenguajes
@@ -81,7 +82,7 @@ function PayToCard(props) {
         coin: Data.coin,
         products: Data.products,
         id_client: userDetails.id,
-        method_pay: "card_credit",
+        method_pay: "pay-pal",
         reference_pay: "wellezy",
         status: 1,
         MonthExpiredCard,
@@ -111,19 +112,35 @@ function PayToCard(props) {
           <TouchableOpacity style={styles.btn} onPress={() => props.navigation.goBack()}>
             <Icon name={'arrow-ios-back-outline'} width={25} height={25} fill={"black"} />
           </TouchableOpacity>
-          <Text style={styles.title}>Pay card</Text>
+          <Text style={styles.title}>Pay-Pal</Text>
           <TouchableOpacity style={styles.btn} onPress={() => setvertical(true)}>
             <Icon name={'more-vertical'} width={25} height={25} fill={"black"} />
           </TouchableOpacity>
         </View>
         <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ textAlign: "center", fontSize: 14, color: color_grey_half }}>Paga tu pedido desde wellezy, fácil, rapido y seguro.</Text>
+          <Text style={{ textAlign: "center", fontSize: 14, color: color_grey_half }}>Paga tu pedido desde wellezy,{"\n"} fácil, rápido y seguro.</Text>
           <Text style={{ fontSize: 20, fontWeight: "bold", color: color_fifth }}>{currencyFormat(Data.coin, Data.total)}</Text>
         </View>
       </View>
+
+      {/* <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} colors={[color_primary, color_primary, color_secondary ]} style={{ flex:1}}> */}
+      
       <ScrollView scrollEventThrottle={16}>
         <View style={styles.card}>
-          <View style={styles.contentAcceptCard}>
+
+
+          <Text style={{color:"red", marginBottom:20}}>(*) En desarrollo</Text>
+          <View style={styles.inputView} >
+            <Text style={styles.inputViewText}>Usuario</Text>
+            <TextInput style={styles.inputText} placeholder="EJ: 5524881234123456" placeholderTextColor="#ccc" onChangeText={text => setNumberCard(text)} keyboardType={'numeric'} value={NumberCard} />
+          </View>
+
+          <View style={styles.inputView} >
+            <Text style={styles.inputViewText}>Contraseña</Text>
+            <TextInput style={styles.inputText} placeholder="EJ: 5524881234123456" placeholderTextColor="#ccc" onChangeText={text => setNumberCard(text)} keyboardType={'numeric'} value={NumberCard} />
+          </View>
+
+          {/* <View style={styles.contentAcceptCard}>
             <Text style={styles.contentAcceptCardText} >ACEPTAMOS</Text>
             <Image style={{ width: 50, height: 50, resizeMode: "contain", }} source={require('../../images/methodpay/mastercard.png')} />
             <Image style={{ width: 50, height: 50, resizeMode: "contain", }} source={require('../../images/methodpay/visa.png')} />
@@ -152,7 +169,13 @@ function PayToCard(props) {
               Acepto haber leído los <OpenURLButton url={Terminos}>Términos y Condiciones y la Política de Privacidad</OpenURLButton> para hacer esta compra.
             </Text>
           </View>
+         
+         */}
         </View>
+
+
+
+
 
         <View style={styles.foot}>
           {iAcceptTerminos === true && MonthExpiredCard !== "" && YearExpiredCard !== "" && CvcCard !== "" && NumberCard !== "" && NameCard !== "" ?
@@ -160,13 +183,19 @@ function PayToCard(props) {
               <Text style={styles.btnPayText}>Pay</Text>
             </TouchableOpacity>
             :
-            <View style={{ ...styles.btnPay, backgroundColor: "silver" }}>
-              <Text style={styles.btnPayText}>Pay</Text>
+            <View style={{ ...styles.btnPay, backgroundColor: "silver", }}>
+              <Text style={{ ...styles.btnPayText }}>Pay</Text>
             </View>
           }
         </View>
 
+
+
+
       </ScrollView>
+      {/* 
+      </LinearGradient> */}
+
       {vertical === true &&
         <MenuVertical
           width={280}
@@ -178,8 +207,8 @@ function PayToCard(props) {
     </SafeAreaView>
   )
 }
-export default PayToCard;
-
+export default PayToPayPal;
+/*
 const SelectMonth = (props) => {
   const [open, setopen] = useState(false);
   const [mounths, setmounths] = useState([]);
@@ -198,10 +227,7 @@ const SelectMonth = (props) => {
   return (
     <View style={{ marginRight: 1, width: "28%" }}>
       <TouchableOpacity onPress={() => setopen(true)} style={{ backgroundColor: "#eee", height: 50, width: "100%" }}>
-        {props.value === "" ?
-          <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: "#ccc", }}>{"mounth"}</Text> :
-          <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: color_grey_dark }}>{props.value}</Text>
-        }
+        <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: "#ccc", }}>{props.value === "" ? "mounth" : props.value}</Text>
       </TouchableOpacity>
       <Modal animationType="slide" transparent={true} visible={open} >
         <View style={styles.modalShadow}>
@@ -253,10 +279,7 @@ const SelectYear = (props) => {
   return (
     <View style={{ marginRight: 1, width: "28%" }}>
       <TouchableOpacity onPress={() => setopen(true)} style={{ backgroundColor: "#eee", height: 50, width: "100%" }}>
-        {props.value === "" ?
-          <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: "#ccc", }}>{"year"}</Text> :
-          <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: color_grey_dark }}>{props.value}</Text>
-        }
+        <Text style={{ textAlign: "center", fontSize: 14, lineHeight: 50, color: "#ccc", }}>{props.value === "" ? "year" : props.value}</Text>
       </TouchableOpacity>
       <Modal animationType="slide" transparent={true} visible={open} >
         <View style={styles.modalShadow}>
@@ -335,7 +358,7 @@ const ShowInfo = () => {
     </View>
   )
 }
-
+*/
 const styles = StyleSheet.create({
   modalShadow: {
     position: "absolute",
@@ -380,7 +403,7 @@ const styles = StyleSheet.create({
     width: "100%",
     lineHeight: 25,
     fontSize: 14,
-    color: color_grey_dark,
+    color: "#777",
     backgroundColor: "#eee",
     paddingLeft: 10,
   },
@@ -589,7 +612,7 @@ const styles = StyleSheet.create({
     //   }
     //   console.log(response.data.data.id, "Token Tarjeta")
     //   setError(false)
-    //   let from = "PayToCard";
+    //   let from = "PayToPayPal";
     //   navigation.navigate("PaymentSummary", {
     //     randomCode: Math.random(),
     //     amount_in_cents: props.route.params.amount_in_cents,

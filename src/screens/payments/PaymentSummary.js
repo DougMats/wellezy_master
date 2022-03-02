@@ -8,7 +8,6 @@ import Toast from 'react-native-simple-toast';
 import { cartShop } from '../../services/connection.js';
 import MenuVertical from '../../components/generic/MenuVertical.js';
 import SimpleAlert from '../../components/alerts/SimpleAlert.js'
-
 import {
   color_primary,
   color_secondary,
@@ -26,124 +25,153 @@ import {
   color_screen,
   color_star
 } from '../../styles/Colors.js';
+import {
+  // serverCrm,
+  // serverAmadeus,
+  // file_server1,
+  // ApiWompi,
+  // token_wompi,
+  // serverCrmTestDrawer,
 
+  Api,
+  serverQa,
+  base_url,
+  token_wompi,
+  ApiWompi
+} from '../../../Env'
 
-// import axios from 'axios'
-// import Menu from '../components/Menu';
-// import { Api, serverQa, base_url, token_wompi, ApiWompi } from '../Env'
 
 function PaymentSumamary(props) {
-
   const { t, i18n } = useTranslation(); //variables de lenguajes
   const userDetails = useContext(UserContext).userDetails;
   const [Load, setLoad] = useState(false);
-
   const data = props.route.params.data
-
-
   const [success, setsuccess] = useState(false);
-  const [IdTransaction, setIdTransaction] = useState()
-  const [RefferedPay, setRefferedPay] = useState();
+  const [error, seterror] = useState(false);
 
+  const [IdTransaction, setIdTransaction] = useState("")
+  const [RefferedPay, setRefferedPay] = useState("");
+
+  const config = {
+    headers: {
+      "Authorization": `Bearer ${token_wompi}`,
+    }
+  }
 
 
   async function GotoPay() {
-    // const data = {
-    //   id_client: null,
-    //   total_invoice: null,
-    //   method_pay: null,
-    //   reference_pay: null,
-    //   status: null,
-    //   coin: null
-    // }
-
-
     setLoad(true)
-    const res = await cartShop.savePayment(data)
-    if (res) {
-      setLoad(false)
-      setsuccess(true)
+    let res
+    if (props.route.params.data.method_pay === "card_credit") { res = await payCardCredit(props.route.params.data) }
+    if (props.route.params.data.method_pay === "card_debit") { res = await payCardDebit(props.route.params.data) }
+
+    if (res === true) {
+      const save = await cartShop.savePayment(props.route.params.data)
+      console.log("save: ", save)
+      // setLoad(false)
+      // setsuccess(true)
     }
     else {
-      console.log("error")
+      setLoad(false)
+      seterror(true)
     }
 
+    /*
+      "CvcCard": "1234",
+      "MonthExpiredCard": 2,
+      "NameCard": "Douglas matos",
+      "NumberCard": "4242424242424242",
+      "YearExpiredCard": 2023,
+      "coin": "$",
+      "id_client": 1,
+      "method_pay": "card_credit",
+      "products": [
+        {"code": "239", "coin": "$", "created_at": "2022-02-28 13:29:41", "description": "solicitud de video valoracion", "id": 1, "id_cartShop": 1, "img": null, "name": "Video Valoración-(ABDOMINOPLASTY)", "price": 50, "qty": 1, "relation": "video valoration", "type": "item", "update_at": "2022-02-28 13:29:41"}
+      ],
+      "reference_pay": "card_wellezy",
+      "status": 1,
+      "total_invoice": 52.5
+    }
+    */
 
   }
 
 
+
+
+  async function payCardCredit(data) {
+    let res = true
+    console.log("payCardCredit init")
+    if (data.NumberCard === "4242424242424242"
+      // && data.YearExpiredCard === 2023
+      // && data.YearExpiredCard === 2
+      // && data.CvcCard === 1234
+    ) {
+      res = true
+    }
+    else {
+      res = false
+    }
+    return res
+  }
+
+
+
+
+
+
+
+
+
+  async function payCardDebit(data) {
+    let res = true
+    return res
+  }
 
 
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
 
+  function finish() {
+    props.navigation.goBack()
+  }
 
-  //console.log("--------->", props.route.params.data)
-
-
-  //   {
-  //     "coin": "$",
-  //   "id_client": 1,
-  //   "method_pay": "card credit",
-  //   "reference_pay": "123abc",
-  //   "status": 1,
-  //   "total_invoice": 52.5
-  // }
-function finish(){
-
-
-  props.navigation.goBack()
-}
 
 
 
   return (
     <SafeAreaView style={{ backgroundColor: color_screen, flex: 1 }}>
       <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+
+      <TouchableOpacity onPress={() => props.navigation.goBack()}
+        style={{ position: "absolute", zIndex: 999, top: 30, left: 15, width: 30, height: 30, borderRadius: 30, alignItems: "center", justifyContent: "center" }}>
+        <Icon name={'arrow-ios-back-outline'} width={25} height={25} fill={color_grey_dark} />
+      </TouchableOpacity>
+
       <View style={styles.header}>
         <View><Text style={styles.tittleHeader}>Resumen del pago</Text></View>
-        <View><Text style={styles.SubtittleHeader}>Confirma y procesa tu pago de {props.route.params.reference_pay}.</Text></View>
-        <View><Text style={styles.SubtittlePrice}>COP <Text style={styles.Price}>{currencyFormat(props.route.params.data.coin, props.route.params.data.total_invoice)}</Text></Text></View>
+        <View><Text style={styles.SubtittleHeader}>Confirma y procesa tu pago de {props.route.params.data.reference_pay}.</Text></View>
+        <View><Text style={styles.SubtittlePrice}>Total: <Text style={styles.Price}>{currencyFormat(props.route.params.data.coin, props.route.params.data.total_invoice)}</Text></Text></View>
       </View>
       <ScrollView style={styles.scrollView}>
         <View style={styles.card}>
-
-          <Text style={styles.card_item}><Text style={styles.card_item_bold}>Concepto: </Text>{props.route.params.reference_pay}</Text>
-          <Text style={styles.card_item}><Text style={styles.card_item_bold}>Referencia: </Text>{/*RefferedPay*/}</Text>
+          <Text style={styles.card_item}><Text style={styles.card_item_bold}>Concepto: </Text>{props.route.params.data.reference_pay}</Text>
+          <Text style={styles.card_item}><Text style={styles.card_item_bold}>Referencia: </Text>{props.route.params.data.reference_pay}</Text>
           <Text style={styles.card_item}><Text style={styles.card_item_bold}>Monto: </Text>{currencyFormat(props.route.params.data.coin, props.route.params.data.total_invoice)}</Text>
-
-
-
-
-
-
-
-
-{/* 
-
-          <TouchableOpacity style={styles.footBtn} onPress={() => finish()}   >
-                <Text style={styles.footBtnTest}>Finalizar</Text>
-              </TouchableOpacity> */}
-
-
           <TouchableOpacity style={styles.loginBtn} onPress={() => GotoPay()}>
             <Text style={styles.loginText}>Pagar</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity style={styles.loginBtn} onPress={() => props.navigation.goBack()}>
+          {/* <TouchableOpacity style={styles.loginBtn} onPress={() => props.navigation.goBack()}>
             <Text style={styles.loginText}>Volver</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.footBtn} onPress={() => finish()}   >
+            <Text style={styles.footBtnText}>Finalizar</Text>
+          </TouchableOpacity>
+          */}
 
         </View>
       </ScrollView>
-
-
-
-
-
-
-
 
 
       {/* <Modal animationType="slide" transparent={true} visible={open} >
@@ -161,10 +189,11 @@ function finish(){
 
 
       <Modal animationType="slide" transparent={true} visible={Load} >
+
         <View style={styles.modalShadow}>
           <View style={styles.modalWrap}>
             <ActivityIndicator color={color_primary} size={40} />
-            <Text style={{}}>Estamos procesando tu pago . . .</Text>
+            <Text style={{ marginTop: 20, color: color_grey_dark, fontSize: 14 }}>Estamos procesando tu pago . . .</Text>
 
             {/*
             <View style={styles.modalWrapHead}></View>
@@ -176,12 +205,66 @@ function finish(){
       </Modal>
 
 
+
+
+
       <Modal animationType="slide" transparent={true} visible={success} >
         <View style={styles.modalShadow}>
           <View style={styles.modalWrap}>
+
+
+
             {/* <View style={styles.modalWrapHead}></View> */}
-           
+
+
+
             <View style={styles.modalWrapBody}>
+
+              <Icon name='checkmark-circle-2-outline' width={200} height={200} fill='#2ECC71' />
+              <Text style={styles.title_succesfull}>Transacción APROBADA</Text>
+              <Text style={styles.title}>Información de la transacción</Text>
+              <Text style={styles.item_succesfull}>Transacción</Text>
+              <Text style={styles.item_succesfull_bold}>{IdTransaction}.........</Text>
+              <Text style={styles.item_succesfull}>Referencia</Text>
+              <Text style={styles.item_succesfull_bold}>{RefferedPay}..........</Text>
+
+
+
+              {/* 
+           
+             
+            
+             
+              <Text style={styles.title} >Información del pagador</Text>
+              <Text style={styles.item_succesfull}>Nombre</Text>
+              <Text style={styles.item_succesfull_bold}>{userDetails.name}</Text>
+              <Text style={styles.item_succesfull}>Email</Text>
+              <Text style={styles.item_succesfull_bold}>{userDetails.email}.......</Text> */}
+            </View>
+
+            {/* <View style={styles.modalWrapFoot}>
+              <TouchableOpacity style={styles.footBtn} onPress={() => finish()}>
+                <Text style={styles.footBtnText}>Finalizar success</Text>
+              </TouchableOpacity>
+            </View> */}
+          </View>
+        </View>
+      </Modal>
+
+
+
+      <Modal animationType="slide" transparent={true} visible={error} >
+        <View style={styles.modalShadow}>
+          <View style={styles.modalWrap}>
+            {/* <View style={styles.modalWrapHead}></View> */}
+            <View style={styles.modalWrapBody}>
+
+              <Icon name={'alert-triangle-outline'} width={100} height={100} fill={color_star} />
+
+
+
+
+              {/*               
               <Icon name='checkmark-circle-2-outline' width={200} height={200} fill='#2ECC71' />
               <Text style={styles.title_succesfull} >Transacción APROBADA</Text>
               <Text style={styles.title}>Información de la transacción</Text>
@@ -189,17 +272,20 @@ function finish(){
               <Text style={styles.item_succesfull_bold}>{IdTransaction}.........</Text>
               <Text style={styles.item_succesfull}>Referencia</Text>
               <Text style={styles.item_succesfull_bold}>{RefferedPay}..........</Text>
-             <Text style={styles.title} >Información del pagador</Text>
+              <Text style={styles.title} >Información del pagador</Text>
               <Text style={styles.item_succesfull}>Nombre</Text>
               <Text style={styles.item_succesfull_bold}>{userDetails.name}</Text>
               <Text style={styles.item_succesfull}>Email</Text>
-              <Text style={styles.item_succesfull_bold}>{userDetails.email}.......</Text>
+              <Text style={styles.item_succesfull_bold}>{userDetails.email}.......</Text> */}
             </View>
 
             <View style={styles.modalWrapFoot}>
-              <TouchableOpacity style={styles.footBtn} onPress={() => finish()}>
-                <Text style={styles.footBtnTest}>Finalizar</Text>
+
+              <TouchableOpacity style={styles.footBtn} onPress={() => GotoPay()}>
+                <Icon name={'sync-outline'} width={30} height={30} fill={"white"} />
+                <Text style={styles.footBtnText}>Reintentar</Text>
               </TouchableOpacity>
+
             </View>
           </View>
         </View>
@@ -208,11 +294,9 @@ function finish(){
 
 
 
-
     </SafeAreaView>
   )
 }
-
 
 //   console.log("value monto: ", props.route.params.amount_in_cents)
 //   const userDetails = useContext(UserContext)
@@ -222,31 +306,10 @@ function finish(){
 //   const [PaySuccess, setPaySuccess] = useState(false)
 //   const [PayDeclined, setPayDeclined] = useState(false)
 //   const [MessageError, setMessageError] = useState(false)
-
 //   const [Car, setCar] = useState()
-
 //   const { navigation } = props
 
-//   let randomCode
-//   if (props) {
-//     randomCode = props.route.params.randomCode
-//     //randomCode = Math.random()
-//   } else {
-//     randomCode = Math.random()
-//   }
 
-
-
-//   function goToScreen(screen) {
-//     setPayDeclined(false)
-//     navigation.navigate(screen, { randomCode: Math.random() })
-//   }
-// console.log("from: ", props.route.params.from)
-//   function goToScreenBack(){
-//     let screen = props.route.params.from
-//        navigation.navigate(screen, { randomCode: Math.random() })
-//         console.log("back: ", screen)
-//       }
 //   useEffect(() => {
 //     setRequesting(false)
 //     setRequestingNequi(false)
@@ -256,6 +319,7 @@ function finish(){
 //     setRefferedPay(`${props.route.params.payment_concept}-${Math.floor(Math.random() * 999999999)}`)
 //     console.log(props.route.params.id_fee, "FEE")
 //   }, [randomCode])
+
 //   function GotoPay() {
 //     // console.log(userDetails, "USER DETAILS")
 //     // return false
@@ -268,12 +332,9 @@ function finish(){
 //       "payment_method": props.route.params.payment_method,
 //       "reference": RefferedPay
 //     }
-//     console.log(props.route.params.acceptance_token)
-//     const config = {
-//       headers: {
-//         "Authorization": `Bearer ${token_wompi}`,
-//       }
-//     }
+
+
+
 //     if (props.route.params.payment_method.type == "NEQUI") {
 //       setRequestingNequi(true)
 //     } else {
@@ -450,10 +511,11 @@ const styles = StyleSheet.create({
     zIndex: 999,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.4)",
     alignItems: "center",
     justifyContent: "center"
   },
+
   modalWrap: {
     overflow: "hidden",
     backgroundColor: "white",
@@ -463,7 +525,9 @@ const styles = StyleSheet.create({
     width: "80%",
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: 20
   },
+
   modalWrapHead: {
     width: "100%",
     flexDirection: "row",
@@ -472,6 +536,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     backgroundColor: color_fifth
   },
+
   modalWrapBody: {
     alignItems: "center",
     justifyContent: "center",
@@ -491,31 +556,37 @@ const styles = StyleSheet.create({
 
 
 
-  footBtn:{
-    width:"80%",
+  footBtn: {
+    flexDirection: "row",
+    width: "80%",
     backgroundColor: color_fifth,
-    justifyContent:"center",
-    alignItems:"center",
-    paddingVertical:10,
-    borderRadius:8
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderRadius: 8
   },
-  footBtnTest:{
+
+  footBtnText: {
+    marginLeft: 10,
+    lineHeight: 30,
     color: color_white,
-    fontWeight:"bold",
-    fontSize:14
+    fontWeight: "bold",
+    fontSize: 14
   },
 
 
 
 
   header: {
-    padding: 30,
+    alignItems: "center",
     backgroundColor: 'white',
     paddingBottom: 20,
+    paddingTop: 20,
     borderBottomLeftRadius: 60,
     borderBottomRightRadius: 60,
     width: "100%"
   },
+
   menu: {
     padding: 10,
     width: "100%",
@@ -614,16 +685,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly"
   },
   loginBtn: {
-    width: "100%",
+    width: "80%",
+    alignSelf: "center",
     backgroundColor: color_primary,
-    borderTopRightRadius: 8,
-    borderBottomRightRadius: 8,
+    // borderTopRightRadius: 8,
+    // borderBottomRightRadius: 8,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 12,
     marginTop: 30,
-    borderLeftColor: color_fifth,
-    borderLeftWidth: 15
+    // borderLeftColor: color_fifth,
+    // borderLeftWidth: 15
   },
   loginText: {
     color: "white"
@@ -738,12 +811,12 @@ const styles = StyleSheet.create({
 
 
   item_succesfull: {
-  backgroundColor:"red",
+    //backgroundColor: "red",
     //padding: 5
-    textAlign:"left"
+    textAlign: "left"
   },
   item_succesfull_bold: {
-    backgroundColor:"yellow",
+    backgroundColor: "yellow",
     fontWeight: "bold"
   }
 });

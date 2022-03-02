@@ -34,6 +34,8 @@ const MEETS = () => ({
 
   
 
+
+  
   checkCodeValoration: async (code) => {
     let res
     console.log("checkCodeValoration: ",base_url(serverCrm, `check/valoration/code/${code}`))
@@ -48,8 +50,12 @@ const MEETS = () => ({
   },
 
 
+
+
+
   getTotalInfoValoration: async (code) => {
     let res
+    console.log("get total info valoration --->", base_url(serverCrm, `get/total/info/valoration/${code}`))
     await axios.get(base_url(serverCrm, `get/total/info/valoration/${code}`)).then(function (response) {
       res = response.data
     })

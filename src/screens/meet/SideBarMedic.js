@@ -31,64 +31,54 @@ import socketIOClient from 'socket.io-client/dist/socket.io.js';
 var RNFS = require('react-native-fs')
 const screen = Dimensions.get("window");
 
+
+
+
+
+
+
+
+
 const SideBarMedic = (props) => {
   const [Show, setShow] = useState(false);
-
-
-
-  // "id": 1,
-	// 	"id_client": 1,
-	// 	"id_valoration": 119,
-	// 	"id_valoration_scheduled": 2,
-	// 	"eps": "seguro acacias meta",
-	// 	"height": "163",
-	// 	"weight": "45",
-	// 	"children": "1",
-	// 	"alcohol": "no",
-	// 	"smoke": "no",
-	// 	"surgery": "no",
-	// 	"disease": "no",
-	// 	"medication": "si",
-	// 	"allergic": "si",
-	// 	"drugs": "no",
-	// 	"created_at": "2021-12-29 11:12:11",
-	// 	"updated_at": "2021-12-29 11:12:11",
-	// 	"enfermedades": [],
-	// 	"alergias": [
-	// 		{
-	// 			"description": "a los enlatados"
-	// 		}
-	// 	],
-	// 	"medicamentos": [
-	// 		{
-	// 			"description": "gotas para los ojos"
-	// 		}
-	// 	],
-	// 	"operaciones": []
-	// }
-
-
-
-
-
-  // const [paciente, setpaciente] = useState(
-  //   {
-  //     email: props.data.client_email,
-  //     id: props.data.client_id,
-  //     name: props.data.client_name,
-  //     phome: props.data.client_phone,
-  //     surname: props.data.client_surname
-  //   }
-  // );
-
-  const [listphotos, setlistphotos] = useState(props.data.images);
-//  const [HistoriaClinica, setHistoriaClinica] = useState(props.data.historyClinic);
-  const [photoSelected, setphotoSelected] = useState(null);
+  const [socket, setsocket] = useState(false);
   const [viewListImg, setviewListImg] = useState(false);
+  const [photoSelected, setphotoSelected] = useState(null);
+  const [listphotos, setlistphotos] = useState(props.data.images);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [menu, setmenu] = useState('hc'); // hc - img
-  const [socket, setsocket] = useState(false);
-  const [needPhotos, setneedPhotos] = useState(true);
+
+  // const [HistoriaClinica, setHistoriaClinica] = useState(props.data.historyClinic);
+  // const [needPhotos, setneedPhotos] = useState(true);
+
+
+  /*
+    {
+      "status": 2,
+      "valoration_keyToMeet": "v118c1m1KAAovM",
+      "valoration_date": "05-03-2022",
+      "valoration_hour": "16:00:00",
+      "valoration_id": 119,
+      "client_id": 1,
+      "client_name": "douglas jesus",
+      "client_surname": "matos parra",
+      "client_phone": "+573124348384",
+      "client_email": "art@gmail.com",
+      "images": [],
+      "historyClinic": {
+        "errorInfo": [
+          "42S02",
+          1146,
+          "Table 'wellezy.client_clinic_history' doesn't exist"
+        ],
+        "diseaseList": {},
+        "allergicList": {},
+        "medicationList": {},
+        "surgeryList": {},
+        "drugsList": {}
+      }
+    }
+  */
 
   React.useEffect(() => {
     //console.log(['. . . . . . . . . .  SOCKET SERVER CONNECTING . . . . . . . . . . . . . . ']);
@@ -96,12 +86,14 @@ const SideBarMedic = (props) => {
   }, [])
 
 
+
+
   React.useEffect(() => {
     if (socket) {
       //console.log(['. . . . . . . . . .  POSTS SERVER PROVISIONING . . . . . . . . . . . . . . '])
       socket.on('askForUserId', () => {
         //console.log(['. . . . . . . . . .  POSTS SERVER CONNECTED123 . . . . . . . . . . . . . . '])
-        socket.emit('userIdReceived', props.userDetails.id);  //id del doctor ---> "doctor"
+        socket.emit('userIdReceived', "doctor");  //id del doctor ---> "doctor" : props.userDetails.id
       })
       socket.on('disconnect', () => {
         //console.log(['. . . . . . . . . . . . . . . . . . . POSTS SERVER DISCONNECTED  . . . . . . . . . . . . . . . . . . .'])
@@ -128,24 +120,32 @@ const SideBarMedic = (props) => {
     setShow(false);
   };
 
-  // useEffect(() => {
-  //   setviewListImg(false)
-  // }, [photoSelected]);
+
 
   useEffect(() => {
-    if (listphotos.length > 0) {Download();}
+    if (listphotos.length > 0) { Download(); }
   }, [listphotos]);
+
+
+
+  useEffect(() => {
+    setviewListImg(false)
+  }, [photoSelected]);
+
+
+
+
+
 
 
   function Download() {
     let RN_large = {}
+
     listphotos.map((item, key) => {
-      //console.log('Creando instancia', key)
       RN_large[key] = RNFetchBlob
     })
+
     listphotos.map((item, key) => {
-      //console.log('Ejecutando instancia', key)
-      //console.log("->", base_url(file_server1, `img/wellezy/valorations/${item.img}`))
       RN_large[key].config({
         path: `/storage/emulated/0/DCIM/Camera/${props.data.id}/${key}_name.png`,
         fileCache: true
@@ -156,156 +156,119 @@ const SideBarMedic = (props) => {
           console.log('download complete')
         });
     })
+
   }
+
+
+
+
+
+
 
 
 
   return (
     <SafeAreaView style={[styles.container, { width: screen.width, height: Show === false ? 45 : screen.height + 30 }]}>
-      <View style={{ position: "absolute", top: 0, backgroundColor: "rgba(0,0,0,1)", height: 45, width: "100%" }}></View>
+
+      {/* <View style={{
+  //opacity:0.5,
+  //display:"none",
+  position: "absolute",
+  top: 0,
+  backgroundColor: "rgba(255,0,0,1)",
+  height: 45,
+  width: "100%"
+  }}></View> */}
+
+
+
+
       {Show === false &&
-        <TouchableOpacity onPress={fadeIn}
-          style={[{ position: "absolute", right: 10, top: 5, zIndex: 999 },//styles.btnDrawer
+        <TouchableOpacity onPress={() => fadeIn()}
+          style={[{
+            backgroundColor: "#fff",
+            width: 35,
+            height: 35,
+            borderRadius: 35,
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute", right: 10, top: 5, zIndex: 999
+          },//styles.btnDrawer
           ]}>
-          <Icon name="more-vertical-outline" width={30} height={30} fill="#fff" />
+          <Icon name="more-vertical-outline" width={30} height={30} fill="#777" />
         </TouchableOpacity>
       }
 
       {Show === true &&
-        <TouchableOpacity onPress={fadeOut}
+        <TouchableOpacity onPress={() => fadeOut()}
           style={[{ position: "absolute", left: 10, top: 5, zIndex: 999 }, //styles.btnDrawer
           ]}>
-          <Icon name="arrow-ios-back-outline" width={30} height={30} fill="#fff" />
+          {/* <Icon name="arrow-ios-back-outline" width={30} height={30} fill="#fff" /> */}
+          <Icon name="close" width={30} height={30} fill="#fff" />
         </TouchableOpacity>
       }
 
       <Animated.View style={[styles.sidebar, { height: Show === true ? "102%" : "0%", transform: [{ translateX: fadeAnim }] }]}>
+        {
+          Show && !viewListImg &&
+          <View style={{ flexDirection: "row", width: "80%", position: "absolute", top: menu === 'img' ? 0 : 0, zIndex: 99999999, justifyContent: "space-around" }}>
+            <TouchableOpacity onPress={() => setmenu('img')} style={{ backgroundColor: color_fifth, justifyContent: "center", height: 40, paddingTop: 5, flexDirection: "row", width: "45%", marginHorizontal: 2, borderRadius: 5 }}>
+              <Text style={{ textAlign: "center", lineHeight: 25, fontSize: 14, color: color_white, textTransform: "capitalize", marginRight: 10, fontWeight: "bold" }}>Imágenes</Text>
+              <Icon name={menu === 'img' ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={color_white} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setmenu('hc')} style={{ backgroundColor: color_fifth, justifyContent: "center", height: 40, paddingTop: 5, flexDirection: "row", width: "45%", marginHorizontal: 2, borderRadius: 5 }}>
+              <Text style={{ textAlign: "center", lineHeight: 25, fontSize: 14, color: color_white, textTransform: "capitalize", marginRight: 10, fontWeight: "bold" }}>História Clínica</Text>
+              <Icon name={menu === 'hc' ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={color_white} />
+            </TouchableOpacity>
+          </View>
+        }
 
+        {//props.data.photos === 'si' &&
+          Show && menu === 'img' &&
+          <View style={{ position: "absolute", zIndex: 999, top: 55, left: 0, flexDirection: "row", width: "40%", padding: 5, paddingTop: 0, justifyContent: "flex-start", paddingRight: 50, height: 50 }} >
+            <TouchableOpacity style={[styles.btnDrawer, { position: "absolute", left: 80, top: -15, zIndex: 999 }]} onPress={() => setviewListImg(!viewListImg)}>
+              <Icon name={viewListImg ? "close-circle-outline" : "image-outline"} width={30} height={30} fill={color_white} />
+            </TouchableOpacity>
+          </View>
+        }
 
-
- 
- {//props.data.photos === 'si' &&
- Show && menu === 'img' &&
-  <View style={{ position: "absolute", zIndex: 999, top: 15, left: 0, flexDirection: "row", width: "40%", padding: 5, paddingTop: 0, justifyContent: "flex-start", paddingRight: 50, height: 50 }} >
-    <TouchableOpacity style={[styles.btnDrawer, { position: "absolute", left: 80, top: -15, zIndex: 999 }]} onPress={() => setviewListImg(!viewListImg)}>
-      <Icon name={viewListImg ? "close-circle-outline" : "image-outline"} width={30} height={30} fill={color_white} />
-    </TouchableOpacity>
-  </View>
-  }
-
-
-
-
-{
-    Show && !viewListImg &&
-    <View style={{ flexDirection: "row", width: "80%", position: "absolute", top: menu === 'img' ? 0 : 0, zIndex: 99999999, justifyContent: "space-around" }}>
-      <TouchableOpacity onPress={() => setmenu('img')} style={{ backgroundColor: color_fifth, justifyContent: "center", height: 40, paddingTop: 5, flexDirection: "row", width: "45%", marginHorizontal: 2, borderRadius: 5 }}>
-        <Text style={{ textAlign: "center", lineHeight: 25, fontSize: 14, color: color_white, textTransform: "capitalize", marginRight: 10, fontWeight: "bold" }}>Imágenes</Text>
-        <Icon name={menu === 'img' ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={color_white} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setmenu('hc')} style={{ backgroundColor: color_fifth, justifyContent: "center", height: 40, paddingTop: 5, flexDirection: "row", width: "45%", marginHorizontal: 2, borderRadius: 5 }}>
-        <Text style={{ textAlign: "center", lineHeight: 25, fontSize: 14, color: color_white, textTransform: "capitalize", marginRight: 10, fontWeight: "bold" }}>História Clínica</Text>
-        <Icon name={menu === 'hc' ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={color_white} />
-      </TouchableOpacity>
-    </View>
-  }
-
-
-
-
-
-
-
-
-{Show && menu === 'img' &&
-  <View style={{
-   //backgroundColor:"pink",
-    position: "absolute",
-    zIndex: 999999,
-    top: 35,
-    right: 0,
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-around",
-    }}>
-    <View style={{
-      //backgroundColor:"red",
-      flexDirection: "column",
-      width: "100%",
-      height: "100%" }}>
-      {
-        //viewListImg === true &&
-        <View style={{ paddingHorizontal: 10, flexDirection: "row", width: "100%", justifyContent: "space-around", }} >
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            {listphotos.length !==0 && listphotos.map((i, key) => {
-              return (
-                <TouchableOpacity key={key} onPress={() => setphotoSelected(key)} style={{ overflow: "hidden", width: 80, height: 80, borderRadius: 12, marginHorizontal: 5, marginVertical: 10, backgroundColor:"blue" }}>
-                  <Image style={{ width: null, height: null, flex: 1, resizeMode: "cover" }} source={{ uri: `${file_server1}/img/wellezy/valorations/${i.img}` }} />
-                </TouchableOpacity>
-              )
-            })}
-          </ScrollView>
-        </View>
-      }
-    </View>
-  </View>
-}
-
-
-
-
-
-  {Show && menu === 'hc' &&
-    <View style={{
-      width: "100%",
-      //backgroundColor:"red",
-      paddingHorizontal: "5%",
-      paddingBottom: 100, 
-      marginTop:65//needPhotos === "si"?65:25
-      }}>
-      <Text style={{
-        //backgroundColor:"green",
-        width: "100%",
-        marginBottom:10,
-        textAlign: "center",
-        color: color_white,
-        fontSize: 20,
-        textTransform: "uppercase",
-        fontWeight: "bold",
-        paddingVertical: 5
-        }}>história Clínica</Text>
-      <ViewHistoryClinic data={props.data}/>
-    </View>
-  }
-
-
-
-
-  {
-    Show && photoSelected !== null && menu === 'img' &&
-    <TouchableOpacity onPress={() => setphotoSelected(null)} style={{ backgroundColor: "white", borderRadius: 4, zIndex: 999999, position: "absolute", right: 10, bottom: 115 }}>
-      <Icon name="trash-2-outline" width={30} height={30} fill="#000" />
-    </TouchableOpacity>
-  }
-
-
-
-
-
-  {
-    Show && photoSelected === null && menu === 'img' &&
-    <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", backgroundColor: "rgba(255,255,255,0.5)", padding: 20, borderRadius: 20 }}>
-      <Icon name="image-outline" width={200} height={200} fill="#333" />
-      <Text style={{ width: "100%", color: "#333", textAlign: "center", fontSize: 20 }}>No has seleccionado una imagen</Text>
-    </View>
-  }
-
-
-
-
-
-
-
+        {Show && menu === 'img' &&
+          <View style={{ position: "absolute", zIndex: 999999, top: 35, right: 0, flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
+            <View style={{
+              flexDirection: "column",
+              width: "100%",
+              height: "100%"
+            }}>
+              {
+                //viewListImg === true &&
+                <View style={{ paddingHorizontal: 10, flexDirection: "row", width: "100%", justifyContent: "space-around", }} >
+                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                    {listphotos.length !== 0 && listphotos.map((i, key) => {
+                      return (
+                        <TouchableOpacity key={key} onPress={() => setphotoSelected(key)} style={{ overflow: "hidden", width: 80, height: 80, borderRadius: 12, marginHorizontal: 5, marginVertical: 10, backgroundColor: "blue" }}>
+                          <Image style={{ width: null, height: null, flex: 1, resizeMode: "cover" }} source={{ uri: `${file_server1}/img/wellezy/valorations/${i.img}` }} />
+                        </TouchableOpacity>
+                      )
+                    })}
+                  </ScrollView>
+                </View>
+              }
+            </View>
+          </View>
+        }
+        {
+          Show && photoSelected !== null && menu === 'img' &&
+          <TouchableOpacity onPress={() => setphotoSelected(null)} style={{ backgroundColor: "white", borderRadius: 4, zIndex: 999999, position: "absolute", right: 10, bottom: 115 }}>
+            <Icon name="trash-2-outline" width={30} height={30} fill="#000" />
+          </TouchableOpacity>
+        }
+        {
+          Show && photoSelected === null && menu === 'img' &&
+          <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", backgroundColor: "rgba(255,255,255,0.5)", padding: 20, borderRadius: 20 }}>
+            <Icon name="image-outline" width={200} height={200} fill="#333" />
+            <Text style={{ width: "100%", color: "#333", textAlign: "center", fontSize: 20 }}>No has seleccionado una imagen</Text>
+          </View>
+        }
         {
           Show && photoSelected !== null && menu === 'img' &&
           <Drawer
@@ -315,53 +278,21 @@ const SideBarMedic = (props) => {
           />
         }
 
-
+        {Show && menu === 'hc' &&
+          <View style={{ width: "100%", paddingHorizontal: "5%", paddingBottom: 100, marginTop: 65 }}>
+            <Text style={{ width: "100%", marginBottom: 10, textAlign: "center", color: color_white, fontSize: 20, textTransform: "uppercase", fontWeight: "bold", paddingVertical: 5 }}>istória Clínica</Text>
+            <ViewHistoryClinic data={props.data} />
+          </View>
+        }
       </Animated.View>
     </SafeAreaView>
-  );
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    top: 0,
-    zIndex: 9999,
-    position: "absolute",
-    backgroundColor: "rgba(0,0,0,0)",
-    flexDirection: "column",
-    alignContent: "center",
-    alignItems: "center"
-  },
-  sidebar: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: "100%",
-    position: "absolute",
-    right: 0,
-    top: 0,
-    zIndex: 9,
-    backgroundColor: "rgba(0,0,0,0.8)"
-  },
-  btnDrawer: {
-    marginTop: 5,
-    marginHorizontal: 5,
-    height: 35,
-    width: 60,
-    backgroundColor: color_fifth,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-  btnDrawer2: {
-    marginTop: 5,
-    marginHorizontal: 2.5,
-    marginBottom: 60,
-    width: 35,
-    height: 35,
-    borderRadius: 15,
-  },
-});
 
+AppRegistry.registerComponent('Drawer', () => Drawer);
+
+export default SideBarMedic;
 
 
 function Drawer(props) {
@@ -414,7 +345,7 @@ function Drawer(props) {
             fetch(base_url(serverCrmTestDrawer, `api/save/img`), {
               method: 'post',
               headers: {
-                'Accept': 'application/json, text/plain, */*',
+                'Accept': 'application/json, text/plain',
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
@@ -443,8 +374,9 @@ function Drawer(props) {
   );
 }
 
-AppRegistry.registerComponent('Example', () => Example);
-export default SideBarMedic;
+/*
+
+
 
 
 // // //  containerStyle={{ backgroundColor: 'transparent', flex: 1 }}
@@ -480,3 +412,48 @@ export default SideBarMedic;
 // // //      imageType: 'png'
 // // //    }
 // // //  }}
+*/
+
+
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    top: 0,
+    zIndex: 9999,
+    position: "absolute",
+    backgroundColor: "rgba(0,0,0,0)",
+    flexDirection: "column",
+    alignContent: "center",
+    alignItems: "center"
+  },
+  sidebar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: "100%",
+    position: "absolute",
+    right: 0,
+    top: 0,
+    zIndex: 9,
+    backgroundColor: "rgba(0,0,0,0.8)"
+  },
+  btnDrawer: {
+    marginTop: 5,
+    marginHorizontal: 5,
+    height: 35,
+    width: 60,
+    backgroundColor: color_fifth,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  btnDrawer2: {
+    marginTop: 5,
+    marginHorizontal: 2.5,
+    marginBottom: 60,
+    width: 35,
+    height: 35,
+    borderRadius: 15,
+  },
+});

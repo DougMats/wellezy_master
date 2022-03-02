@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useRef, useEffect, useContext } from 'react'
+import { AppState } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import UserContext from '../../contexts/UserContext'
 import RequestPermission from '../../permission';
@@ -6,8 +7,63 @@ import Splash from './Splash'
 import Login from './Login'
 import Dashboard from './Dashboard';
 import { useTranslation } from 'react-i18next';
+import JitsiMeet, { JitsiMeetView } from 'react-native-jitsi-meet';
+
 
 function Home(props) {
+
+
+
+  /* ------ */
+
+  const appState = useRef(AppState.currentState);
+  const [appStateVisible, setAppStateVisible] = useState(appState.current);
+
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener("change", nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        console.log("App has come to the foreground!");
+      }
+
+      appState.current = nextAppState;
+      setAppStateVisible(appState.current);
+      console.log("AppState", appState.current);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+
+
+
+
+
+  useEffect(() => {
+    if (appStateVisible !== "active") {
+      console.log("*** se salio, colgar llamada", appStateVisible)
+      JitsiMeet.endCall();
+    } else {
+      console.log("*** in the app ", appStateVisible)
+    }
+  }, [appStateVisible]);
+  /* ------ */
+
+
+
+
+
+
+
+
+
+
+
   const [isSplashing, setIsSplashing] = useState(true)
   const { setUserDetails } = useContext(UserContext)
   const userDetails = useContext(UserContext)
@@ -33,12 +89,11 @@ function Home(props) {
   useEffect(() => {
     if (Platform.OS === 'android') {
       RequestPermission().then(_ => {
-        console.log('requested!');
+        console.log('RequestPermission!');
       });
     }
     _retrieveData()
     change()
-    console.log("___ home ___")
   }, [])
 
   if (isSplashing) {
@@ -48,25 +103,12 @@ function Home(props) {
     return <Splash />
   }
 
-console.log("* * *")
-console.log("userDetails: ")
-console.log(userDetails)
-console.log("***")
-
-
-
-
   function change() {
-    console.log(" CHANGE CHANGE CHANGE CHANGE CHANGE CHANGE CHANGE CHANGE ")
     if (userDetails.userDetails.email !== null) {
       const lng = userDetails.userDetails.language
       i18n.changeLanguage(lng);
-      console.log("___________- idioma cambiado")
     }
   }
-
-
-
 
   if (isSplashing === false) {
     if (userDetails.userDetails.email === null) {

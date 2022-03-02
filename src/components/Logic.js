@@ -1,8 +1,12 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { showLocation } from 'react-native-map-link'
+// import ImgToBase64 from 'react-native-image-base64';
 
-function zfill(number=0, width=0) {
+//var base64Img = require('base64-img');
+
+
+function zfill(number = 0, width = 0) {
   var numberOutput = Math.abs(number);
   var length = number.toString().length;
   var zero = "0";
@@ -77,22 +81,48 @@ function GetDiference2(dias, horas) {
 
 
 //function currencyFormat(coin="$", num=0) {
-  function currencyFormat(coin, num) {
-  return coin+' '+num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+function currencyFormat(coin, num) {
+  return coin + ' ' + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 }
 
 
 
-function globalStatusValoration(p, s) {
-  let Response 
-  if (s === 4)               { Response = ["red",    0, "Cancelada", "cancel"]; }
-  if (p === "si" && s === 2) { Response = ["green",  1, "Por realizar","successful"]; }
-  if (p === "si" && s === 2) { Response = ["green",  1, "Por Realizar", "successful"]; }
-  if (p === "no" && s === 1) { Response = ["green",  1, "Por Realizar", "successful"]; }
-  if (s === 3)               { Response = ["blue",   2, "Realizada", "done"]; }
+
+function globalStatusValoration(v) {
+
+  let Response
+  if (s === 0) { Response = ["red", 0, "Cancelada", "cancel"]; }
+
+  
+  // if (s === 4) { Response = ["red", 0, "Cancelada", "cancel"]; }
+  // if (p === "si" && s === 2) { Response = ["green", 1, "Por realizar", "successful"]; }
+  // if (p === "si" && s === 2) { Response = ["green", 1, "Por Realizar", "successful"]; }
+  // if (p === "no" && s === 1) { Response = ["green", 1, "Por Realizar", "successful"]; }
+  // if (s === 3) { Response = ["blue", 2, "Realizada", "done"]; }
+  // if (p === "si" && s === 0) { Response = ["orange", 3, "Pendiente por historial clínico", "pendHC"]; }
+  // if (p === "no" && s === 0) { Response = ["orange", 3, "Pendiente por historial clínico", "pendHC"]; }
+  // if (p === "si" && s === 1) { Response = ["orange", 4, "Pendiente por subir fotos", "pendPh"]; }
+
+  return Response;
+}
+
+
+
+
+
+function globalStatusValoration2(p, s) {
+  let Response
+  if (s === 4) { Response = ["red", 0, "Cancelada", "cancel"]; }
+  if (p === "si" && s === 2) { Response = ["green", 1, "Por realizar", "successful"]; }
+  if (p === "si" && s === 2) { Response = ["green", 1, "Por Realizar", "successful"]; }
+  if (p === "no" && s === 1) { Response = ["green", 1, "Por Realizar", "successful"]; }
+
+
+  if (s === 3) { Response = ["blue", 2, "Realizada", "done"]; }
   if (p === "si" && s === 0) { Response = ["orange", 3, "Pendiente por historial clínico", "pendHC"]; }
-  if (p === "no" && s === 0) { Response = ["orange", 3, "Pendiente por historial clínico","pendHC"]; }
+  if (p === "no" && s === 0) { Response = ["orange", 3, "Pendiente por historial clínico", "pendHC"]; }
   if (p === "si" && s === 1) { Response = ["orange", 4, "Pendiente por subir fotos", "pendPh"]; }
+
   return Response;
 }
 
@@ -104,12 +134,12 @@ function letterCounter(text, max) {
 
 
 function Name(title, name, surname) {
-   return title + ". " + name.split(" ")[0] + " " + surname.split(" ")[0];
- }
+  return title + ". " + name.split(" ")[0] + " " + surname.split(" ")[0];
+}
 
 
 const Offer = (price, offer, size) => {
-  
+
   let res = ((offer * 100) / price) - 100
   let sizeText = size
   let sizeCircle = size * 3.5
@@ -140,7 +170,7 @@ const Offer = (price, offer, size) => {
   }
 }
 
-const InitialsName = (userName, userSurname) =>{
+const InitialsName = (userName, userSurname) => {
 
   let Name = "";
   let Sur = "";
@@ -156,25 +186,27 @@ const InitialsName = (userName, userSurname) =>{
 }
 
 
-const extractDate = (date, position)=>{
+const extractDate = (date, position) => {
   return date.split(" ")[position];
 }
 
 
- const GotoMaps =(lat, lon)=> {
-    showLocation({
-      latitude: lat,
-      longitude: lon,
-      googleForceLatLon: false,
-    })
-  }
+const GotoMaps = (lat, lon) => {
+  showLocation({
+    latitude: lat,
+    longitude: lon,
+    googleForceLatLon: false,
+  })
+}
 
 
+const toBase64Format = (file) => {
+  
+  // base64Img.base64(file, function (err, data) {
+  //   console.log("err: ", err)
+  //   console.log("data: ", data)
+  // })
+}
 
-export {GotoMaps,extractDate, InitialsName, Offer, Name, GetDiference2, GetDiference, zfill, currencyFormat, globalStatusValoration, letterCounter};
 
-
-
-
-
-
+export { toBase64Format, GotoMaps, extractDate, InitialsName, Offer, Name, GetDiference2, GetDiference, zfill, currencyFormat, globalStatusValoration, letterCounter };

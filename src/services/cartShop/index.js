@@ -6,7 +6,8 @@ const CARTSHOP = () => ({
 
   insertcartshop: async (data) => {
     let res
-     console.log(" ____url: ",base_url(serverCrm, 'insertcartshop'))
+     console.log(" ____url: ",base_url(serverCrm, 'insert/cart/shop'))
+
      console.log("____data: ", data)
     await axios.post(base_url(serverCrm, 'insert/cart/shop'), data)
       .then(function (response) {
@@ -93,8 +94,8 @@ deletedSelectes: async (data) => {
 
   savePayment: async (data) => {
     let res
-    console.log("link--->", base_url(serverCrm, 'save/payment'))
-    console.log("data -->", data)
+    console.log("savePayment link--->", base_url(serverCrm, 'save/payment'))
+    console.log("savePayment data -->", data)
 
     await axios.post(base_url(serverCrm, 'save/payment'), data)
       .then(function (response) {

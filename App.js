@@ -1,4 +1,9 @@
 import * as React from 'react';
+
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import Reducers from './src/reducers/index'
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import UserProvider from './contexts/UserProvider';
@@ -45,8 +50,19 @@ import PaymentCart from './src/screens/payments/PaymentCart.js'
 import CheckOut from './src/screens/payments/CheckOut.js'
 import MethodPay from './src/screens/payments/MethodPay.js'
 import PayToCard from './src/screens/payments/PayToCard.js'
+import PayToPayPal from './src/screens/payments/PayToPayPal.js'
 import PaymentSummary from './src/screens/payments/PaymentSummary.js'
 import ManageOrders from './src/screens/payments/ManageOrders.js'
+
+
+import ValorationsList from './src/screens/valorations/valorationsList.js'
+
+import ValorationView from './src/screens/valorations/ValorationView.js'
+
+
+
+
+
 
 // Quotation.js
 // QuotationList.js
@@ -54,7 +70,6 @@ import ManageOrders from './src/screens/payments/ManageOrders.js'
 //import MethodPay from './src/screens/payments/MethodPay.js'
 //import MethodPay from './src/screens/payments/MethodPay.js'
 //import MethodPay from './src/screens/payments/MethodPay.js'
-
 
 //SolicitudNew from medic
 // import HotelsRoomView from './src/screens/additionalServices/View/HotelsRoomView.js'
@@ -65,59 +80,68 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <UserProvider>
-        <CartGuiProvider >
-          <Stack.Navigator headerMode={'none'}>
-            <Stack.Screen headerMode={'none'} name="Home" component={Home} />
-            <Stack.Screen headerMode={'none'} name="Splash" component={Splash} />
-            <Stack.Screen headerMode={'none'} name="Login" component={Login} />
-            <Stack.Screen headerMode={'none'} name="Register" component={Register} />
-            <Stack.Screen headerMode={'none'} name="Forgot" component={Forgot} />
-            <Stack.Screen headerMode={'none'} name="Dashboard" component={Dashboard} />
-            <Stack.Screen headerMode={'none'} name="Profile" component={Profile} />
-            <Stack.Screen headerMode={'none'} name="Procedures" component={Procedures} />
-            <Stack.Screen headerMode={'none'} name="Process" component={Process} />
-            <Stack.Screen headerMode={'none'} name="NotNetwork" component={NotNetwork} />
-            <Stack.Screen headerMode={'none'} name="DashboardServices" component={DashboardServices} />
-            <Stack.Screen headerMode={'none'} name="NurseView" component={NurseView} />
-            <Stack.Screen headerMode={'none'} name="SpecialView" component={SpecialView} />
-            <Stack.Screen headerMode={'none'} name="DriversView" component={DriversView} />
-            <Stack.Screen headerMode={'none'} name="HotelsView" component={HotelsView} />
-            <Stack.Screen headerMode={'none'} name="Room" component={Room} />
-            <Stack.Screen headerMode={'none'} name='Reservation' component={Reservation} />
-            <Stack.Screen headerMode={'none'} name="MedicsView" component={MedicsView} />
-            <Stack.Screen headerMode={'none'} name="MedicsList" component={MedicsList} />
-            <Stack.Screen headerMode={'none'} name="SimpleForm" component={SimpleForm} />
-            <Stack.Screen headerMode={'none'} name="HistoryClinicForm" component={HistoryClinicForm} />
-            <Stack.Screen headerMode={'none'} name="UploadPictures" component={UploadPictures} />
-            <Stack.Screen headerMode={'none'} name="ClinicList" component={ClinicList} />
-            <Stack.Screen headerMode={'none'} name="ClinicView" component={ClinicView} />
-            <Stack.Screen headerMode={'none'} name="Sala" component={Sala} />
-            <Stack.Screen headerMode={'none'} name="Meet" component={Meet} />
-            <Stack.Screen headerMode={'none'} name="DashboardFly" component={DashboardFly} />
-            <Stack.Screen headerMode={'none'} name="Configurations" component={Configurations} />
-            <Stack.Screen headerMode={'none'} name="ValorationManager" component={ValorationManager} />
-            <Stack.Screen headerMode={'none'} name="HomeRecovery" component={HomeRecovery} />
-            <Stack.Screen headerMode={'none'} name="CreateProfileNurse" component={CreateProfileNurse} />
-            <Stack.Screen headerMode={'none'} name="CreateProfileDriver" component={CreateProfileDriver} />
-            <Stack.Screen headerMode={'none'} name="PurchaseOrder" component={PurchaseOrder} />
-            <Stack.Screen headerMode={'none'} name="PackageDescription" component={PackageDescription} />
-            <Stack.Screen headerMode={'none'} name="PaymentCart" component={PaymentCart} />
-            <Stack.Screen headerMode={'none'} name="CheckOut" component={CheckOut} />
-            <Stack.Screen headerMode={'none'} name="MethodPay" component={MethodPay} />
-            <Stack.Screen headerMode={'none'} name="PayToCard" component={PayToCard} />
-            <Stack.Screen headerMode={'none'} name="PaymentSummary" component={PaymentSummary} />
-            <Stack.Screen headerMode={'none'} name="ManageOrders" component={ManageOrders} />
-            <Stack.Screen headerMode={'none'} name="Search" component={Search} />
-            {/* 
+      <Provider store={createStore(Reducers)}>
+        <UserProvider>
+          <CartGuiProvider >
+            <Stack.Navigator headerMode={'none'}>
+              <Stack.Screen headerMode={'none'} name="Home" component={Home} />
+              <Stack.Screen headerMode={'none'} name="Splash" component={Splash} />
+              <Stack.Screen headerMode={'none'} name="Login" component={Login} />
+              <Stack.Screen headerMode={'none'} name="Register" component={Register} />
+              <Stack.Screen headerMode={'none'} name="Forgot" component={Forgot} />
+              <Stack.Screen headerMode={'none'} name="Dashboard" component={Dashboard} />
+              <Stack.Screen headerMode={'none'} name="Profile" component={Profile} />
+              <Stack.Screen headerMode={'none'} name="Procedures" component={Procedures} />
+              <Stack.Screen headerMode={'none'} name="Process" component={Process} />
+              <Stack.Screen headerMode={'none'} name="NotNetwork" component={NotNetwork} />
+              <Stack.Screen headerMode={'none'} name="DashboardServices" component={DashboardServices} />
+              <Stack.Screen headerMode={'none'} name="NurseView" component={NurseView} />
+              <Stack.Screen headerMode={'none'} name="SpecialView" component={SpecialView} />
+              <Stack.Screen headerMode={'none'} name="DriversView" component={DriversView} />
+              <Stack.Screen headerMode={'none'} name="HotelsView" component={HotelsView} />
+              <Stack.Screen headerMode={'none'} name="Room" component={Room} />
+              <Stack.Screen headerMode={'none'} name='Reservation' component={Reservation} />
+              <Stack.Screen headerMode={'none'} name="MedicsView" component={MedicsView} />
+              <Stack.Screen headerMode={'none'} name="MedicsList" component={MedicsList} />
+              <Stack.Screen headerMode={'none'} name="SimpleForm" component={SimpleForm} />
+              <Stack.Screen headerMode={'none'} name="HistoryClinicForm" component={HistoryClinicForm} />
+              <Stack.Screen headerMode={'none'} name="UploadPictures" component={UploadPictures} />
+              <Stack.Screen headerMode={'none'} name="ClinicList" component={ClinicList} />
+              <Stack.Screen headerMode={'none'} name="ClinicView" component={ClinicView} />
+              <Stack.Screen headerMode={'none'} name="Sala" component={Sala} />
+              <Stack.Screen headerMode={'none'} name="Meet" component={Meet} />
+              <Stack.Screen headerMode={'none'} name="DashboardFly" component={DashboardFly} />
+              <Stack.Screen headerMode={'none'} name="Configurations" component={Configurations} />
+              <Stack.Screen headerMode={'none'} name="ValorationManager" component={ValorationManager} />
+              <Stack.Screen headerMode={'none'} name="HomeRecovery" component={HomeRecovery} />
+              <Stack.Screen headerMode={'none'} name="CreateProfileNurse" component={CreateProfileNurse} />
+              <Stack.Screen headerMode={'none'} name="CreateProfileDriver" component={CreateProfileDriver} />
+              <Stack.Screen headerMode={'none'} name="PurchaseOrder" component={PurchaseOrder} />
+              <Stack.Screen headerMode={'none'} name="PackageDescription" component={PackageDescription} />
+              <Stack.Screen headerMode={'none'} name="PaymentCart" component={PaymentCart} />
+              <Stack.Screen headerMode={'none'} name="CheckOut" component={CheckOut} />
+              <Stack.Screen headerMode={'none'} name="MethodPay" component={MethodPay} />
+              <Stack.Screen headerMode={'none'} name="PayToCard" component={PayToCard} />
+              <Stack.Screen headerMode={'none'} name="PayToPayPal" component={PayToPayPal} />
+              <Stack.Screen headerMode={'none'} name="PaymentSummary" component={PaymentSummary} />
+              <Stack.Screen headerMode={'none'} name="ManageOrders" component={ManageOrders} />
+              <Stack.Screen headerMode={'none'} name="Search" component={Search} />
+              <Stack.Screen headerMode={'none'} name="ValorationsList" component={ValorationsList} />
+              <Stack.Screen headerMode={'none'} name="ValorationView" component={ValorationView} />
+             
+              
+             
+             
+              {/* 
             <Stack.Screen headerMode={'none'} name="HotelsRoomView" component={HotelsRoomView} />
             <Stack.Screen headerMode={'none'} name="Medics" component={Medics} />
             <Stack.Screen headerMode={'none'} name="Clinics" component={Clinics} />
             <Stack.Screen headerMode={'none'} name="SpecialAll" component={SpecialAll} />
             */}
-          </Stack.Navigator>
-        </CartGuiProvider>
-      </UserProvider>
+            </Stack.Navigator>
+          </CartGuiProvider>
+        </UserProvider>
+      </Provider>
     </NavigationContainer>
   )
 }

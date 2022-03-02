@@ -32,8 +32,8 @@ function Index(props) {
   const { userDetails } = useContext(UserContext)
   const [modal, setmodal] = useState(false)
 
-  function goToScreen(screen) {
-    props.props.navigation.navigate(screen, { randomCode: Math.random() })
+  function goToScreen(screen, data) {
+    props.props.navigation.navigate(screen, { randomCode: Math.random(),data })
   }
 
   let colorUser
@@ -57,15 +57,20 @@ function Index(props) {
             <Icon name={"search-outline"} width={30} height={30} fill={"silver"} />
           </TouchableOpacity>
         </View>
-        <View style={{ justifyContent: "center", alignItems: "center", width: "10%" }}>
-          <CartShop user={userDetails.id} goToScreen={goToScreen} />
+        <View style={{ justifyContent:"space-around", width:"30%", flexDirection:"row"}}>
+        {userDetails.rol === "client" &&
+          <View style={{ justifyContent: "center", alignItems: "center", width: "33%" }}>
+            <CartShop user={userDetails.id} goToScreen={goToScreen} />
+          </View>
+        }
+        <View style={{ justifyContent: "center", alignItems: "center", width: "33%" }}>
+          <Alert user={userDetails.id} rol={userDetails.rol} lang={i18n.language} goToScreen={goToScreen} />
         </View>
-        <View style={{ justifyContent: "center", alignItems: "center", width: "10%" }}>
-          <Alert user={userDetails.id} goToScreen={goToScreen} />
-        </View>
-        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", width: "10%", }} onPress={() => props.action(true)}>
+
+        <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", width: "33%", }} onPress={() => props.action(true)}>
           <Icon name={"menu-outline"} width={30} height={30} fill={"silver"} />
         </TouchableOpacity>
+        </View>
       </View>
     </View>
   )

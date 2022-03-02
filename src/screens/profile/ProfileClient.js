@@ -23,7 +23,7 @@ import {
   color_screen,
 } from '../../styles/Colors'
 
-import { profile } from '../../services/connection.js';
+import { profile, notifications } from '../../services/connection.js';
 import { file_server1 } from '.././../../Env.js'
 
 // import { MyValorationScheduled, getMyProfile, updateMyProfile, mySharedExperiences, MyProceduresPerformed } from '../../src/api/https.js'
@@ -54,6 +54,15 @@ function ProfileClient(props) {
   const [Data, setData] = useState(false);
   const [vertical, setvertical] = useState(false);
   const [Page, setPage] = useState(1);
+
+
+
+
+  const [notificationsList, setnotificationsList] = useState([]);
+
+
+
+
 
   // const [menu, setmenu] = useState(false);
   // const [Editing, setEditing] = useState(false);
@@ -87,6 +96,10 @@ function ProfileClient(props) {
     setLoad(true)
     const res = await profile.getProfile(userDetails.id, userDetails.rol)
     setData(res)
+
+    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+    setnotificationsList(noti)
+
     setLoad(false)
   }
 
@@ -105,30 +118,43 @@ function ProfileClient(props) {
 
 
   function goToScreenData(data) {
-    let status = data.status;
-    let screen
-    let key_conference = data.key_generated;
-    screen = 'HistoryClinicForm';
-
-
-    // if (status === 0) { screen = 'HistoryClinicForm'; }
-    // if (status === 1) { screen = 'UploadPictures'; }
-    // if (status === 2) { screen = 'Sala'; }
-    props.navigation.navigate(screen, { randomCode: Math.random(), data, key_conference })
+    let screen, key_conference
+		if(data.type_event === "valoration"){screen = 'ValorationView'; }
+    else{screen = 'Home';}
+    // if (data.status === 0) { screen = 'HistoryClinicForm'; }
+    // if (data.status === 1) { screen = 'UploadPictures'; }
+    // if (data.status === 2) { screen = 'Sala'; }
+    
+    props.navigation.navigate(screen, { randomCode: Math.random(), data})
   }
 
 
 
-
-
   const HorizontalMenuOpntionList = [
-    { value: 1, name: 'person-outline' },       //perfil
-    { value: 2, name: 'settings-outline' },
-    { value: 3, name: 'message-circle-outline' },
-    { value: 4, name: 'folder-add-outline' },
-    { value: 5, name: 'bell-outline' },
-    { value: 6, name: 'heart' }
+
+    { value: 1, name: 'person-outline', counter: 0 },       //perfil
+    { value: 2, name: 'settings-outline', counter: 0 },
+    { value: 3, name: 'message-circle-outline', counter: 0 },
+    { value: 4, name: 'folder-add-outline', counter: 0 },
+    { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
+    { value: 6, name: 'heart', counter: 0 }
+
   ]
+
+
+
+
+async function NotificationUpdateToRead(id){
+  const update = await notifications.UpdateToRead(id)
+
+  if(update === true){
+    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+    setnotificationsList(noti)
+    console.log("updating notifications")
+  }
+}
+
+  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_white }}>
@@ -201,10 +227,19 @@ function ProfileClient(props) {
 
 
         {!Load && Page === 1 && <ProfileInfo data={Data} goToScreen={goToScreen} />}
+
+
+        {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} update={NotificationUpdateToRead}/>}
+
+
+
         {/* {!Load && Page === 2 && <ProfileConfig data={Data} goToScreen={goToScreen} />}
         {!Load && Page === 3 && <ProfileShares data={Data} goToScreen={goToScreen} />}
-        {!Load && Page === 5 && <ProfileNotifications data={Data} goToScreen={goToScreenData} />}
+       
         {!Load && Page === 6 && <ProfileFavorites data={Data} goToScreen={goToScreen} />} */}
+
+
+
       </ScrollView>
       {vertical === true &&
         <MenuVertical

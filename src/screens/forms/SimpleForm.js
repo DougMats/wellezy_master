@@ -15,10 +15,16 @@ import {
   color_fifth,
   color_grey_dark,
 } from '../../styles/Colors.js'
+
 import { file_server1 } from '../../../Env'
+
+
+
 
 import styles from '../../styles/styles.js'
 
+
+import { toBase64Format } from '../../components/Logic.js'
 
 function SimpleForm(props) {
   const { t, i18n } = useTranslation();
@@ -45,7 +51,28 @@ function SimpleForm(props) {
 
 
 
-  console.log("....... img: ",)
+
+
+
+
+
+  function urlToBlob(url) {
+    return new Promise((resolve, reject) => {
+      var xhr = new XMLHttpRequest();
+      xhr.onerror = reject;
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          resolve(xhr.response);
+        }
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'base64'; // convert type
+      xhr.send();
+    })
+  }
+
+
+
 
   async function sendForm() {
     const data = { ...formInfo }
@@ -62,23 +89,30 @@ function SimpleForm(props) {
       setFormOn(true);
       data.id_client = userDetails.id;
       data.id_medic = props.route.params.id_MedicSource,//props.route.params.id_Medic;
-        data.id_procedure = props.route.params.data.id;
+      data.id_procedure = props.route.params.data.id;
       data.id_category = props.route.params.data.id_category;
       const response = await formularios.SimpleFormulario(data);
 
       if (response !== false) {
         let imagen = ""
-        if (props.route.params.data.foto === undefined) { imagen = `${file_server1}/img/category/picture/${props.route.params.data.foto}` }
+        if (props.route.params.data.foto === undefined) {
+          imagen = toBase64Format(`${file_server1}/img/category/picture/${props.route.params.data.foto}`)
+        }
         else {
           imagen = "https://wellezy.com/wp-content/uploads/2020/12/Logo-final-wellezy-blanco.png"
         }
+
+
+
+        
         const toCar = {
           id_client: userDetails.id,
+          id_medic: 2,
           items: [
             {
               type: "item",
               code: response.id,
-              relation: "video valoration",
+              relation: "valoration",
               name: `Video Valoración-(${props.route.params.data.name})`,
               description: "solicitud de video valoracion",
               price: 50,
@@ -88,6 +122,26 @@ function SimpleForm(props) {
             }
           ]
         }
+
+
+
+        /*
+        var data = 'data:image/png;base64,...';
+        urlToBlob(data)
+
+        .then(blob => {
+            console.log(blob)
+        })
+          let imagen = urlToBlob(props.route.params.data.foto)
+          console.log("imagen: ", imagen)
+          toBase64Format
+        */
+
+
+
+
+
+
         const res = await cartShop.insertcartshop(toCar);
 
 
@@ -98,25 +152,24 @@ function SimpleForm(props) {
             goToScreen("PaymentCart", null);
           }, 10000);
         }
-
         else {
-
-
-
           Toast.show("Error");
           console.error("error al enviar formulario")
           console.log("error al enviar formulario")
-
-
-
           setTimeout(() => {
             goToScreen("Home", null);
           }, 3000);
         }
+
+
+
+      }
+      else {
+        setLoad(false)
+        console.log("response..... response = false")
       }
     }
   }
-
 
   function goToScreen(screen, data) {
     setFormOn(false);

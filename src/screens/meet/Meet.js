@@ -13,7 +13,7 @@ const App = (props) => {
   const [listadoDeImagenes, setlistadoDeImagenes] = useState(props.route.params.data.photos);
   const { userDetails } = useContext(UserContext);
   const url = `https://meet.jit.si/${props.route.params.key_conference}`;
-  
+
   const userInfo = {
     displayName: userDetails.name + " " + userDetails.surname,
     email: userDetails.email,
@@ -27,14 +27,22 @@ const App = (props) => {
     randomCode = 1
   }
 
+
   useEffect(() => {
-    console.log("first time")
-    //JitsiMeet.endCall();
+    // console.log("first time")
+    // JitsiMeet.endCall();
+
     setTimeout(() => {
       JitsiMeet.call(url, userInfo);
       console.log("init call")
     }, 1000);
+
+
   }, [randomCode])
+
+
+
+
 
 
 
@@ -52,11 +60,17 @@ const App = (props) => {
     return true;
   };
 
+
+
+
+
+
   useEffect(() => {
     BackHandler.addEventListener("hardwareBackPress", backAction);
     return () =>
       BackHandler.removeEventListener("hardwareBackPress", backAction);
   }, []);
+
 
   function endCalling() {
     console.log("-> my destroyer, proceso para salir de la video llamada")
@@ -65,6 +79,7 @@ const App = (props) => {
   }
 
   function goToScreen(screen) {
+    JitsiMeet.endCall();
     console.log("--> go to screen")
     props.navigation.navigate(screen, { randomCode: Math.random() })
   }
@@ -82,12 +97,15 @@ const App = (props) => {
     />
   }
 
+
+
+
   function onConferenceTerminated(nativeEvent) {
     console.log("terminated local");
     //   endCalling()
     //   // console.log("onConferenceTerminated ")
     //  // JitsiMeet.endCall();
-    //   // goToScreen("Sala");
+    goToScreen("Sala");
   }
   function onConferenceJoined(nativeEvent) {
     console.log("onConferenceJoined ")
@@ -104,8 +122,30 @@ const App = (props) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-{userDetails.rol === "client" && <SideBarClient data={data} /* HistoriClinica={HistoriClinica} listadoDeImagenes={listadoDeImagenes}*/ userDetails={userDetails}/>}
-{userDetails.rol === "medic"  && <SideBarMedic  data={data} /* HistoriClinica={HistoriClinica} listadoDeImagenes={listadoDeImagenes}*/ userDetails={userDetails}/>}
+
+      {
+        userDetails.rol === "client" &&
+        <SideBarClient data={data}
+          //HistoriClinica={HistoriClinica}
+          //listadoDeImagenes={listadoDeImagenes}
+          userDetails={userDetails}
+        />
+      }
+
+
+
+      {
+        userDetails.rol === "medic" &&
+        <SideBarMedic
+          data={data}
+          //HistoriClinica={HistoriClinica}
+          //listadoDeImagenes={listadoDeImagenes}
+          userDetails={userDetails}
+        />
+
+      }
+
+
       <Call />
     </SafeAreaView>
   );

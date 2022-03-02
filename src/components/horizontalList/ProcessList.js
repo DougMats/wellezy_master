@@ -40,6 +40,10 @@ function ProcessList(props) {
     setLoad(false)
   }
 
+
+
+  console.log("lenguaje actual: ", i18n.language)
+
   return (
     <View style={styles.wrap}>
       <View style={styles.head}>

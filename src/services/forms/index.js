@@ -1,13 +1,11 @@
 import axios from 'axios'
 import { serverCrm, base_url } from '../../../Env'
 
-
 const FORMS = () => ({
-
   SimpleFormulario: async (data) => {
     let res
-   // console.log("SimpleFormulario link: ", base_url(serverCrm, `wellezy/cotization/create`))
-   // console.log("SimpleFormulario data: ", data)
+    console.log("SimpleFormulario link: ", base_url(serverCrm, `wellezy/cotization/create`))
+    console.log("SimpleFormulario data: ", data)
     await axios.post(base_url(serverCrm, `wellezy/cotization/create`), data)
       .then(function (response) {
         res = response.data
@@ -20,10 +18,6 @@ const FORMS = () => ({
     console.log("res:", res)
     return res;
   },
-
-
-
-
 
   saveHistoryClinic: async (data) => {
     console.log("data: ", data)
@@ -40,9 +34,7 @@ const FORMS = () => ({
     return res;
   },
 
-
-
-  getHistoryClinic: async (client, id) =>{
+  getHistoryClinic: async (client, id) => {
     let res
     console.log(base_url(serverCrm, `clients/history/clinic/${client}/${id}`))
     await axios.get(base_url(serverCrm, `clients/history/clinic/${client}/${id}`)).then(function (response) {
@@ -53,8 +45,5 @@ const FORMS = () => ({
       })
     return res
   }
-
-
 });
-
 export default FORMS;

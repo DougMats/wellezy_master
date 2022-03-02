@@ -38,70 +38,30 @@ import _ from 'lodash';
 function ViewHistoryClinic({data}) {
   const [ViewData, setViewData] = useState(true);
   const [ViewHC, setViewHC] = useState(false);
-  console.log("data: ", data)
+  console.log("hc data: ", data)
 /*
-{
-  "client_email": "art@gmail.com",
-  "client_id": 1,
-  "client_name": "douglas jesus",
-  "client_phone": "+573124348384",
-  "client_surname": "matos parra",
-   "status": 2, "valoration_date": "28-12-2021", "valoration_hour": "16:00:00", "valoration_id": 119, "valoration_keyToMeet": "v118c1m1KAAovM",
+ {
+   "client_email": "art@gmail.com",
+   "client_id": 1,
+   "client_name": "douglas jesus",
+   "client_phone": "+573124348384",
+   "client_surname": "matos parra",
+   "historyClinic": {"allergicList": {},
+   "diseaseList": {},
+    "drugsList": {},
 
-  "historyClinic": {
-
-
-    "id_client": 1,
-    "id_country": null,
-    "id_valoration": 119,
-    "id_valoration_scheduled": 2,
-    "identificacion": "1123009452",
-    "img": "default-user.png",
-    "name": "angie katherine",
-    "phone": "3127023197",
-    "adress": null,
-    "twitter": null,
-    "youtube": null
-    "facebook": null,
-    "date_of_birth": null,
-    "id_city": null,
-    "instagram": null,
-
-
-
-
-    "alergias": [[Object]],
-    "allergic": "si",
-
-    "disease": "no",
-    "enfermedades": [],
-    
-    "drugs": "no",
-    "drogas": [],
-
-     "medicamentos": [[Object]],
-    "medication": "si",
-   
-
-    "created_at": "2021-12-29 11:12:11",
-     "updated_at": "2021-12-29 11:12:11",
-    
-
-    "id": 1,
-    "surgery": "no",
-    "surname": "acosta henao",
-
-
-  
- 
-  },
- 
- 
-  "images": [{"created_at": "2021-07-19 11:57:56", "id": 1, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "23299135-foto-valoration.png", "updated_at": "2021-07-19 11:57:56"}, {"created_at": "2021-07-19 12:47:03", "id": 2, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "18577825-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-19 12:47:03", "id": 3, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "98024879-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-21 17:41:10", "id": 4, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "70638799-foto-valoration.png", "updated_at": "2021-07-21 17:41:10"}],
- }
+    "errorInfo": ["42S02", 1146, "Table 'wellezy.client_clinic_history' doesn't exist"],
+    "medicationList": {},
+    "surgeryList": {}},
+    "images": [],
+    "status": 2,
+    "valoration_date": "05-03-2022",
+    "valoration_hour": "16:00:00",
+    "valoration_id": 119,
+    "valoration_keyToMeet":
+    "v118c1m1KAAovM"
+  }
 */
-
-
   return (
     <View style={styles.wrapper}>
       <ScrollView scrollEventThrottle={16}>

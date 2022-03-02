@@ -52,6 +52,10 @@ const search = SEARCH()
 import CARTSHOP from './cartShop'
 const cartShop =CARTSHOP()
 
+
+import NOTIFICATIONS from './notifications'
+const notifications = NOTIFICATIONS()
+
 export {
   procedimientos,
   vuelos,
@@ -69,5 +73,6 @@ export {
   valorations,
   profile,
   search,
-  cartShop
+  cartShop,
+  notifications
 };

@@ -6,6 +6,7 @@ import { currencyFormat } from '../../components/Logic.js';
 import _ from 'lodash';
 import UserContext from '../../../contexts/UserContext'
 import MenuVertical from '../../components/generic/MenuVertical.js';
+import { cartShop } from '../../services/connection.js';
 import {
   color_primary,
   color_secondary,
@@ -23,10 +24,6 @@ import {
   color_screen,
   color_star
 } from '../../styles/Colors.js';
-
-
-import { cartShop } from '../../services/connection.js';
-
 
 function PaymentCart(props) {
   const { t, i18n } = useTranslation();
@@ -71,9 +68,6 @@ function PaymentCart(props) {
   }, [products]);
 
 
-
-
-
   useEffect(() => {
     if (itemsSelect.length > 0) {
       setfootTitle(`Select Items (${itemsSelect.length})`)
@@ -92,16 +86,12 @@ function PaymentCart(props) {
     setitemsSelect(res)
   }
 
-
-
-
   async function itemDelect(item) {
     console.log("deleting uno ")
     const DATA = {
       id_client: userDetails.id,
       items: [{ ...item }]
     }
-
     const res = await cartShop.deletedSelectes(DATA)
     if (res) {
       itemUnselect(item)
@@ -109,15 +99,12 @@ function PaymentCart(props) {
     }
   }
 
-
-
   async function removeAllSelects() {
     console.log("deleting lotes ")
     const DATA = {
       id_client: userDetails.id,
       items: [...itemsSelect]
     }
-
     const res = await cartShop.deletedSelectes(DATA)
     if (res) {
       setitemsSelect([])
@@ -183,8 +170,6 @@ function PaymentCart(props) {
               }}>empty</Text>
             </View>
           }
-
-
           {!Load && products.length > 0 && products.map((i, key) => {
             return (
               <Item
@@ -207,7 +192,6 @@ function PaymentCart(props) {
           <Text style={[styles.footUpText, styles.footUpLeft]}>{footTitle}</Text>
           <Text style={[styles.footUpText, styles.footUpRight]}>{currencyFormat(coin, total)}</Text>
         </View>
-
         {itemsSelect.length > 0 ?
           <TouchableOpacity onPress={() => removeAllSelects()} style={{ ...styles.btnPay, backgroundColor: "#E74C3C" }}>
             <Text style={styles.btnPayText}>remove all selected</Text>
@@ -233,7 +217,6 @@ function PaymentCart(props) {
   )
 }
 
-
 const Item = (props) => {
   const check = checked()
   const [open, setopen] = useState(false)
@@ -246,9 +229,7 @@ const Item = (props) => {
     return res
   }
 
-
   function long() {
-    console.log("press....")
     if (!check) {
       props.itemSelect(props.data)
     }
@@ -259,26 +240,19 @@ const Item = (props) => {
 
   function simple() {
     if (check) {
-      console.log("simple....")
       props.itemUnselect(props.data)
     }
   }
 
-
-
   return (
     <View style={styles.item}>
-      <TouchableOpacity style={styles.wrapperUp}
-        onLongPress={() => long()}
-        onPress={() => simple()}
-      >
+      <TouchableOpacity style={styles.wrapperUp} onLongPress={() => long()} onPress={() => simple()} >
         <View style={styles.wrap}>
           {props.selectList.length > 0 &&
             <TouchableOpacity onPress={() => check ? props.itemUnselect(props.data) : props.itemSelect(props.data)} style={styles.btn}>
               <Icon name={check ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={check ? color_primary : color_grey_light} />
             </TouchableOpacity>
           }
-
           <View style={styles.image}>
             <Image style={styles.img} source={{ uri: props.data.img }} />
           </View>
@@ -290,10 +264,7 @@ const Item = (props) => {
           </View>
         </View>
         <View style={styles.itemBtn}>
-          <TouchableOpacity
-            onPress={() => setmodal(true)}
-            style={styles.btn}
-          >
+          <TouchableOpacity onPress={() => setmodal(true)} style={styles.btn} >
             <Icon name={'trash-outline'} width={25} height={25} fill={color_grey_light} />
           </TouchableOpacity>
           {props.data.type === "group" &&
@@ -303,7 +274,6 @@ const Item = (props) => {
           }
         </View>
       </TouchableOpacity>
-
       {open &&
         <View style={styles.childWrap}>
           {props.data.child.map((i, key) => {
@@ -331,9 +301,7 @@ const Item = (props) => {
         <View style={styles.modal}>
           <View style={styles.modalWrap}>
             <Icon name={'alert-circle-outline'} width={80} height={80} fill={color_star} />
-            <Text style={styles.modalText}>
-              realmente desea eliminar este produto de la lista?
-            </Text>
+            <Text style={styles.modalText}>realmente desea eliminar este produto de la lista?</Text>
             <View style={styles.modalFoot}>
               <TouchableOpacity style={styles.modalFootBtn} onPress={() => setmodal(false)}>
                 <Icon name={'close-outline'} width={25} height={25} fill={color_grey_half} />
@@ -341,7 +309,7 @@ const Item = (props) => {
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalFootBtn} onPress={() => [props.itemDelect(props.data), setmodal(false)]}>
                 <Icon name={'checkmark-outline'} width={25} height={25} fill={color_grey_half} />
-                <Text style={styles.modalFootBtnText}>delete</Text>
+                <Text style={styles.modalFootBtnText}>Delete</Text>
               </TouchableOpacity>
             </View>
           </View>

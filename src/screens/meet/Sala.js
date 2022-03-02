@@ -16,7 +16,7 @@ import MenuVertical from '../../components/generic/MenuVertical.js';
 function Sala(props) {
   const { t, i18n } = useTranslation();
   const [Status, setStatus] = useState("off");
-  const [Code, setCode] = useState({ code: "v118c1m1KAAovM" }); //v118c1m1KAAovM
+  const [Code, setCode] = useState({ code: "v118c1m1KAAovM" });
   const [ViewKey, setViewKey] = useState(true);
   const [vertical, setvertical] = useState(false);
   const [_debugID, set_debugID] = useState(0);
@@ -39,6 +39,12 @@ function Sala(props) {
     }
   }, [randomCode]);
 
+
+
+
+
+
+
   function onChangeText(text, key) {
     setCode({
       ...Code,
@@ -46,42 +52,55 @@ function Sala(props) {
     })
   }
 
+
   async function sendCode() {
-    //setStatus("onHold")
     let check = await meets.checkCodeValoration(Code.code);
     if (check === true) {
-      const valoration = await meets.getTotalInfoValoration(Code.code);
-      // if(valoration.status === 0){}
-      // if(valoration.status === 1){}
-      // if(valoration.status === 2){}
-      // if(valoration.status === 3){}
-      // if(valoration.status === 4){}
 
-      // {
-      //   "client_email": "art@gmail.com",
-      //   "client_id": 1,
-      //   "client_name": "douglas jesus",
-      //   "client_phone": "+573124348384",
-      //   "client_surname": "matos parra",
-      //    "status": 2,
-      //    "valoration_date": "28-12-2021",
-      //    "valoration_hour": "16:00:00",
-      //    "valoration_id": 119,
-      //    "valoration_keyToMeet": "v118c1m1KAAovM",
-      //    "images": [{"created_at": "2021-07-19 11:57:56", "id": 1, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "23299135-foto-valoration.png", "updated_at": "2021-07-19 11:57:56"}, {"created_at": "2021-07-19 12:47:03", "id": 2, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "18577825-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-19 12:47:03", "id": 3, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "98024879-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-21 17:41:10", "id": 4, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "70638799-foto-valoration.png", "updated_at": "2021-07-21 17:41:10"}]
-      //   }
+      const valoration = await meets.getTotalInfoValoration(Code.code);
 
       goToScreen("Meet", Code.code, valoration);
     }
     else {
       setStatus("nocheck")
     }
+
+
+    //setStatus("onHold")
+    // if(valoration.status === 0){}
+    // if(valoration.status === 1){}
+    // if(valoration.status === 2){}
+    // if(valoration.status === 3){}
+    // if(valoration.status === 4){}
+
+    // {
+    //   "client_email": "art@gmail.com",
+    //   "client_id": 1,
+    //   "client_name": "douglas jesus",
+    //   "client_phone": "+573124348384",
+    //   "client_surname": "matos parra",
+    //    "status": 2,
+    //    "valoration_date": "28-12-2021",
+    //    "valoration_hour": "16:00:00",
+    //    "valoration_id": 119,
+    //    "valoration_keyToMeet": "v118c1m1KAAovM",
+    //    "images": [{"created_at": "2021-07-19 11:57:56", "id": 1, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "23299135-foto-valoration.png", "updated_at": "2021-07-19 11:57:56"}, {"created_at": "2021-07-19 12:47:03", "id": 2, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "18577825-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-19 12:47:03", "id": 3, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "98024879-foto-valoration.png", "updated_at": "2021-07-19 12:47:03"}, {"created_at": "2021-07-21 17:41:10", "id": 4, "id_valoration": 119, "id_valoration_scheduled": 2, "img": "70638799-foto-valoration.png", "updated_at": "2021-07-21 17:41:10"}]
+    //   }
+
+
   }
+
+
 
   function goToScreen(screen, code_key, data) {
     setStatus("off")
+
     let key_conference = md5(code_key);
-    props.navigation.navigate(screen, { randomCode: Math.random(), key_conference, data})
+
+    const url = `https://meet.jit.si/${key_conference}`;
+
+    console.log("url: ", url)
+    props.navigation.navigate(screen, { randomCode: Math.random(), key_conference, data })
   }
 
 

@@ -5,11 +5,25 @@ import { Icon } from 'react-native-eva-icons';
 import RNFetchBlob from "rn-fetch-blob";
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas'; // canvas advanced
 import socketIOClient from 'socket.io-client/dist/socket.io.js'
-import { color_primary } from "../../styles/Colors.js";
+
+import {
+  color_primary,
+  color_secondary,
+  color_tertiary,
+  color_quarter,
+  color_fifth,
+  color_white,
+  color_white_a,
+  color_black,
+  color_black_a,
+  color_grey_light,
+  color_grey_half,
+  color_grey_dark,
+  color_transparent,
+  color_screen,
+  color_star } from "../../styles/Colors.js";
+
 var RNFS = require('react-native-fs')
-
-
-
 
 const SideBar = (props) => {
   const screen = Dimensions.get("window");
@@ -19,11 +33,13 @@ const SideBar = (props) => {
   const [displayDrawer, setdisplayDrawer] = useState(null);
   const [photoSelected, setphotoSelected] = useState(null);
   const [viewListImg, setviewListImg] = useState(false);
+  
   const [cero, setcero] = useState(false);
   const [one, setone] = useState(false);
   const [tools, settools] = useState(false);
   const [listphotos, setlistphotos] = useState(props.data.images)
   const [downloading, setDownloading] = React.useState(true)
+
 
   React.useEffect(() => {
     console.log(['. . . . . . . . . .  SOCKET SERVER CONNECTING . . . . . . . . . . . . . . ']);
@@ -38,11 +54,13 @@ const SideBar = (props) => {
         console.log(['. . . . . . . . . .  POSTS SERVER CONNECTED123 . . . . . . . . . . . . . . '])
         socket.emit('userIdReceived', props.data.client_id);
       })
+
       socket.on('displayImage', (data) => {
         console.log(['______________________________ get la imagen ______________________________']);
         console.log("uri ->", data.uri);
         setdisplayDrawer(data.uri);
       })
+
       socket.on('disconnect', () => {
         console.log(['. . . . . . . . . . . . . . . . . . . POSTS SERVER DISCONNECTED  . . . . . . . . . . . . . . . . . . .'])
       })
@@ -103,8 +121,8 @@ const SideBar = (props) => {
 
       {Show === false &&
         <TouchableOpacity onPress={fadeIn}
-          style={{backgroundColor:"white", width:50, height:50, borderRadius:25, justifyContent:"center",alignContent:"center", alignItems:"center", position: "absolute", right: 10, top: 10, zIndex: 999 }}>
-          <Icon name="more-vertical-outline" width={30} height={30} fill="#000" />
+          style={{ width:50, height:50, borderRadius:25, justifyContent:"center",alignContent:"center", alignItems:"center", position: "absolute", right: 10, top: 10, zIndex: 999 }}>
+          <Icon name="more-vertical-outline" width={30} height={30} fill="#fff" />
         </TouchableOpacity>
       }
       {Show === true &&

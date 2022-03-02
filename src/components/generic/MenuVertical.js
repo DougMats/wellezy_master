@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import About from '../About';
 import { InitialsName } from '../Logic.js';
 import { file_server1 } from '../../../Env.js';
-import {color_primary, color_secondary, color_white, color_grey_half } from '../../styles/Colors.js'
+import { color_primary, color_secondary, color_white, color_grey_half } from '../../styles/Colors.js'
 import styles from '../../styles/styles.js'
 
 function Menu(props) {
@@ -18,7 +18,7 @@ function Menu(props) {
   const fadeWidth = useRef(new Animated.Value(WIDTH)).current;
   const [AboutModal, setAboutModal] = useState(false);
 
-const rol = userDetails.rol
+  const rol = userDetails.rol
 
 
 
@@ -92,7 +92,7 @@ const rol = userDetails.rol
     }).start();
   };
 
-  function Go(screen,data) {
+  function Go(screen, data) {
     closet()
     setTimeout(() => {
       props.goToScreen(screen, data)
@@ -122,7 +122,7 @@ const rol = userDetails.rol
                   {InitialsName(userDetails.name, userDetails.surname)}
                 </Text>
               }
-              
+
             </View>
             <Text style={styles.sidebarHeadName}>{userDetails.surname} {userDetails.name}</Text>
             <View style={styles.sidebarHeadEmailWrap}>
@@ -130,7 +130,7 @@ const rol = userDetails.rol
               <Text style={styles.sidebarHeadEmail}>{userDetails.email}</Text>
             </View>
 
-            <Text>{rol}</Text>
+            {/* <Text>{rol}</Text> */}
 
           </LinearGradient>
           <View style={styles.sidebarBody}>
@@ -151,13 +151,13 @@ const rol = userDetails.rol
 
 
 
-            {//rol === "medic" &&
-  <TouchableOpacity
-  style={styles.sidebarbodyLabel} onPress={() => Go("ManageOrders", null)}>
-  <Icon name='list-outline' fill={color_grey_half} width={30} height={30} />
-  <Text style={styles.sidebarbodyLabelText}>Manage Orders</Text>
-</TouchableOpacity>
-}
+            {rol === "medic" &&
+              <TouchableOpacity
+                style={styles.sidebarbodyLabel} onPress={() => Go("ManageOrders", null)}>
+                <Icon name='list-outline' fill={color_grey_half} width={30} height={30} />
+                <Text style={styles.sidebarbodyLabelText}>Manage Orders</Text>
+              </TouchableOpacity>
+            }
 
 
 
@@ -265,7 +265,7 @@ const rol = userDetails.rol
               <Text style={styles.sidebarbodyLabelText}>Configuraciones</Text>
             </TouchableOpacity> */}
 
-             {/* <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.sidebarbodyLabel} onPress={() => setAboutModal()}>
               <Icon name='question-mark-circle-outline' fill={color_grey_half} width={30} height={30} />
               <Text style={styles.sidebarbodyLabelText}>Acerca de</Text>

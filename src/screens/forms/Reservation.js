@@ -238,7 +238,7 @@ function Reservation(props) {
     color: "#FF008B",
     minDateNow : false,
     hour: false,
-    rangeDate: true,
+    rangeDate: false,
   }
 
 

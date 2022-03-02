@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { SafeAreaView, Dimensions, ActivityIndicator, StyleSheet, ScrollView, Linking, TouchableOpacity, View, Image, Text } from 'react-native';
 import { Icon } from 'react-native-eva-icons';
-
 import { useTranslation } from 'react-i18next';
 import { currencyFormat } from '../../components/Logic.js';
 import _ from 'lodash';
@@ -43,11 +42,13 @@ function CheckOut(props) {
   const url = "https://www.youtube.com/watch?v=VEDVL-Z_JhM&t=868s";
 
   const metthoPayList = [
-    { id: 1, route:"PayToCard", name: "Tarjetas de crédito/débito", logo: "card.png" },
-    { id: 2, route:"PayToCard2", name: "PayPal", logo: "paypal.png" }
+    { id: 1, route: "PayToCard",   name: "Tarjetas de crédito/débito", logo: "card.png" },
+    { id: 2, route: "PayToPayPal", name: "PayPal",                     logo: "paypal.png" },
+   // { id: 3, route: "PayToCripto", name: "Cryptocurrency",             logo: "bitcoin.png" }
+   
   ]
 
-
+  //console.log("checkOut----->", props.route.params.data)
 
   useEffect(() => {
     let res = (porcentajeBancario / 100) * data.total
@@ -56,7 +57,7 @@ function CheckOut(props) {
       settotalPay(value)
     }
     else {
-      if(totalPay>data.total){
+      if (totalPay > data.total) {
         const value = totalPay - res
         settotalPay(value)
       }
@@ -79,24 +80,18 @@ function CheckOut(props) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
 
-
-
-
-function goToPay(){
-
-const GoTo = _.find(metthoPayList, function(o) { return o.id === methodPay; });
-let send ={
-  total : totalPay,
-  coin: data.coin
-}
-goToScreen(GoTo.route,send)
-}
-
-
+  function goToPay() {
+    const GoTo = _.find(metthoPayList, function (o) { return o.id === methodPay; });
+    let send = {
+      total: totalPay,
+      coin: data.coin,
+      products: data.products
+    }
+    goToScreen(GoTo.route, send)
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
-
       <View style={styles.head}>
         <TouchableOpacity style={styles.btn} onPress={() => props.navigation.goBack()}>
           <Icon name={'arrow-ios-back-outline'} width={25} height={25} fill={"black"} />
@@ -108,8 +103,6 @@ goToScreen(GoTo.route,send)
           <Icon name={'more-vertical'} width={25} height={25} fill={"black"} />
         </TouchableOpacity>
       </View>
-
-
       <ScrollView scrollEventThrottle={16}>
         <View style={styles.body}>
           <View style={styles.methodPaySection}>
@@ -135,14 +128,12 @@ goToScreen(GoTo.route,send)
         </View>
       </ScrollView>
 
-
-
       <View style={styles.foot}>
         <View style={styles.footUp}>
           <Text style={[styles.footUpText, styles.footUpLeft]}>Total Payment</Text>
           <Text style={[styles.footUpText, styles.footUpRight]}>{currencyFormat(data.coin, totalPay)}</Text>
         </View>
-        {iAcceptTerms && iAcceptPorcent && methodPay !== 0?
+        {iAcceptTerms && iAcceptPorcent && methodPay !== 0 ?
           <TouchableOpacity style={styles.btnPay} onPress={() => goToPay()}>
             <Text style={styles.btnPayText}>To Pay</Text>
           </TouchableOpacity>
@@ -163,6 +154,54 @@ goToScreen(GoTo.route,send)
     </SafeAreaView>
   )
 }
+
+
+
+
+
+
+const CardMethodPay = (props) => {
+  let active, route
+
+  const [view, setview] = useState(false);
+
+  if (props.active === props.data.id) { active = true }
+  else { active = false }
+  const size = WIDTH * 4
+  return (
+
+
+    <TouchableOpacity
+      style={{
+        ...styles.methodPay,
+        width: size,
+        height: (size / 3) * 2,
+        borderWidth: active ? 2 : 6,
+        borderColor: active ? color_fifth : "white",
+
+      }}
+
+
+      onPress={() => props.set(props.data.id)}  
+      >
+    
+     {active &&
+        <View style={styles.methodPayActive}>
+          <Icon name={'checkmark-outline'} width={20} height={20} fill={color_fifth} />
+        </View>
+      }
+
+
+      <Image style={{ width: null, height: null, flex: 1, resizeMode:"center" }}
+        source={{ uri: `${file_server1}/img/wellezy/methodPay/${props.data.logo}` }}
+      />
+    </TouchableOpacity>
+
+  )
+}
+
+
+
 export default CheckOut;
 
 const styles = StyleSheet.create({
@@ -187,8 +226,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
-
   body: {
     paddingBottom: 60
   },
@@ -239,6 +276,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+
   iAgreeBtn: {
     backgroundColor: color_white,
     width: "100%",
@@ -292,31 +330,3 @@ const styles = StyleSheet.create({
     fontWeight: "800"
   },
 })
-
-
-const CardMethodPay = (props) => {
-  let active, route
-  if (props.active === props.data.id) { active = true }
-  else { active = false }
-  const size = WIDTH * 4
-  return (
-    <TouchableOpacity
-      style={{
-        ...styles.methodPay,
-        width: size,
-        height: (size / 3) * 2,
-        borderWidth: active ? 2 : 6,
-        borderColor: active ? color_fifth : "transparent",
-      }}
-      onPress={() => props.set(props.data.id)}>
-      {active &&
-        <View style={styles.methodPayActive}>
-          <Icon name={'checkmark-outline'} width={20} height={20} fill={color_fifth} />
-        </View>
-      }
-      <Image style={{ width: null, height: null, flex: 1, resizeMode: "cover", }}
-        source={{ uri: `${file_server1}/img/wellezy/methodPay/${props.data.logo}` }}
-      />
-    </TouchableOpacity>
-  )
-}

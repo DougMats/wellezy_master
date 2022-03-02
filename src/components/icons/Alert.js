@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { Icon } from 'react-native-eva-icons'
-import { cartShop } from '../../services/connection.js';
+import { notifications } from '../../services/connection.js';
 
 function Index(props) {
   const [count, setcount] = useState(0);
   useEffect(() => {
-    /*
     async function get() {
-      const res = await cartShop.getCartShop(props.user)
-      setcount(res.length)
+      const res = await notifications.GetNews(props.lang, props.user, props.rol)
+      const total = res.filter(obj => obj.view === 0).length
+      setcount(total)
     }
     get()
-    */
   }, [props]);
+
 
   return (
     <TouchableOpacity
-    //onPress={()=>props.goToScreen(null,null)}
+    onPress={()=>props.goToScreen('Profile', 5 )}
       style={{
         width: 35,
         height: 35,

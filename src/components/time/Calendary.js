@@ -8,9 +8,6 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const celda = windowWidth / 10
 
-
-
-
 function zfill(number, width) {
   var numberOutput = Math.abs(number);
   var length = number.toString().length;
@@ -30,12 +27,9 @@ function zfill(number, width) {
   }
 }
 
-
-
-
 function Calendary(props) {
-  const [date, setdate] = useState(props.data);
   const color = props.config.color
+
   let colorWrap, colorText
   if (props.config.theme === "" || props.config.theme === "light") {
     colorWrap = "white"
@@ -46,31 +40,23 @@ function Calendary(props) {
     colorText = "white"
   }
 
-  // minDateNow: false,
-  // hour: false,
-  // rangeDate: true,
+  const [date, setdate] = useState(props.data);
 
+  useEffect(() => {
+    if (date === false) {
+      const y = toDay.getFullYear()
+      const m = toDay.getMonth() + 1
+      const d = toDay.getDate()
+      const hoy = `${y}-${m}-${d}`
+      setdate(hoy)
+    }
+  }, [date]);
 
+  //its open select year
+  const [selectYearDirectly, setselectYearDirectly] = useState(false);
 
-
-  //   const [tip, settip] = useState(1);
-  //   // config={config}
-  //   // minDateNow : false,
-  //   // hour: false,
-  //   // rangeDate: true,
-  //   // open={openRange}
-  //   // close={setopenRange}
-  //   // getChange={getChangeSingle}
-  //   //get color 
-  //   
-  //   //set styles about theme (text and wrapper)
-  //   
-
-
-
-
-
-
+  //its open select month
+  const [selectMonthDirectly, setselectMonthDirectly] = useState(false);
 
   //courrent time it's today
   const toDay = new Date();
@@ -80,7 +66,6 @@ function Calendary(props) {
 
   //año seleccionado
   const [yearSelected, setyearSelected] = useState({ leap: false, value: 0 });
-
 
   //calcular año bisiesto
   function YEARLEAPER(y) {
@@ -103,12 +88,6 @@ function Calendary(props) {
     return status
   }
 
-
-
-
-
-
-
   //lista de meses con sus nombres y cantidad de dias
   const monthList = [
     { 'id': 0, 'name': 'enero', days: 31 },
@@ -127,30 +106,18 @@ function Calendary(props) {
 
   // mes seleccioando
   const [monthSelected, setmonthSelected] = useState({ id: 0, name: "", daysTotal: "", dayInitName: "", dayInitNumber: 0, dayInitPosition: 0 });
-
   // lista de los dias del mes seccionado
   const [monthSelectedDaysList, setmonthSelectedDaysList] = useState([]);
-
-
-
-
 
   //al iniciar el componente
   useEffect(() => {
     // año seleccionado sera igual al año actual
     setyearSelected(yearCurrent)
-
     //construir el mes segun el mes actual
     setmonthSelected(buildMonthCurrent(toDay.getMonth()))
-
-
-
-
     // setdayInit(props.init)
     // setdayEnd(props.end)
   }, [props.open]);
-
-
 
   //construir el mes por defecto
   function buildMonthCurrent(m) {
@@ -165,15 +132,10 @@ function Calendary(props) {
     return data
   }
 
-
-
-
   // construir el mes a partir del mes seleccionado
   useEffect(() => {
     builderMonth()
   }, [monthSelected]);
-
-
 
   // construir el mes
   async function builderMonth() {
@@ -192,46 +154,15 @@ function Calendary(props) {
     setmonthSelectedDaysList([...array])
   }
 
-
-
-
-
-
-
-
-
-
-
-
-  //     const [dayInit, setdayInit] = useState(""); //seleccionado inicio
-  //     const [dayEnd, setdayEnd] = useState(""); // seleccionado fin //2022-01-20
-
-  //   //   const [labelInit, setlabelInit] = useState(true);
-  //   //   const [labelEnd, setlabelEnd] = useState(false);
-
-  //   //   function switchLabel() {
-  //   //     setlabelInit(!labelInit)
-  //   //     setlabelEnd(!labelEnd)
-  //   //   }
-
-
-
-
-
-
-
-
   //cambiar de mes y año segun corresponda
   function changeMonth(v) {
     const id = monthSelected.id
     const mes = id + v
-
     if (mes === -1) {
       setyearSelected({ value: yearSelected.value - 1, leap: YEARLEAPER(yearSelected.value - 1) })
       const res = buildMonthCurrent(11)
       setmonthSelected(buildMonthCurrent(11))
     }
-
     else {
       if (mes === 12) {
         setyearSelected({ value: yearSelected.value + 1, leap: YEARLEAPER(yearSelected.value + 1) })
@@ -244,146 +175,100 @@ function Calendary(props) {
     }
   }
 
-
-
-
-
-
-
-
-  //   function returnData() {
-  //    const fechaInicio = new Date(dayInit).getTime();
-  //    const fechaFin = new Date(dayEnd).getTime();
-  //    const diferencia = fechaFin - fechaInicio;
-  //    const diff = diferencia / (1000 * 60 * 60 * 24)
-  //   console.log("............", diff);
-  //     let data = [dayInit, dayEnd, diff]
-  //     props.changeDate(data)
-  //   }
-
-
-
-
-
-
   function selectYear(v) {
     const value = yearSelected.value + v
     const newYear = {
       value: value,
       leap: YEARLEAPER(value)
     }
-    console.log("year -> ", newYear)
     setyearSelected(newYear)
-    console.log("calling...")
     builderMonth()
   }
 
-
-
-
   function getDay(day) {
-    console.log(" ::::::::::::::::::::::::::::::::::::::::::::::::::: ")
     setdate(day)
   }
-
-
 
   function send() {
     props.close(false)
     props.getChange(date)
   }
 
-  const [selectYearDirectly, setselectYearDirectly] = useState(false);
-
-  const [selectMonthDirectly, setselectMonthDirectly] = useState(false);
-
-
-
-
   return (
-    <Modal animationType="slide" transparent={true} visible={props.open} >
+    <Modal animationType="slide" transparent={true} visible={props.open}>
       <View style={styles.wrap}>
-
-
-
         {selectYearDirectly &&
           <View style={styles.wrapDirectly}>
-            {/*
-             <View style={{ backgroundColor: "rgba(255,255,255,0.25)", borderRadius: 12, padding: 5, flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
-               <View style={{ flexDirection: "row" }}>
-                 <TouchableOpacity style={{ width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => selectYear(-1)}>
-                   <Icon name={"minus-outline"} width={25} height={25} fill={"silver"} />
-                 </TouchableOpacity>
-                 <Text style={{
-                   backgroundColor: "rgba(255,255,255,0.25)",
-                   borderRadius: 12,
-                   lineHeight: 25,
-                   paddingHorizontal: 40,
-                   fontWeight: "bold",
-                   fontSize: 14,
-                   marginHorizontal: 10
-                 }}>{yearSelected.value}</Text>
-                 <TouchableOpacity style={{ width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => selectYear(+1)}>
-                   <Icon name={"plus-outline"} width={25} height={25} fill={"silver"} />
-                 </TouchableOpacity>
-               </View>
-               <TouchableOpacity style={{ marginLeft: 15, width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => setselectYearDirectly(false)}>
-                 <Icon name={"close"} width={25} height={25} fill={"silver"} />
-               </TouchableOpacity>
-             </View>
-                */}
+            <View style={{ backgroundColor: "rgba(255,255,255,0.25)", borderRadius: 12, padding: 5, flexDirection: "row", width: "100%", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity style={{ width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => selectYear(-1)}>
+                  <Icon name={"minus-outline"} width={25} height={25} fill={"silver"} />
+                </TouchableOpacity>
+                <Text style={{
+                  backgroundColor: "rgba(255,255,255,0.25)",
+                  borderRadius: 12,
+                  lineHeight: 25,
+                  paddingHorizontal: 40,
+                  fontWeight: "bold",
+                  fontSize: 14,
+                  marginHorizontal: 10
+                }}>{yearSelected.value}</Text>
+                <TouchableOpacity style={{ width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => selectYear(+1)}>
+                  <Icon name={"plus-outline"} width={25} height={25} fill={"silver"} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={{ marginLeft: 15, width: 30, height: 30, borderRadius: 30, justifyContent: "center", alignItems: "center", backgroundColor: "white" }} onPress={() => setselectYearDirectly(false)}>
+                <Icon name={"close"} width={25} height={25} fill={"silver"} />
+              </TouchableOpacity>
+            </View>
           </View>
         }
-
         {selectMonthDirectly &&
           <View style={styles.wrapDirectly}>
-            {/* <TouchableOpacity
-               onPress={() => setselectMonthDirectly(false)}
-               style={{
-                 position: "absolute",
-                 top: 5,
-                 right: 5,
-                 zIndex: 999,
-               }}>
-               <Icon name={"close"} width={25} height={25} fill={"white"} />
-             </TouchableOpacity> *}
-             {monthList.map((i, key) => {
-               return (
-                 <TouchableOpacity
-                   onPress={() => [setmonthSelected(buildMonthCurrent(i.id)), setselectMonthDirectly(false)]}
-                   style={{
-                     width: celda * 2.7,
-                     backgroundColor: monthSelected.id === i.id ? "white" : "rgba(255,255,255,0.25)",
-                     marginHorizontal: 2,
-                     marginVertical: 3,
-                     justifyContent: "center",
-                     alignItems: "center",
-                     padding: 5,
-                     borderRadius: 8
-                   }}
-                   key={key}>
-                   <Text style={{
-                     color: monthSelected.id === i.id ? props.color : "#1C2833",
-                     fontWeight: "bold",
-                     textTransform: "capitalize"
-                   }}>{i.name}</Text>
-                 </TouchableOpacity>
-               )
-             })}
-
-              */}
+            <TouchableOpacity
+              onPress={() => setselectMonthDirectly(false)}
+              style={{
+                backgroundColor: "silver",
+                borderWidth: 2,
+                borderColor: "white",
+                width: 30,
+                height: 30,
+                borderRadius: 30,
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                top: -5,
+                right: -5,
+                zIndex: 999,
+              }}>
+              <Icon name={"close"} width={25} height={25} fill={"white"} />
+            </TouchableOpacity>
+            {monthList.map((i, key) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => [setmonthSelected(buildMonthCurrent(i.id)), setselectMonthDirectly(false)]}
+                  style={{
+                    width: celda * 2.7,
+                    backgroundColor: monthSelected.id === i.id ? "white" : "rgba(255,255,255,0.25)",
+                    marginHorizontal: 2,
+                    marginVertical: 3,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    padding: 5,
+                    borderRadius: 8
+                  }}
+                  key={key}>
+                  <Text style={{
+                    color: monthSelected.id === i.id ? props.color : "#1C2833",
+                    fontWeight: "bold",
+                    textTransform: "capitalize"
+                  }}>{i.name}</Text>
+                </TouchableOpacity>
+              )
+            })}
           </View>
         }
-
-
-
-
-        <View style={{
-          backgroundColor: colorWrap,
-          width: celda * 9,
-          borderRadius: 12,
-          overflow: "hidden"
-        }}>
+        <View style={{ backgroundColor: colorWrap, width: celda * 9, borderRadius: 12, overflow: "hidden" }}>
           <View style={{ flexDirection: "row" }}>
             <TouchableOpacity onPress={() => changeMonth(-1)} style={{ width: celda, height: celda, justifyContent: "center", alignItems: "center" }}>
               <Icon name="arrow-left" width={20} height={20} fill={"silver"} />
@@ -400,7 +285,6 @@ function Calendary(props) {
               <Icon name="arrow-right" width={20} height={20} fill={"silver"} />
             </TouchableOpacity>
           </View>
-
           <View style={styles.wrapper}>
             <View style={styles.header}>
               <Text style={styles.nameDay}>Dom</Text>
@@ -411,7 +295,6 @@ function Calendary(props) {
               <Text style={styles.nameDay}>Vie</Text>
               <Text style={styles.nameDay}>Sáb</Text>
             </View>
-
             {monthSelectedDaysList.length !== 0 && monthSelectedDaysList.map((i, key) => {
               return (
                 <DAY
@@ -421,34 +304,87 @@ function Calendary(props) {
                   color={color}
                   getDay={getDay}
                   toDay={toDay}
+                  minDateNow={props.config.minDateNow}
                 />
               )
-            })
-            }
+            })}
             <View style={styles.wrapperFoot}>
               <TouchableOpacity style={{ ...styles.wrapperFootBtnCancel, borderColor: color }} onPress={() => props.close(false)}>
                 <Text style={{ ...styles.wrapperFootBtnCancelText, color: color }}>Cancelar</Text>
               </TouchableOpacity>
-
               <TouchableOpacity style={{ ...styles.wrapperFootBtnAccept, backgroundColor: color }} onPress={() => send()}>
                 <Text style={{ ...styles.wrapperFootBtnAcceptText, }}>Aceptar</Text>
               </TouchableOpacity>
             </View>
-
-
           </View>
         </View>
       </View>
-
     </Modal>
   )
 }
 export default React.memo(Calendary);
 
+const DAY = (props) => {
+  const day = props.value.date.split("-")[2]
 
+  function itsActive() {
+    let res = false
+    if (props.date !== null) {
+      const select = props.date.split("-")[2]
+      if (day === select) { res = true }
+    }
+    return res
+  }
+
+  function _position(p) {
+    let res = 0
+    if (p === "01") {
+      var DAY = new Date(props.value.date);
+      const first = DAY.getDay() + 1
+      if (first === 7) {
+        res = 0
+      }
+      else {
+        res = first
+      }
+    }
+    return res;
+  }
+
+  function check(day) {
+    const toDay = new Date();
+    const Y = toDay.getFullYear()
+    const M = zfill(toDay.getMonth() + 1, 2)
+    const D = zfill(toDay.getDate(), 2)
+    const today = Y + "-" + M + "-" + D
+    if (props.minDateNow === true) {
+      if (day >= today) {
+        props.getDay(day)
+      }
+      else {
+        Toast.show(`minimum day ${D}`)
+      }
+    }
+    else {
+      props.getDay(day)
+    }
+  }
+  let active = itsActive()
+  let position = _position(day);
+  return (
+    <TouchableOpacity onPress={() => check(props.value.date)}
+      style={{
+        margin: 1, justifyContent: "center", alignItems: "center",
+        borderRadius: celda, width: celda, height: celda,
+        backgroundColor: active ? props.color : "white",
+        marginLeft: (celda * position) + 1
+      }}>
+      <Text style={{ fontSize: 14, color: active === true ? "white" : "silver" }}>{day}</Text>
+    </TouchableOpacity>
+  )
+}
 
 const styles = StyleSheet.create({
-
   wrapDirectly: {
     backgroundColor: "silver",
     width: celda * 9,
@@ -460,12 +396,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     flexDirection: 'row',
     flexWrap: 'wrap',
-
   },
-
-
-
-
   wrap: {
     backgroundColor: "rgba(0,0,0,0.7)",
     width: "100%",
@@ -516,94 +447,3 @@ const styles = StyleSheet.create({
     color: "white"
   }
 })
-
-
-
-
-
-
-const DAY = (props) => {
-
-
-
-
-
-  const day = props.value.date.split("-")[2]
-
-
-
-  function itsActive() {
-    let res = false
-    if (props.date !== null) {
-      const select = props.date.split("-")[2]
-      if (day === select) { res = true }
-    }
-    return res
-  }
-
-  let active = itsActive()
-
-
-
-
-
-
-
-
-  function _position(p) {
-    let res = 0
-    if (p === "01") {
-      var DAY = new Date(props.value.date);
-      const first = DAY.getDay() + 1
-      console.log("el primer dia:", p, ":", first)
-
-      if (first === 7) {
-        res = 0
-      }
-      else{
-        res = first
-      }
-    }
-    return res;
-  }
-
-
-  let position = _position(day);
-
-  function check(day) {
-    const toDay = new Date();
-    const Y = toDay.getFullYear()
-    const M = zfill(toDay.getMonth() + 1, 2)
-    const D = zfill(toDay.getDate(), 2)
-    const today = Y + "-" + M + "-" + D
-    if (day >= today) {
-      props.getDay(day)
-    }
-    else {
-      Toast.show(`minimum day ${D}`)
-    }
-  }
-
-  return (
-    <TouchableOpacity
-      onPress={() => check(props.value.date)}
-      style={{
-        margin: 1,
-        borderRadius: celda,
-        width: celda,
-        height: celda,
-        backgroundColor: active ? props.color : "white",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: (celda * position)+1
-      }}>
-      <Text
-        style={{
-          fontSize: 14,
-          color: active === true ? "white" : "silver"
-        }}>
-        {day}
-      </Text>
-    </TouchableOpacity>
-  )
-}

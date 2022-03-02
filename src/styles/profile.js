@@ -28,7 +28,7 @@ const profile = StyleSheet.create({
   profileHeader: {
     flexDirection: "column",
     width: "100%",
-    height: windowWidth / 1.3,
+    height: windowWidth / 1.5,
     alignItems: "center",
     justifyContent: "center"
   },
@@ -47,9 +47,9 @@ const profile = StyleSheet.create({
     borderWidth: 3,
     borderColor: color_white,
     overflow: "hidden",
-    width: windowWidth / 2.5,
-    height: windowWidth / 2.5,
-    borderRadius: windowWidth / 2.5,
+    width: windowWidth / 3.5,
+    height: windowWidth / 3.5,
+    borderRadius: windowWidth / 3.5,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,

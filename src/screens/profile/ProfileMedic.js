@@ -25,12 +25,15 @@ import LinearGradient from 'react-native-linear-gradient';
 import MenuVertical from '../../components/generic/MenuVertical.js';
 import { file_server1 } from '../../../Env'
 
+import { profile, notifications } from '../../services/connection.js';
 
-
+import Head from './components/Head.js'
 
 
 import MyServices from '../../components/profile/med/MyServices.js'
 
+
+import ProfileNotifications from './pages/ProfileNotifications.js';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -43,12 +46,29 @@ function ProfileMedic(props) {
   const [vertical, setvertical] = useState(false);
   const [Page, setPage] = useState(1);
   const [headColor, setheadColor] = useState(color_primary);
+  const [Load, setLoad] = useState(true);
+  const [Data, setData] = useState(false);
+  const [notificationsList, setnotificationsList] = useState([]);
+
+
+
   const ListProfile = [
-    { value: 1, status: 1, icon: 'person-outline' },
-    { value: 2, status: 1, icon: 'activity'/*'message-circle-outline'*/ },
-    { value: 3, status: 1, icon: 'folder-add-outline' },
-    { value: 4, status: 1, icon: 'bell-outline' },
-    { value: 5, status: 1, icon: 'settings-outline' },
+
+    // { value: 1, name: 'person-outline', counter: 0 },       //perfil
+    // { value: 2, name: 'settings-outline', counter: 0 },
+    // { value: 3, name: 'message-circle-outline', counter: 0 },
+    // { value: 4, name: 'folder-add-outline', counter: 0 },
+    // { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
+    // { value: 6, name: 'heart', counter: 0 }
+
+
+    { value: 1, status: 1, icon: 'person-outline', counter: 0 },
+    { value: 2, status: 1, icon: 'activity', counter: 0},
+    { value: 3, status: 1, icon: 'folder-add-outline', counter: 0 },
+    { value: 4, status: 1, icon: 'settings-outline', counter: 0 },
+    { value: 5, status: 1, icon: 'bell-outline', counter: 0 },
+    { value: 6, status: 1, icon: 'settings-outline' , counter: 0},
+   
   ];
 
 
@@ -56,6 +76,22 @@ function ProfileMedic(props) {
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
+
+
+
+  async function get() {
+    setLoad(true)
+    const res = await profile.getProfile(userDetails.id, userDetails.rol)
+    setData(res)
+
+    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+    setnotificationsList(noti)
+
+    setLoad(false)
+  }
+
+
+
 
   //console.log("userDetails: ", userDetails)
   /*
@@ -101,6 +137,8 @@ props.navigation.navigate(screen, { randomCode: Math.random(), data })
 
 
 
+
+
   {/*
 <Text>{userDetails.city}</Text>
 <Text>{userDetails.country}</Text>
@@ -113,6 +151,13 @@ props.navigation.navigate(screen, { randomCode: Math.random(), data })
 <Text>{userDetails.photo_profile}</Text>
 <Text>{userDetails.telefono}</Text>
 */}
+
+
+
+
+function goToScreenData(data) {
+  console.log("..........", data)
+}
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
@@ -127,6 +172,19 @@ props.navigation.navigate(screen, { randomCode: Math.random(), data })
             sticker(y)
           }}>
 
+
+<Head
+          user={userDetails}
+          color_primary={color_primary}
+          color_secondary={color_secondary}
+          color_white={color_white}
+          back={props.navigation.goBack}
+          setvertical={setvertical}
+        />
+
+
+
+{/*         
           <LinearGradient
             colors={[color_fifth, color_fifth, color_fifth, color_primary]}
             start={{ x: 0, y: 0 }}
@@ -153,7 +211,7 @@ props.navigation.navigate(screen, { randomCode: Math.random(), data })
               <Text style={{ lineHeight: 17, marginLeft: 10, color: color_white, fontSize: 14 }}>{userDetails.email}</Text>
             </View>
           </LinearGradient>
-
+ */}
 
 
 
@@ -182,6 +240,9 @@ props.navigation.navigate(screen, { randomCode: Math.random(), data })
           {Page === 2 && <Statistics data={data} Load={Load} />}
           */}
           {Page === 3 && <MyServices /*data={data}*/ /*Load={Load}*/ userDetails={userDetails} goToScreen={goToScreen} />}
+
+          {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} />}
+
           {/*
           {Page === 5 && <Setting data={data} Load={Load} />}          
           */}

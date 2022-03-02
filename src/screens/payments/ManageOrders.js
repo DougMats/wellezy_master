@@ -234,7 +234,6 @@ function ManageOrders(props) {
 
     const res = await valorations.insertcartshop(newData)
     console.log("insert es: ", res)
-
     //     `cartShop`
     //     id	id_client	 id_medic created_at	update_at 
 
@@ -244,6 +243,11 @@ function ManageOrders(props) {
     // cartShopChild
     // id	id_father	code	name	description	price	qty	img	coin	relation	created_at	update_at
   }
+
+
+
+
+  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
