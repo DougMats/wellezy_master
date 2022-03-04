@@ -46,7 +46,7 @@ function Home(props) {
 
   useEffect(() => {
     if (appStateVisible !== "active") {
-      console.log("*** se salio, colgar llamada", appStateVisible)
+      console.log("se salio, colgar llamada", appStateVisible) //userDetails.name, 
       JitsiMeet.endCall();
     } else {
       console.log("*** in the app ", appStateVisible)

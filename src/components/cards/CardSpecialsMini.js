@@ -25,7 +25,6 @@ function CardSpecials(props) {
   const { t, i18n } = useTranslation();
   const [displayDescription, setdisplayDescription] = useState(false);
   const coin = "$"
-
   return (
     <TouchableOpacity
     onPress={()=>props.goToScreen("SpecialView",props.data)}
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
   wrap: {
     backgroundColor: color_white,
     alignItems: "center",
-    width: windowWidth / 2.5,
+   // width: windowWidth / 2.5,
     marginHorizontal: 2,
     marginVertical: 10,
     borderRadius: 12,
@@ -91,18 +90,21 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: 10
   },
+
   title: {
     color: color_black,
     fontWeight: "bold",
     fontSize: 16,
     width: "100%"
   },
+
   descount: {
     position: "absolute",
     zIndex: 999,
-    top: 5,
-    right: 5
+    top: 0,
+    right: 0
   },
+
   priceTotal: {
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',

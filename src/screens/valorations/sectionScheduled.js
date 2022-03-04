@@ -51,53 +51,60 @@ function SectionClient(props) {
     setState({ scrollEnabled: true });
   }
 
-
-
-  // const status = globalStatusValoration(props.data.status,4)
-
   return (
-    <View style={{ paddingBottom: 80 }}>
-      {/* <View style={{ borderColor: color_white, borderWidth: 2, marginTop: 20, width: 150, height: 150, borderRadius: 150, backgroundColor: "silver", alignSelf: "center", overflow: "hidden" }}>
-        <Image style={{ width: null, height: null, flex: 1, resizeMode: "cover" }} source={{ uri: `${file_server1}/img/category/picture/${props.data.foto}` }} />
+    <View style={{ backgroundColor: color_white, paddingHorizontal: 20, paddingBottom: 80 }}>
+      <Text>{props.data.valoration.id}</Text>
+      <Text>{props.data.valoration.status}</Text>
+      <Text>{props.data.valoration.id_medic}</Text>
+      <Text>{props.data.valoration.id_client}</Text>
+      <Text>{props.data.valoration.names}</Text>
+      <Text>{props.data.valoration.surnames}</Text>
+      <Text>{props.data.valoration.phone}</Text>
+      <Text>{props.data.valoration.email}</Text>
+      <Text>{props.data.valoration.id_category}</Text>
+      <Text>{props.data.valoration.id_subcategory}</Text>
+      <Text>{props.data.valoration.created_at}</Text>
+      <Text>{props.data.valoration.updated_at}</Text>
+      <Text>{props.data.valoration.category_name}</Text>
+      <Text>____________________________</Text>
+      <Text>{props.data.scheduled.id}</Text>
+      <Text>{props.data.scheduled.id_valoration}</Text>
+      <Text>{props.data.scheduled.status}</Text>
+      <Text>{props.data.scheduled.key_generated}</Text>
+      <Text>{props.data.scheduled.scheduled_date}</Text>
+      <Text>{props.data.scheduled.scheduled_time}</Text>
+      <Text>{props.data.scheduled.created_at}</Text>
+      <Text>{props.data.scheduled.updated_at}</Text>
+
+
+{/* 
+<View style={styles.group}><Text style={styles.label}>Key</Text><Text style={styles.text}>{props.data.key_generated}</Text></View> */}
+
+
+
+
+{/* 
+      <View>
+        <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
+          <Text style={styles.btnText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
+          <Text style={styles.btnText}>Cancelar</Text>
+        </TouchableOpacity>
       </View> */}
-      <View style={{ marginTop: 30, zIndex: -9, backgroundColor: color_white, width: "90%", alignSelf: "center", paddingTop: 40, paddingHorizontal: 20 }}>
-        <View style={styles.group}><Text style={styles.label}>Status</Text>
-        
-        
-        
-        {/* <Text style={{...styles.text,color: status[0]}}>{status[2]}</Text> */}
-
-        <Text>***{props.data.status}***</Text>
-        </View>
 
 
-        <View style={styles.group}><Text style={styles.label}>Key</Text><Text style={styles.text}>{props.data.key_generated}</Text></View>
-        <View style={styles.group}><Text style={styles.label}>Fecha</Text><Text style={styles.text}>{props.data.scheduled_date}</Text></View>
-        <View style={styles.group}><Text style={styles.label}>Hora</Text><Text style={styles.text}>{props.data.scheduled_time}</Text></View>
-        <View style={styles.group}><Text style={styles.label}>Editado</Text><Text style={styles.text}>{props.data.created_at}</Text></View>
-
-        <View>
-          <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
-            <Text style={styles.btnText}>Editar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
-            <Text style={styles.btnText}>Cancelar</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
-            <Text style={styles.btnText}>Entrar</Text>
-          </TouchableOpacity>
-        </View>
+      <TouchableOpacity onPress={() => props.setview("manage")} style={styles.btn}>
+        <Text style={styles.btnText}>Entrar</Text>
+      </TouchableOpacity>
 
 
-      </View>
     </View>
   )
 }
 
-export default React.memo(SectionClient);
 
+export default React.memo(SectionClient);
 const styles = StyleSheet.create({
   group: {
     marginBottom: 15,

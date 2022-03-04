@@ -24,7 +24,7 @@ const VALORATIONS = () => ({
   //traer la informacion general de esta valoracion
   getThisValoration: async (len, id) => {
     let res
-    //console.log("getThisValoration --->", base_url(serverCrm, `wellezy/med/get/this/valoration/${len}/${id}`))
+    console.log("*** get This Valoration --->", base_url(serverCrm, `wellezy/med/get/this/valoration/${len}/${id}`))
     await axios.get(base_url(serverCrm, `wellezy/med/get/this/valoration/${len}/${id}`)).then(function (response) {
       res = response.data
     })
@@ -55,10 +55,20 @@ const VALORATIONS = () => ({
 
 
 
+  updateDateValoration: async (data) =>{
+    let res
+    await axios.post(base_url(serverCrm, `update/valoration/date`),data).then(function (response) {
+      res = response.data
+    })
+      .catch(() => {
+        return false
+      })
+    return res;
+  },
+
+
   updateStateValoration: async (id, state) =>{
     let res
-    console.log("...",id)
-    console.log("...",state)
     await axios.get(base_url(serverCrm, `update/valoration/state/${id}/${state}`)).then(function (response) {
       res = response.data
     })

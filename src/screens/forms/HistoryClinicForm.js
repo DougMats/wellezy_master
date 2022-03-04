@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { Keyboard, SafeAreaView, StatusBar, ScrollView, StyleSheet, TextInput, Modal, Text, Image, View, TouchableOpacity, ActivityIndicator, Linking, Alert } from 'react-native'
-import UserContext from '../../../contexts/UserContext'
+import React, { useState, useEffect, useCallback } from 'react';
+import { Keyboard, SafeAreaView, ScrollView, StyleSheet, TextInput, Modal, Text, Image, View, TouchableOpacity, ActivityIndicator, Linking, Alert } from 'react-native'
 import Head from '../../components/generic/Head';
 import Menu from '../../components/generic/Menu';
 import MenuVertical from '../../components/generic/MenuVertical.js';
@@ -10,48 +9,17 @@ import { Icon } from 'react-native-eva-icons';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 
-
-
-// import BTN from '../components/BTN.js';
-// import axios from 'axios';
-// import { base_url, serverCrm } from '../Env.js';
-// import Toast from 'react-native-simple-toast';
-// import { zfill} from '../components/Time/logic.js'
-
 import {
   color_primary,
   color_secondary,
-  color_tertiary,
-  color_quarter,
   color_fifth,
   color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
   color_screen,
-  color_star
 } from '../../styles/Colors.js'
 
-
 function HistoryClinicForm(props) {
-  //languages
   const { t, i18n } = useTranslation();
-
-  //menu vertical
   const [vertical, setvertical] = useState(false);
-
-
-
-
-
-
-
-
-  //peso y altura
   const [getEPS, setgetEPS] = useState(false);
   const [float, setfloat] = useState({
     altura: 150,
@@ -72,17 +40,6 @@ function HistoryClinicForm(props) {
     }
   }, [getEPS]);
 
-
-
-
-
-
-
-
-
-
-
-
   //hijos
   const [hijos, sethijos] = useState(1);
   const [gethijos, setgethijos] = useState(false);
@@ -97,20 +54,10 @@ function HistoryClinicForm(props) {
     }
   }
 
-
-
-
   //consume alcohol
   const [alcohol, setalcohol] = useState(false);
-
   //fuma
   const [fuma, setfuma] = useState(false);
-
-
-
-
-
-
 
   //operaciones realiadas
   const [operacionesGet, setoperacionesGet] = useState(false);
@@ -152,15 +99,6 @@ function HistoryClinicForm(props) {
   }, [operacionesGet]);
 
 
-
-
-
-
-
-
-
-
-
   //medicamentos
   const [medicamentosGet, setmedicamentosGet] = useState(false);
   const [medicamentosLista, setmedicamentosLista] = useState([]);
@@ -200,19 +138,6 @@ function HistoryClinicForm(props) {
     }
   }, [medicamentosGet]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   //enfermedades
   const [enfermedadesGet, setenfermedadesGet] = useState(false);
   const [enfermedadesLista, setenfermedadesLista] = useState([]);
@@ -251,17 +176,6 @@ function HistoryClinicForm(props) {
     }
   }, [enfermedadesGet]);
 
-
-
-
-
-
-
-
-
-
-
-
   //alergias
   const [alergiasGet, setalergiasGet] = useState(false);
   const [alergiasLista, setalergiasLista] = useState([]);
@@ -299,21 +213,6 @@ function HistoryClinicForm(props) {
       setalergiasLista([]);
     }
   }, [alergiasGet]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //drogas
   const [drogasGet, setdrogasGet] = useState(false);
@@ -356,25 +255,13 @@ function HistoryClinicForm(props) {
     }
   }, [drogasGet]);
 
-
-
-
-
-
-
-
-
-  // Terminos & Condiciones
   const [TerminosCondiciones, setTerminosCondiciones] = useState(false);
   const url = "https://www.youtube.com/watch?v=VEDVL-Z_JhM&t=868s";
   const url1 = "https://pdtclientsolutions.com/phpmyadmin/sql.php?db=telesaludapp&token=47737e342000550ddf1993a8c8990c26&goto=db_structure.php&table=app_telesalud_citas&pos=0";
   const OpenURLButton = ({ url, children }) => {
     const handlePress = useCallback(async () => {
-      // Checking if the link is supported for links with custom URL scheme.
       const link = await Linking.canOpenURL(url);
       if (link) {
-        // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-        // by some browser in the mobile
         await Linking.openURL(url);
       } else {
         Alert.alert(`Don't know how to open this URL: ${url}`);
@@ -382,7 +269,6 @@ function HistoryClinicForm(props) {
     }, [url]);
     return <Text style={styles.bold} onPress={handlePress}> {children} </Text>;
   };
-
 
   async function save() {
     if (TerminosCondiciones === false) {
@@ -394,7 +280,7 @@ function HistoryClinicForm(props) {
       let data = {
         id_cita: props.route.params.data.id,
         id_medic: props.route.params.data.id_medic,
-        id_client: props.route.params.data.id_cliente,
+        id_client: props.route.params.data.id_client,
         hijos: hijos,
         eps: getEPS === false ? "no" : float.eps,
         fuma: fuma === true ? 'si' : 'no',
@@ -422,7 +308,6 @@ function HistoryClinicForm(props) {
     }
   }
 
-
   const [modal, setmodal] = useState(false);
   const [Load, setLoad] = useState(false);
   const [successful, setsuccessful] = useState(false);
@@ -433,80 +318,17 @@ function HistoryClinicForm(props) {
     if (successful === true) {
       console.log("... finishing")
       setTimeout(() => {
-
         setmodal(false)
         setLoad(false)
         setsuccessful(false)
-        goToBack()
-      }, 3000);
+        goToScreen("ValorationView", { id: props.route.params.data.id })
+      }, 5000);
     }
   }, [successful]);
 
-
-  function goToBack() {
-    props.navigation.goBack()
-  }
-
-
-
-
-  // const [dataActual, setdataActual] = useState(null);
-  //useEffect(() => {
-  // if (dataActual !== null) {
-  //   setLoad(false)
-  //   console.log(dataActual)
-  //   if (dataActual.state === 3) {
-  //     setsuccessful("done");
-  //     setTimeout(() => {
-  //       goToScreen("Sala")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.state === 4) {
-  //     setsuccessful("cancel");
-  //     setTimeout(() => {
-  //       goToScreen("Dashboard")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.photos === "si" && dataActual.state === 0) {
-  //     setsuccessful("hc");
-  //     setTimeout(() => {
-  //       goToScreen("HistoryClinic")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.photos === "si" && dataActual.state === 1) {
-  //     setsuccessful("ph");
-  //     setTimeout(() => {
-  //       goToScreen("UploadPhotos")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.photos === "si" && dataActual.state === 2) {
-  //     setsuccessful("ready");
-  //     setTimeout(() => {
-  //       goToScreen("Sala")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.photos === "no" && dataActual.state === 0) {
-  //     setsuccessful("hc");
-  //     setTimeout(() => {
-  //       goToScreen("HistoryClinic")
-  //     }, 5000);
-  //   }
-  //   if (dataActual.photos === "no" && dataActual.state === 1) {
-  //     setsuccessful("ready");
-  //     setTimeout(() => {
-  //       goToScreen("Sala")
-  //     }, 5000);
-  //   }
-  // }
-  // else { console.log("dataActual null"); }
-  //}, [dataActual]);
-
-
   function goToScreen(screen, data) {
-    navigation.navigate(screen, { randomCode: Math.random(), data })
+    props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
-
-
 
 
   const [keyboardStatus, setKeyboardStatus] = useState(false);
@@ -524,30 +346,24 @@ function HistoryClinicForm(props) {
   }, []);
 
   useEffect(() => {
-    if (keyboardStatus === false && operacionesGet  === true && operacion.name !== ""  ) {operacionAdd()}
-    if (keyboardStatus === false && medicamentosGet === true && medicamento.name !== "") {medicamentoAdd()}
-    if (keyboardStatus === false && enfermedadesGet === true && enfermedad.name !== "" ) {enfermedadAdd()}
-    if (keyboardStatus === false && alergiasGet     === true && alergia.name !== ""    ) {alergiaAdd()}
-    if (keyboardStatus === false && drogasGet       === true && droga.name !== ""      ) {drogaAdd()}
+    if (keyboardStatus === false && operacionesGet === true && operacion.name !== "") { operacionAdd() }
+    if (keyboardStatus === false && medicamentosGet === true && medicamento.name !== "") { medicamentoAdd() }
+    if (keyboardStatus === false && enfermedadesGet === true && enfermedad.name !== "") { enfermedadAdd() }
+    if (keyboardStatus === false && alergiasGet === true && alergia.name !== "") { alergiaAdd() }
+    if (keyboardStatus === false && drogasGet === true && droga.name !== "") { drogaAdd() }
   }, [keyboardStatus]);
-
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
-
       <Head props={props} return=""
         show={vertical}
         action={setvertical}
       />
-
       <LinearGradient colors={[color_secondary, color_primary, color_fifth, color_fifth, color_primary]}
         style={styles.imageBackground}>
         <ScrollView>
-
           <View style={styles.wrapper}>
             <View style={styles.wrap}>
-
-              {/* cabezera del formulario - init */}
               <View style={{ marginTop: 20, paddingBottom: 10, borderBottomColor: "silver", borderBottomWidth: 1, justifyContent: "center", alignItems: "center", alignContent: "center" }}>
                 <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 18, width: "90%", }}>Historia Clínica.</Text>
                 <View style={{ width: 180, height: 140 }}>
@@ -555,9 +371,6 @@ function HistoryClinicForm(props) {
                 </View>
                 <Text style={{ textAlign: "center", fontSize: 12, width: "90%", color: "#777", marginVertical: 10 }}>Complete el siguiente formulario correctamente.</Text>
               </View>
-              {/* cabezera del formulario - end */}
-
-
 
               <View style={[styles.bigGroup, { borderBottomColor: "silver", paddingVertical: 10, borderBottomWidth: 1 }]}>
                 <View style={{ flexDirection: "row", marginTop: 10 }}>
@@ -574,7 +387,6 @@ function HistoryClinicForm(props) {
                 </View>
               </View>
 
-
               <View style={[styles.bigGroup, { borderBottomColor: "silver", paddingVertical: 10, borderBottomWidth: 1 }]}>
                 <View style={{ flexDirection: "row", marginTop: 10 }}>
                   <Text style={{ marginLeft: 10, width: "30%", fontSize: 14, fontWeight: "bold", lineHeight: 35 }}>Peso (Kg):</Text>
@@ -589,7 +401,6 @@ function HistoryClinicForm(props) {
                   </View>
                 </View>
               </View>
-
 
               <View style={[styles.bigGroup, { borderBottomColor: "silver", paddingVertical: 10, borderBottomWidth: 1 }]}>
                 <Text style={styles.bigGroupLabel}>Tiene Hijos?</Text>
@@ -625,7 +436,6 @@ function HistoryClinicForm(props) {
                 </View>
               </View>
 
-
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
                   <Text style={styles.bigGroupLabel}>Ingiere Alcohol?</Text>
@@ -647,8 +457,6 @@ function HistoryClinicForm(props) {
                 </View>
               </View>
 
-
-
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
                   <Text style={styles.bigGroupLabel}>Fuma?</Text>
@@ -669,7 +477,6 @@ function HistoryClinicForm(props) {
                   </TouchableOpacity>
                 </View>
               </View>
-
 
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
@@ -712,7 +519,6 @@ function HistoryClinicForm(props) {
                   </View>
                 }
               </View>
-
 
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
@@ -799,14 +605,6 @@ function HistoryClinicForm(props) {
                   </View>
                 }
               </View>
-
-
-
-
-
-
-
-
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
                   <Text style={styles.bigGroupLabel}>Alérgias?</Text>
@@ -828,17 +626,16 @@ function HistoryClinicForm(props) {
                 </View>
                 {alergiasGet === true &&
                   <View>
-                    {
-                      alergiasLista.length >= 1 && alergiasLista.map((i, key) => {
-                        return (
-                          <View key={key} style={styles.bigGroupCard}>
-                            <Text style={styles.bigGroupCardText}>{i.descripcion}</Text>
-                            <TouchableOpacity style={styles.bigGroupCardBTN} onPress={() => alergiaDel(i.id)}>
-                              <Icon name='trash-outline' height={30} width={30} fill="silver" />
-                            </TouchableOpacity>
-                          </View>
-                        )
-                      })}
+                    {alergiasLista.length >= 1 && alergiasLista.map((i, key) => {
+                      return (
+                        <View key={key} style={styles.bigGroupCard}>
+                          <Text style={styles.bigGroupCardText}>{i.descripcion}</Text>
+                          <TouchableOpacity style={styles.bigGroupCardBTN} onPress={() => alergiaDel(i.id)}>
+                            <Icon name='trash-outline' height={30} width={30} fill="silver" />
+                          </TouchableOpacity>
+                        </View>
+                      )
+                    })}
                     <View style={styles.bigGroupFoot}>
                       <TextInput style={styles.bigGroupFootInput}
                         placeholderTextColor="#777" placeholder="Describir alérgia." value={alergia.name} onChangeText={text => onChangeTextalergias(text, 'name')} />
@@ -849,15 +646,6 @@ function HistoryClinicForm(props) {
                   </View>
                 }
               </View>
-
-
-
-
-
-
-
-
-
 
               <View style={styles.bigGroup}>
                 <View style={styles.bigGroupHead}>
@@ -880,17 +668,16 @@ function HistoryClinicForm(props) {
                 </View>
                 {drogasGet === true &&
                   <View>
-                    {
-                      drogasLista.length >= 1 && drogasLista.map((i, key) => {
-                        return (
-                          <View key={key} style={styles.bigGroupCard}>
-                            <Text style={styles.bigGroupCardText}>{i.descripcion}</Text>
-                            <TouchableOpacity style={styles.bigGroupCardBTN} onPress={() => drogaDel(i.id)}>
-                              <Icon name='trash-outline' height={30} width={30} fill="silver" />
-                            </TouchableOpacity>
-                          </View>
-                        )
-                      })}
+                    {drogasLista.length >= 1 && drogasLista.map((i, key) => {
+                      return (
+                        <View key={key} style={styles.bigGroupCard}>
+                          <Text style={styles.bigGroupCardText}>{i.descripcion}</Text>
+                          <TouchableOpacity style={styles.bigGroupCardBTN} onPress={() => drogaDel(i.id)}>
+                            <Icon name='trash-outline' height={30} width={30} fill="silver" />
+                          </TouchableOpacity>
+                        </View>
+                      )
+                    })}
                     <View style={styles.bigGroupFoot}>
                       <TextInput style={styles.bigGroupFootInput}
                         placeholderTextColor="#777" placeholder="Describir droga." value={droga.name} onChangeText={text => onChangeTextdrogas(text, 'name')} />
@@ -902,11 +689,6 @@ function HistoryClinicForm(props) {
                 }
               </View>
 
-
-
-
-              {/* 
-              const [getEPS, setgetEPS] = useState(false); */}
               <View style={[styles.bigGroup, { borderBottomColor: "silver", paddingVertical: 10, borderBottomWidth: 1 }]}>
                 <Text style={{ ...styles.bigGroupLabel, width: "100%", }}>Posees EPS, Seguro Social u otro?</Text>
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -918,7 +700,6 @@ function HistoryClinicForm(props) {
                     }
                     <Text style={{ lineHeight: 25, marginLeft: 10, fontSize: 14 }}>Si.</Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity onPress={() => setgetEPS(false)} style={{ marginLeft: 10, flexDirection: "row" }}>
                     {getEPS === false ?
                       <Icon name='checkmark-square-2-outline' height={30} width={30} fill={color_fifth} />
@@ -929,12 +710,6 @@ function HistoryClinicForm(props) {
                   </TouchableOpacity>
                 </View>
 
-
-
-
-
-
-
                 {getEPS === true &&
                   <View style={{ alignItems: "center", marginTop: 10 }}>
                     <Text>¿Cúal posees?</Text>
@@ -943,12 +718,11 @@ function HistoryClinicForm(props) {
                       placeholder="EPS / Seguro Social / Otros"
                       onChangeText={text => onChangedFloat(text, 'eps')}
                       value={`${float.eps}`}
-                      //maxLength={10}
                     />
                   </View>
                 }
-
               </View>
+
 
               <View style={{ marginTop: 20, flexDirection: "row" }}>
                 <TouchableOpacity onPress={() => setTerminosCondiciones(!TerminosCondiciones)} style={{ flexDirection: "row" }}>
@@ -957,34 +731,18 @@ function HistoryClinicForm(props) {
                     : <Icon name="square-outline" fill={"silver"} width={30} height={30} />
                   }
                 </TouchableOpacity>
-
                 <Text style={{ left: 10, textAlign: "center", fontSize: 12, width: "85%", }}>
                   Acepto las
                   <OpenURLButton url={url}><Text style={{ fontWeight: "bold" }}> Política de tratamientos de la información </Text></OpenURLButton>
                   de tratamiento de datos personales y Políticas de uso y seguridad.
                 </Text>
               </View>
-
-
-              <TouchableOpacity onPress={() => save()}
-                style={{
-                  width: "60%",
-                  backgroundColor: color_primary,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  alignSelf: "center",
-                  marginTop: 20,
-                  borderRadius: 12,
-                  paddingVertical: 5
-                }}>
+              <TouchableOpacity onPress={() => save()} style={{ width: "60%", backgroundColor: color_primary, flexDirection: "row", justifyContent: "center", alignItems: "center", alignSelf: "center", marginTop: 20, borderRadius: 12, paddingVertical: 5 }}>
                 <Icon name={"save-outline"} width={30} height={30} fill={color_white} />
                 <Text style={{ marginLeft: 10, color: color_white, fontWeight: "bold" }}>Guardar</Text>
               </TouchableOpacity>
-
             </View>
           </View>
-
         </ScrollView>
         <Menu props={props} option={2} />
       </LinearGradient>
@@ -997,19 +755,15 @@ function HistoryClinicForm(props) {
         />
       }
 
-
-
       <Modal animationType="slide" transparent={true} visible={modal} >
         <View style={{ backgroundColor: "rgba(0,0,0,0.8)", width: "100%", height: "100%", position: "absolute", zIndex: 999, justifyContent: "center", alignContent: "center", alignItems: "center", }}>
           <View style={{ backgroundColor: color_white, borderRadius: 20, width: "80%", padding: 20, justifyContent: "center", alignContent: "center", alignItems: "center", }}>
-
             {Load &&
               <View>
                 <ActivityIndicator color={color_primary} size={50} />
                 <Text style={{ marginTop: 20, color: color_primary }}>Cargando...</Text>
               </View>
             }
-
             {!Load && successful === true &&
               <>
                 <View style={{ width: 160, height: 160 }}>
@@ -1021,88 +775,12 @@ function HistoryClinicForm(props) {
                 <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Has completado los requisitos para entrar a la video valoración.</Text>
               </>
             }
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* 
-          {!Load && successful === "done" &&
-            <>
-              <View style={{ width: 160, height: 160 }}>
-                <Image
-                  style={{ width: null, height: null, resizeMode: "cover", flex: 1 }}
-                  source={require("../../images/formOne.png")}
-                />
-              </View>
-              <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Video valoración realizada.</Text>
-            </>
-          }
-
-          {!Load && successful === "cancel" &&
-            <>
-              <View style={{ width: 160, height: 160 }}>
-                <Image
-                  style={{ width: null, height: null, resizeMode: "cover", flex: 1 }}
-                  source={require("../../images/formOne.png")}
-                />
-              </View>
-              <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Video valoración cancelada</Text>
-            </>
-          }
-
-          {!Load && successful === "hc" &&
-            <>
-              <View style={{ width: 160, height: 160 }}>
-                <Image
-                  style={{ width: null, height: null, resizeMode: "cover", flex: 1 }}
-                  source={require("../../images/formOne.png")}
-                />
-              </View>
-              <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Aun no has completado los requisitos para entrar a la video valoración. {"\n"} Sólo falta un paso.</Text>
-            </>
-          }
-
-          {!Load && successful === "ph" &&
-            <>
-              <View style={{ width: 160, height: 160 }}>
-                <Image
-                  style={{ width: null, height: null, resizeMode: "cover", flex: 1 }}
-                  source={require("../../images/formOne.png")}
-                />
-              </View>
-              <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Aun no has completado los requisitos para entrar a la video valoración. {"\n"} Sólo falta un paso.</Text>
-            </>
-          }
-
-          {!Load && successful === "ready" &&
-            <>
-              <View style={{ width: 160, height: 160 }}>
-                <Image
-                  style={{ width: null, height: null, resizeMode: "cover", flex: 1 }}
-                  source={require("../../images/formThree.png")}
-                />
-              </View>
-              <Text style={{ textAlign: "center", fontWeight: "bold", fontSize: 16, width: "90%", marginVertical: 10 }}>Has completado los requisitos para entrar a la video valoración.</Text>
-            </>
-          }
-        */}
-
           </View>
         </View>
       </Modal>
-
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   imageBackground: {

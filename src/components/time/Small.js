@@ -4,6 +4,14 @@ import { View, Text, StyleSheet } from 'react-native'
 import { GetDiference,  GetDiference2, zfill } from './logic.js';
 
 function TimeOut(props) {
+
+
+
+
+
+
+
+
   const time = new Date();
   const [status, setstatus] = useState(false);
   //  const [count, setcount] = useState(GetDiference(props.days, props.hours.split('-')[0]));
@@ -11,6 +19,8 @@ function TimeOut(props) {
   let hora
   let valueA = props.hours.split('-')[0]
   let valueB = props.hours.split('-')[1]
+
+
   if (valueB === "PM") {
     let hh = valueA.split(":")[0]
     let h = parseInt(hh, 12) + 12;
@@ -63,7 +73,6 @@ function TimeOut(props) {
 function MyStopwatch({ size, color, w, dif }) {
   let stopwatchOffset = new Date();
   let diferencia = dif
-
   stopwatchOffset.setSeconds(stopwatchOffset.getSeconds() + diferencia);
   const {
     seconds,
@@ -78,7 +87,7 @@ function MyStopwatch({ size, color, w, dif }) {
     <View style={{ width: w, flexDirection: "column", justifyContent: "center", }}>
       <Text style={{ width: "100%", textAlign: "center", fontSize: 12, lineHeight: 20, fontWeight: "bold", color: color }}>La video valoración comenzó hace</Text>
       <View style={{ width: w, flexDirection: "row", justifyContent: "center", }}>
-        <Text style={[{ color: color, fontSize: size }, styles.number]}> {zfill(hours, 2)}: {zfill(minutes, 2)} : {zfill(seconds, 2)}</Text>
+        <Text style={[{ color: color, fontSize: size }, styles.number]}> {zfill(hours, 2)}:{zfill(minutes, 2)}:{zfill(seconds, 2)}</Text>
       </View>
     </View>
   );
@@ -114,4 +123,5 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
 })
+
 export default TimeOut;

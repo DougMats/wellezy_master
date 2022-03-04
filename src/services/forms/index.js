@@ -19,9 +19,10 @@ const FORMS = () => ({
     return res;
   },
 
+
   saveHistoryClinic: async (data) => {
-    console.log("data: ", data)
-    console.log(base_url(serverCrm, `clients/history/clinic`))
+    console.log("saveHistoryClinic data: ", data)
+    console.log(" saveHistoryClinic", base_url(serverCrm, `clients/history/clinic`))
     await axios.post(base_url(serverCrm, `clients/history/clinic`), data)
       .then(function (response) {
         res = response.data
@@ -33,6 +34,8 @@ const FORMS = () => ({
       })
     return res;
   },
+
+
 
   getHistoryClinic: async (client, id) => {
     let res

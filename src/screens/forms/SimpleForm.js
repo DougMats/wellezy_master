@@ -15,26 +15,20 @@ import {
   color_fifth,
   color_grey_dark,
 } from '../../styles/Colors.js'
-
 import { file_server1 } from '../../../Env'
-
-
-
-
 import styles from '../../styles/styles.js'
-
-
 import { toBase64Format } from '../../components/Logic.js'
+import RNFetchBlob from "rn-fetch-blob";
 
 function SimpleForm(props) {
+  const fs = RNFetchBlob.fs;
   const { t, i18n } = useTranslation();
   const [vertical, setvertical] = useState(false);
   const userDetails = useContext(UserContext).userDetails;
   const [Load, setLoad] = useState(false);
   const [FormOn, setFormOn] = useState(false);
 
-  const [formInfo, setFormInfo] = useState(
-    {
+  const [formInfo, setFormInfo] = useState({
       Nombres: userDetails.name,
       Apellidos: userDetails.surname,
       Email: userDetails.email,
@@ -47,14 +41,6 @@ function SimpleForm(props) {
       [key]: text
     })
   }
-
-
-
-
-
-
-
-
 
   function urlToBlob(url) {
     return new Promise((resolve, reject) => {
@@ -72,8 +58,6 @@ function SimpleForm(props) {
   }
 
 
-
-
   async function sendForm() {
     const data = { ...formInfo }
     if (
@@ -88,23 +72,20 @@ function SimpleForm(props) {
       setLoad(true);
       setFormOn(true);
       data.id_client = userDetails.id;
-      data.id_medic = props.route.params.id_MedicSource,//props.route.params.id_Medic;
+      data.id_medic = props.route.params.id_MedicSource,
       data.id_procedure = props.route.params.data.id;
       data.id_category = props.route.params.data.id_category;
       const response = await formularios.SimpleFormulario(data);
-
       if (response !== false) {
-        let imagen = ""
-        if (props.route.params.data.foto === undefined) {
-          imagen = toBase64Format(`${file_server1}/img/category/picture/${props.route.params.data.foto}`)
-        }
-        else {
-          imagen = "https://wellezy.com/wp-content/uploads/2020/12/Logo-final-wellezy-blanco.png"
-        }
-
-
-
-        
+        let imagen = props.route.params.data.foto
+        if (imagen !== undefined) { imagen = "https://wellezy.com/wp-content/uploads/2020/12/Logo-final-wellezy-blanco.png"}
+        let newImagen, imagePath = null;
+        newImagen = await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
+          .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
+          .then(base64Data => {
+            return base64Data
+            //return fs.unlink(imagePath);
+          });
         const toCar = {
           id_client: userDetails.id,
           id_medic: 2,
@@ -117,35 +98,18 @@ function SimpleForm(props) {
               description: "solicitud de video valoracion",
               price: 50,
               qty: 1,
-              img: imagen,
+              img: newImagen,
               coin: "$"
             }
           ]
         }
-
-
-
-        /*
-        var data = 'data:image/png;base64,...';
-        urlToBlob(data)
-
-        .then(blob => {
-            console.log(blob)
-        })
-          let imagen = urlToBlob(props.route.params.data.foto)
-          console.log("imagen: ", imagen)
-          toBase64Format
-        */
-
-
-
-
-
-
         const res = await cartShop.insertcartshop(toCar);
-
-
         if (res === true) {
+
+          console.log("save successful...!")
+          console.log("Angie Acosta -> Te Quiero.")
+
+
           setLoad(false);
           setTimeout(() => {
             setFormOn(false);
@@ -160,10 +124,7 @@ function SimpleForm(props) {
             goToScreen("Home", null);
           }, 3000);
         }
-
-
-
-      }
+     }
       else {
         setLoad(false)
         console.log("response..... response = false")
@@ -304,7 +265,8 @@ const styles2 = StyleSheet.create({
   wrap: {
     alignSelf: "center",
     borderRadius: 12,
-    marginVertical: "25%",
+    marginTop:20,
+    marginBottom:"25%",
     width: "90%",
     backgroundColor: "rgba(255,255,255,0.8)",
     alignSelf: "center",

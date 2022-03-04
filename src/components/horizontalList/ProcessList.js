@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, ActivityIndicator, TextInput, View, TouchableOpacity, Text, Image, Dimensions } from 'react-native';
+import { ScrollView, StyleSheet, ActivityIndicator, FlatList, TextInput, View, TouchableOpacity, Text, Image, Dimensions } from 'react-native';
 import { procedimientos } from '../../services/connection.js';
 import { useTranslation } from 'react-i18next';
 import { Icon } from 'react-native-eva-icons';
@@ -40,10 +40,13 @@ function ProcessList(props) {
     setLoad(false)
   }
 
+  
 
+  const renderItem = ({ item }) => (
+    <Card data={item} goToScreen={props.goToScreen}/>
+  );
 
-  console.log("lenguaje actual: ", i18n.language)
-
+if(data.length > 0){
   return (
     <View style={styles.wrap}>
       <View style={styles.head}>
@@ -54,6 +57,19 @@ function ProcessList(props) {
           <Text style={styles.btnText}>ver más</Text>
         </TouchableOpacity>
       </View>
+
+      
+
+      <FlatList
+        horizontal={true}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
+  
+
+
+      {/*
       <View style={styles.body}>
         {Load === true ?
           <ActivityIndicator color={color_primary} size={40} />
@@ -67,13 +83,22 @@ function ProcessList(props) {
           </ScrollView>
         }
       </View>
+      */}
     </View>
   )
+
+
+
+}
+else{
+  return false
+}
+
 }
 export default React.memo(ProcessList);
 const styles = StyleSheet.create({
   wrap: {
-    paddingTop: 5,
+    paddingTop: 10,
     paddingBottom: 10,
     flexDirection: "column",
     borderBottomColor: color_grey_light,
@@ -91,20 +116,23 @@ const styles = StyleSheet.create({
     color: color_primary
   },
   btn: {
-    borderColor: color_grey_dark,
-    borderWidth: 0.5,
-    paddingVertical: 2.5,
-    paddingHorizontal: 5,
+    backgroundColor: color_white,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
     borderRadius: 12
   },
   btnText: {
+    fontSize:12,
     color: color_grey_dark
   },
-  body: {
-    paddingHorizontal: 10,
-  },
+
+
+
+
   card: {
-    flexDirection: "row",
+    justifyContent:"center",
+    alignItems:"center",
+    flexDirection: "column",
     padding: 10,
     backgroundColor: color_white,
     borderRadius: 12,
@@ -118,11 +146,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+
   cardL: {
     backgroundColor: "#F4F6F6",
-    width: 80,
-    height: 80,
-    borderRadius: 80,
+    width: 90,
+    height: 90,
+    borderRadius: 20,
     overflow: "hidden"
   },
   img: {
@@ -134,18 +163,19 @@ const styles = StyleSheet.create({
   cardR: {
     flexDirection: "column",
     paddingLeft: 10,
-    width: windowWidth / 2,
+    //width: windowWidth / 2,
     overflow: "hidden"
   },
   name: {
+    marginTop:5,
+    textAlign:"center",
     textTransform: "uppercase",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: color_primary
   },
   wrapper: {
     marginBottom: 2,
-    paddingVertical: 5,
     borderBottomColor: color_grey_light,
     borderBottomWidth: 0.5,
     flexDirection: "row"
@@ -156,6 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: "700"
   }
 })
+
 const Card = (props) => {
   const { t, i18n } = useTranslation();
   return (
@@ -163,13 +194,14 @@ const Card = (props) => {
       <View style={styles.cardL}>
         <Image style={styles.img} source={{ uri: `${file_server1}/img/category/picture/${props.data.foto}` }} />
       </View>
+
       <View style={styles.cardR}>
         <Text style={styles.name}>{letterCounter(props.data.name, 21)}</Text>
         <View style={styles.wrapper}>
           <Text style={styles.text}>{t("recommendedBy")}: {props.data.recommended}</Text>
         </View>
-        <ScoreStars stars={props.data.stars} size={25} color={color_star} />
-      </View>
+        <ScoreStars stars={props.data.stars} size={20} color={color_star} />
+      </View> 
     </TouchableOpacity>
   )
 }

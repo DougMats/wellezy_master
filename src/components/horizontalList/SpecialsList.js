@@ -41,6 +41,8 @@ function ProcessList(props) {
     setLoad(false)
   }
 
+
+  if(data.length > 0){
   return (
     <View style={styles.wrap}>
       {Load === false &&
@@ -69,10 +71,15 @@ function ProcessList(props) {
     </View>
   )
 }
+else{
+  return false
+}
+}
 export default React.memo(ProcessList);
 const styles = StyleSheet.create({
+
   wrap: {
-    paddingTop: 5,
+    paddingTop: 10,
     paddingBottom: 10,
     flexDirection: "column",
     borderBottomColor: color_grey_light,
@@ -90,17 +97,14 @@ const styles = StyleSheet.create({
     color: color_primary
   },
   btn: {
-    borderColor: color_grey_dark,
-    borderWidth: 0.5,
-    paddingVertical: 2.5,
-    paddingHorizontal: 5,
+    backgroundColor: color_white,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
     borderRadius: 12
   },
   btnText: {
+    fontSize:12,
     color: color_grey_dark
-  },
-  body: {
-    paddingHorizontal: 10,
   },
   card: {
     flexDirection: "row",
@@ -154,4 +158,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700"
   }
+
+
+
 })

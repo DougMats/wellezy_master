@@ -33,7 +33,7 @@ const CARTSHOP = () => ({
 
 getCartShop: async (id) => {
     let res
-    console.log("getCartShop link ---> ",base_url(serverCrm, `get/cart/shop/${id}`))
+    //console.log("getCartShop link ---> ",base_url(serverCrm, `get/cart/shop/${id}`))
     await axios.get(base_url(serverCrm, `get/cart/shop/${id}`))
       .then(function (response) {
         res = response.data

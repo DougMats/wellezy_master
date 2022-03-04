@@ -8,8 +8,6 @@ function Index(props) {
   useEffect(() => {
     async function get() {
       const res = await cartShop.getCartShop(props.user)
-      console.log("res: ", res)
-
       setcount(res.length)
     }
     get()

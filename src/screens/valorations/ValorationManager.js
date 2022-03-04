@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { RefreshControl, Linking, Platform, StyleSheet, Dimensions, Clipboard, ScrollView, SafeAreaView, Text, View, Image, TouchableOpacity, StatusBar, ActivityIndicator, Button } from 'react-native'
+import { RefreshControl, Modal, Linking, Platform, StyleSheet, Dimensions, Clipboard, ScrollView, SafeAreaView, Text, View, Image, TouchableOpacity, StatusBar, ActivityIndicator, Button, unstable_batchedUpdates } from 'react-native'
 import { useTranslation } from 'react-i18next';
 import { Icon } from 'react-native-eva-icons';
 import md5 from 'md5';
 import Toast from 'react-native-simple-toast';
 import LinearGradient from 'react-native-linear-gradient';
 
-import SectionClient from './sectionClient.js'
-import SectionProcedure from './sectionProcedure.js'
-import SectionScheduled from './sectionScheduled.js'
-
-
-
-
 import { InitialsName, Offer, Name, GetDiference2, GetDiference, zfill, currencyFormat, globalStatusValoration, letterCounter } from '../../components/Logic.js'
 import ScoreStars from '../../components/stars/ScoreStars.js';
 import Calendary from '../../components/time/Calendary.js';
 import GetHour from '../../components/time/getHour.js';
-import {file_server1} from '../../../Env'
+import { file_server1 } from '../../../Env'
 import { valorations } from '../../services/connection'
 import Head from '../../components/generic/Head';
 import MenuVertical from '../../components/generic/MenuVertical.js';
@@ -47,40 +40,26 @@ const windowHeight = Dimensions.get('window').height;
 function ValorationManager(props) {
   const { t, i18n } = useTranslation();
   const [Load, setLoad] = useState(false);
-  const [itsSaving, setitsSaving] = useState(false);
-  const [vertical, setvertical] = useState(false);
   const [data, setdata] = useState(null)
+  const [vertical, setvertical] = useState(false);
 
-  const [date, setdate] = useState(false);
-  const [time, settime] = useState(false);
+  const [modal, setmodal] = useState(false);
+  const [itsSaving, setitsSaving] = useState(false);
+  const [itsUpdating, setitsUpdating] = useState(false);
+  const [successful, setsuccessful] = useState(false);
 
-
-  const [openCalendary, setopenCalendary] = useState(false);
-  const [openClock, setopenClock] = useState(false);
-
-
-
-  
 
   const [optionesList, setoptionesList] = useState([
-    // 'manage',
-    // 'client',
-    // 'procedure'
+    { id: 1, name: 'manage', color: "red" },
+    { id: 2, name: 'client', color: "blue" },
+    { id: 3, name: 'procedure', color: "green" },
+    { id: 4, name: 'clinicHistory', color: "pink" },
+    { id: 5, name: 'images', color: "orange" },
+    { id: 6, name: 'scheduled', color: "red" },
+    { id: 7, name: 'valoration', color: "red" }
   ]);
-  const [view, setview] = useState("");
 
-
-
-
-  const config = {
-    theme: "",//light / dark
-    color: color_fifth,//"#FF008B",
-    minDateNow : true,
-    hour: false,
-    rangeDate: true,
-  }
-
-
+  const [view, setview] = useState(selectView());
 
   let randomCode
   if (props.route.params) {
@@ -92,331 +71,135 @@ function ValorationManager(props) {
     Get()
   }, [randomCode]);
 
-  useEffect(() => {
-    if(date!==false){
-     //setopenClock(true)
-    }
-   }, [date]);
-
-
   async function Get() {
     setLoad(true)
-     const res = await valorations.getThisValoration(i18n.language, props.route.params.data.id)
-     setdata(res)
+    const res = await valorations.getThisValoration(i18n.language, props.route.params.data.id)
+    setdata(res)
     setLoad(false)
   }
 
+  function selectView() {
+    return optionesList[0]
+  }
 
+  async function updateDate(fecha, hora) {
+    setmodal(true)
+    setitsUpdating(true);
+    const array = {
+      'id_valoration': data.valoration.id,
+      'scheduled_date': fecha,
+      'scheduled_time': hora,
+    }
+    const update = await valorations.updateDateValoration(array)
+    if (update === true) {
+      setsuccessful(true)
+      Get()
+    }
+  }
 
+  async function saveDate(fecha, hora) {
+    setmodal(true)
+    setitsSaving(true);
+    let keyRandom = "";
+    let key, array;
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 5; i++) { keyRandom += possible.charAt(Math.floor(Math.random() * possible.length)); }
+    key = "v" + data.valoration.id + "c" + data.valoration.id_client + "m" + data.valoration.id_medic + "K" + keyRandom;
+    array = {
+      'id_valoration': data.valoration.id,
+      'key_generated': key,
+      'scheduled_date': fecha,
+      'scheduled_time': hora,
+      'status': 0
+    }
+    const res = await valorations.newValorationscheduled(array)
+    if (res === true) {
+      const update = await valorations.updateStateValoration(data.valoration.id, "Procesada")
+      if (update === true) {
+        setsuccessful(true)
+        Get()
+      }
+    }
+  }
 
   useEffect(() => {
-    if(data !== null){
-      createMenu()
+    if (successful === true) {
+      setTimeout(() => {
+        setmodal(false);
+        setitsSaving(false);
+        setitsUpdating(false);
+        setsuccessful(false);
+      }, 5000);
     }
-  }, [data]);
-
-
-
-
-
-
-function createMenu(){
-  let list = []
-  
-  if(data.valoration.status === "Pendiente"){
-    list.push('manage')
-  }
-
-  if(data.client !== null){list.push('client')}
-  if(data.procedure !== null){list.push('procedure')}
-  if(data.clinicHistory !== null){list.push('clinicHistory')}
-  if(data.images !== null){list.push('images')}
-  if(data.scheduled !== null){list.push('scheduled')}
-  if(data.valoration !== null){ list.push('valoration')}
-
-
-
-  for(var i in list){
-    let isset = optionesList.find(obj => obj === list[i])
-    if(isset === undefined){
-      optionesList.push(list[i])
-    }
-  }
-
-
-setview(list[0])
-}
-
-
-
-
+  }, [successful]);
 
 
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
 
-
-
-
-
-
-
-
-
-
-  async function save() {
-    console.log("saving...")
-    setitsSaving(true);
-    let keyRandom = "";
-    let key, array;
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (let i = 0; i < 5; i++) { keyRandom += possible.charAt(Math.floor(Math.random() * possible.length)); }
-    key = "v" +props.route.params.data.id + "c" + props.route.params.data.id_cliente + "m" + props.route.params.data.id_medic + "K" + keyRandom;
-    array = {
-      'id_valoration':props.route.params.data.id,
-      'key_generated': key,
-      'scheduled_date': date,
-      'scheduled_time': time,
-      'status': 0 }
-
-      const res = await valorations.newValorationscheduled(array)
-      if(res===true){
-        Get()
-      }
-      //else{}
-
-  }
-
-
-
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
       <StatusBar backgroundColor={color_primary} barStyle='light-content' />
-     
-      <ScrollView
-        scrollEventThrottle={16}
-        stickyHeaderIndices={[0]}
-        refreshControl={
-          <RefreshControl
-            refreshing={Load}
-            onRefresh={Get}
-          />
-        }
-      >
-
-
-<View style={{
-  backgroundColor: color_primary,
-  flexDirection:"row",
-  width:"80%",
-  // paddingHorizontal:20
-}}>
-
-
-<View style={{
-  width:"15%",
-  backgroundColor:"red"
-}}>
-<TouchableOpacity
-onPress={()=>setvertical(true)}>
-  <Icon name={'arrow-ios-back-outline'} width={30} height={30} fill={color_white} />
-</TouchableOpacity>
-</View>
-
-
-
-
-{/* 
-
-
-<View style={{ backgroundColor:"red", width:"70%"}}>
-<Text>setvertical</Text>
-</View>
-
-
-
- */}
-
-<View style={{
-    width:"15%",
-    backgroundColor:"red"
-}}>
-<TouchableOpacity
-onPress={()=>setvertical(true)}>
-  <Icon name={'more-vertical'} width={30} height={30} fill={color_white} />
-</TouchableOpacity>
-</View>
-
-
-</View>
-
-
-
-
-
-
-
-
-
-
-
-<View style={{
-  paddingTop:20,
-  flexDirection:"row", width:"100%", backgroundColor: color_primary, paddingBottom:5}}> 
-  <ScrollView horizontal>
-    {!Load && optionesList.map((i,key)=>{
-        return(
-          <TouchableOpacity onPress={()=>setview(i)}
-          style={{
-            paddingVertical:10,
-            width:windowWidth / 4,
-            alignItems:"center",
-            justifyContent:"center",
-            borderBottomColor: view===i? color_white: color_primary,
-            borderBottomWidth:1
-          }}>
-            <Text style={{
-              textTransform:"capitalize",
-              fontSize:14,
-              fontWeight:"700",
-              color: view===i? color_white: color_grey_light
-            }}>{i}</Text>
+      <View style={styles.header}>
+        <View style={styles.headerSide}>
+          <TouchableOpacity style={styles.headerBtn} onPress={() => props.navigation.goBack()}>
+            <Icon name={"arrow-back-outline"} width={30} height={30} fill={color_white} />
           </TouchableOpacity>
-        )
-      })
-    }
-  </ScrollView>
-</View>
+        </View>
+        <View style={styles.headerCenter}>
+          <Text style={styles.headerCenterText}>Administración de valoraciones</Text>
+        </View>
+        <View style={styles.headerSide}>
+          <TouchableOpacity style={styles.headerBtn} onPress={() => setvertical(!vertical)}>
+            <Icon name={"more-vertical"} width={30} height={30} fill={color_white} />
+          </TouchableOpacity>
+        </View>
+      </View>
 
+      {Load && <ActivityIndicator color={color_primary} size={40} style={{ marginTop: 50 }} />}
 
+      {!Load &&
+        <View style={styles.sectionMenu}>
+          <ScrollView horizontal scrollEventThrottle={16} showsHorizontalScrollIndicator={false}>
+            {optionesList.map((i, key) => {
+              return (
+                <TouchableOpacity key={key} onPress={() => setview(i)}
+                  style={{ ...styles.sectionMenuBtn, backgroundColor: view.id === i.id ? color_white : "#F4F6F6" }}
+                >
+                  <Text style={{ ...styles.sectionMenuBtnText, color: view.id === i.id ? color_fifth : color_grey_half }}>
+                    {i.name}
+                  </Text>
+                </TouchableOpacity>
+              )
+            })
+            }
+          </ScrollView>
+        </View>
+      }
 
-
-
-
-
-
-
-
-
-
-{
-view === 'manage' &&
-<View style={styles.contained}>
-<TouchableOpacity onPress={()=>setopenCalendary(!openCalendary)}
-style={{
-  backgroundColor:color_white,
-  width:"80%",
-  justifyContent:"center",
-  alignItems:"center",
-  paddingVertical:10,
-  paddingHorizontal:20,
-  flexDirection:"row",
-  marginTop:10
-}}>
-<Icon name={'calendar-outline'} width={30} height={30} fill={color_grey_half} />
-  <Text style={{
-    //backgroundColor:"red",
-    paddingHorizontal:20,
-    fontSize:16,
-    //marginLeft: 5,
-    color: color_grey_half,
-    fontWeight:"bold",
-    lineHeight:30,
-    textTransform:"uppercase"
-  }}>{date === false ? 'select a date':date}</Text>
-</TouchableOpacity>
-
-
-
-
-<TouchableOpacity onPress={()=>setopenClock(!openClock)}
-style={{
-  backgroundColor:color_white,
-  width:"80%",
-  justifyContent:"center",
-  alignItems:"center",
-  paddingVertical:10,
-  paddingHorizontal:20,
-  flexDirection:"row",
-  marginTop:10
-}}
->
-<Icon name={'clock-outline'} width={30} height={30} fill={color_grey_half} />
-  <Text
-  style={{
-    //backgroundColor:"red",
-    paddingHorizontal:20,
-    fontSize:16,
-    //marginLeft: 5,
-    color: color_grey_half,
-    fontWeight:"bold",
-    lineHeight:30,
-    textTransform:"uppercase"
-  }}
-  >{time === false ? 'open clock ':time }</Text>
-</TouchableOpacity>
-
-<Calendary
-  data={date}
-  config={config}
-  open={openCalendary}
-  close={setopenCalendary}
-  getChange={setdate}
-/>
-
-<GetHour
-  display={openClock}
-  title={'carlos'}
-  color={color_fifth}
-  mode={'light'}// dark- light 
-  onChange={settime}
-  cancel={setopenClock}
-/>
-
-
-{date !== false && time !== false &&
-
-<TouchableOpacity onPress={()=>save()}
-style={{
-  backgroundColor: color_fifth,
-  width:"60%",
-  marginTop: 20,
-  justifyContent:"center",
-  alignItems:"center",
-  paddingVertical:10,borderRadius:8
-}}>
-  <Text style={{
-    color: color_white,
-    fontWeight:"bold",
-    fontSize:14,
-    textTransform:"uppercase"
-  }}>save</Text>
-</TouchableOpacity>
-}
-
-
-
-
-
-</View>
-}
-
-
-
-
-
-{view === 'client'    && <SectionClient    data={data.client}    setview={setview} goToScreen={goToScreen}/> }
-{view === 'procedure' && <SectionProcedure data={data.procedure} setview={setview} goToScreen={goToScreen}/> }
-{view === 'scheduled' && <SectionScheduled data={data.scheduled} setview={setview} goToScreen={goToScreen}/> }
-{view === 'clinicHistory' && <Text>clinicHistory</Text>}
-{view === 'images' && <Text>images</Text>}
-{view === 'valoration' && <Text>valoration</Text>}
-
-
-
-      </ScrollView>
+      {!Load && data !== null &&
+        <LinearGradient
+          colors={[color_white, color_white, "#F5F5F5"]}
+          start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }}
+          style={{ backgroundColor: color_white, flex: 1 }}
+        >
+          <ScrollView scrollEventThrottle={16} stickyHeaderIndices={[0]} refreshControl={<RefreshControl refreshing={Load} onRefresh={Get} />}>
+            {view.name === 'client' && <Client data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'procedure' && <Procedure data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'manage' && <Manage data={data} setview={setview} goToScreen={goToScreen} saveDate={saveDate} updateDate={updateDate} />}
+            {view.name === 'scheduled' && <Scheduled data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'clinicHistory' && <ClinicHistory data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'images' && <Images data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'valoration' && <Valoration data={data} setview={setview} goToScreen={goToScreen} />}
+          </ScrollView>
+        </LinearGradient>
+      }
+      <Menu
+        props={props}
+        option={1}
+        alert={0}
+      />
       {vertical === true &&
         <MenuVertical
           width={280}
@@ -425,314 +208,252 @@ style={{
           goToScreen={goToScreen}
         />
       }
-    </SafeAreaView>
+      <Modal animationType="slide" transparent={true} visible={modal}>
+        <View style={styles.modalWrap}>
+          {itsSaving && <View style={styles.modalWrapper}>
+            {successful ?
+              <View style={styles.modalContained}>
+                <Icon name={"checkmark-circle-outline"} width={80} height={80} fill={color_fifth} />
+                <Text style={styles.modalText}>saved successful</Text>
+              </View>
+              :
+              <View style={styles.modalContained}>
+                <ActivityIndicator color={color_fifth} size={80} />
+                <Text style={styles.modalText}>Saving...</Text>
+              </View>
+            }
+          </View>
+          }
+          {itsUpdating && <View style={styles.modalWrapper}>
+            {successful ?
+              <View style={styles.modalContained}>
+                <Icon name={"checkmark-circle-outline"} width={80} height={80} fill={color_fifth} />
+                <Text style={styles.modalText}>Updated successful</Text>
+              </View>
+              :
+              <View style={styles.modalContained}>
+                <ActivityIndicator color={color_fifth} size={80} />
+                <Text style={styles.modalText}>Updating...</Text>
+              </View>
+            }
+          </View>
+          }
+        </View>
+      </Modal>
+    </SafeAreaView >
   )
 }
 
-export default ValorationManager;
-const styles = StyleSheet.create({
-  contained:{
-   // backgroundColor:"red",
-    //marginTop:50,
-   // height:windowHeight,
-    alignItems:"center",
-    // justifyContent:"center",
-    // flexDirection:"column"
-  }
-})
-
-
-
-
-
-
-
-
-
-
-
-// const SCHEDULE = (props) => {
-//   const [open, setopen] = useState(true);
-//   const [date, setdate] = useState(props.date);
-//   const [hour, sethour] = useState(props.hour);
-//   const config = {
-//     theme: "",//light / dark
-//     color: "#FF008B",
-//     // minDateNow: false,
-//     // hour: false,
-//     // rangeDate: true,
-//   }
-
-
-
-
-//   return (
-//     <View style={styles.label}>
-//       <TouchableOpacity onPress={() => setopen(!open)} style={styles.labelHeat}>
-//         <View style={{ flexDirection: "row" }}>
-//           <Icon name={"calendar-outline"} width={25} height={25} fill={color_grey_half} />
-//           <Text style={styles.labelHeatText}>SCHEDULE</Text>
-//         </View>
-//         <Icon name={open ? 'arrow-ios-downward-outline' : 'arrow-ios-forward-outline'} width={20} height={20} fill={color_grey_dark} />
-//       </TouchableOpacity>
-      
-//       {open &&
-//         <View style={{
-//           padding: 10
-//         }}>
-
-//           <TouchableOpacity onPress={() => setopenCalendary(true)}>
-//             <Text>date: {date}</Text>
-//           </TouchableOpacity>
-//           <TouchableOpacity onPress={() => setopenClock(true)}>
-//             <Text>hour: {hour}</Text>
-//           </TouchableOpacity>
-         
-//           <Calendary 
-//             data={date}
-//             config={config}
-//             open={openCalendary}
-//             close={setopenCalendary}
-//             getChange={setdate}
-//           />
-
-//           <GetHour
-//             display={openClock}
-//             title={''}
-//             color={color_fifth}
-//             mode={'light'}// dark- light 
-//             onChange={sethour}
-//             cancel={setopenClock}
-//           />
-//           <TouchableOpacity>
-//             <Text>save</Text>
-//           </TouchableOpacity>
-//         </View>
-//       }
-//     </View>
-//   )
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-
-
-
-
-
-
-/*
-
-
-
-
-  const { navigation } = props;
-  const 
-
-  const [data, setdata] = useState(props.route.params.data);
-
-  const [patient, setpatient] = useState(null);
-  const [scheduled, setscheduled] = useState(null);
-  const [schedule, setschedule] = useState(null);
-  const [historyclinic, sethistoryclinic] = useState(null);
-  const [images, setimages] = useState(null);
-
-  // <SCHEDULE data={request} hour={data.hour} date={data.date} />
-  //         <PATIENT data={request} />
-  //         <PROCEDURE data={request} />
-  //         <HC data={HCValoration} />
-  //         <IMAGES data={ImagesValoration} />
-
-
-
-
-  //
-  // const [HCValoration, setHCValoration] = useState(false);
-  // const [ImagesValoration, setImagesValoration] = useState(false);
-  // const [data, setdata] = useState({
-  //   date: null,
-  //   hour: null
-  // });
-
-
-
-
-
-  /*
-    {
-      "basedOn": 1,
-      "categori_img": "https://pdtclientsolutions.com/crm-public/img/category/picture/Portadas%20cirug%C3%ADas_Otoplastia.png",
-      "category_id": 2,
-      "category_name": "Facial",
-      "category_photo": "w1.jpg",
-      "created_at": "2021-10-25 11:18:43",
-      "email": "art@gmail.com",
-      "id": 128,
-      "id_category": 2,
-      "id_cliente": 1,
-      "id_medic": 1,
-      "id_subcategory": 9,
-      "img": "default-user.png",
-      "names": "douglas jesus",
-      "phone": "+573124348384",
-      "rating": 5,
-      "recommended": 0,
-      "stars": 5,
-      "status_valoration": "Pendiente",
-      "sub_category_description": "<div></div>",
-      "sub_category_id": 9,
-      "sub_category_information": "",
-      "sub_category_name": "BLEFAROPLASTIA",
-      "sub_category_photo": "Portadas cirugías_Otoplastia.png",
-      "surnames": "matos parra"
-    }
-    ****
-
-    //valorations.getThisValoration(lenguaje, id)
-    const status = props.route.params.data.status_valoration;
-    // wellezy_valoration_scheduled
-    // wellezy_valoration_img
-    // wellezy_valoration_scheduled_history
-    //console.log("status: ", status)
-    //status ->Procesada
-    // if (status === "Procesada") {
-    //   const res = await valorations.getValorationWhenProcessed(props.route.params.data.id)
-    //   if (res.status !== 0) {
-    //     const res_hc = await valorations.getClientHC(props.route.params.data.id_cliente)
-    //     setHCValoration(res_hc)
-    //   }
-    //   // if (Valoration.status === 2) {
-    //   //   getImgsValoration(props.route.params.data.id)
-    //   //setPhotosValoration
-    //   // }
-    // }
-  }
-
-
-
-  return (
-
-      <View style={styles.head}>
-        <View style={styles.headSides}>
-          <TouchableOpacity style={styles.headBtn} onPress={() => props.navigation.goBack()}>
-            <Icon name={"arrow-back-outline"} width={30} height={30} fill={color_fifth} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.headTitle}>
-          <Text style={styles.headTitleText}>request: {data.status_valoration}</Text>
-        </View>
-        <View style={styles.headSides}>
-          <TouchableOpacity style={styles.headBtn} onPress={() => setvertical(!vertical)}>
-            <Icon name={"more-vertical"} width={30} height={30} fill={color_fifth} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView scrollEventThrottle={16}>
-
-        <View style={{ flexDirection: "column", paddingHorizontal: 20 }}>
-          <VALORATION />
-
-          {/* 
-          <PATIENT data={request} />
-          <PROCEDURE data={request} />
-          <HC data={HCValoration} />
-          <IMAGES data={ImagesValoration} /> ****}
-        </View>
-      </ScrollView>
-
-
-      {/* <Menu
-        props={props}
-        option={1}
-        alert={0}
-      /> *****}
-
-      
-    </SafeAreaView>
-  )
-}
-
-
 const styles = StyleSheet.create({
 
-  head: {
-    flexDirection: "row",
-    paddingHorizontal: 20,
-    justifyContent: "space-between",
+  modalWrap: {
+    backgroundColor: "rgba(0,0,0,0.5)",
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modalWrapper: {
     backgroundColor: color_white,
+    borderRadius: 12,
+    padding: 20,
+    width: "60%"
+  },
+  modalContained: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modalText: {
+    marginVertical: 15,
+    color: color_grey_dark,
+    fontSize: 14,
+    fontWeight: "bold"
+  },
+  header: {
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    width: "100%",
+    flexDirection: "row",
     paddingBottom: 10,
-    paddingTop: 20,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40
+    paddingTop: 30,
+    backgroundColor: color_primary
   },
-  headSides: {
-    width: "10%",
+  headerSide: {
+    width: "15%",
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center"
   },
-  headTitle: {
-    width: "80%",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  headBtn: {
+  headerBtn: {
     width: 40,
     height: 40,
     justifyContent: "center",
     alignItems: "center"
   },
-  headTitleText: {
-    fontSize: 16,
-    color: color_fifth,
-    textTransform: "capitalize",
+  headerCenter: {
+    width: "70%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerCenterText: {
+    color: color_white,
     fontWeight: "bold",
-
+    fontSize: 14,
+    textTransform: "uppercase",
+    textAlign: "center"
   },
-
-
-
-
-  label: {
-    marginTop: 5,
+  sectionMenu: {
+    marginTop: -20,
+    zIndex: -1,
+    paddingTop: 20,
+    backgroundColor: "#EAECEE",
     width: "100%",
-    backgroundColor: color_white
-  },
-  labelHeat: {
     flexDirection: "row",
+    justifyContent: "space-around"
+  },
+  sectionMenuBtn: {
+    marginHorizontal: 2,
+    marginTop: 5,
+    height: 40,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    paddingVertical: 10,
+    width: windowWidth / 3.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  sectionMenuBtnText: {
+    textAlign: "center",
+    textTransform: "capitalize",
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  page: {
+    minHeight: "100%",
+    alignItems: "center",
+    flexDirection: "column",
+    padding: 20
+  },
+  pageHead: {},
+  pageHeadTitle: {},
+  pageBody: {},
+
+  btn: {
+    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    justifyContent: "space-between"
+    borderRadius: 12,
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: color_fifth
   },
-  labelHeatText: {
-    marginLeft: 10,
+  btnText: {
+    color: color_white,
+    fontWeight: "bold",
+    fontSize: 14
+  },
+  inputBtn: {
+    marginVertical: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    width: "80%",
+    borderRadius: 12,
+    backgroundColor: "#EAECEE"
+  },
+  inputBtnLabel: {
     lineHeight: 25,
-    color: color_grey_dark,
     fontSize: 14,
-    textTransform: "capitalize"
+    marginLeft: 10
   },
-
-
+  inputBtnText: {
+    lineHeight: 25,
+    fontSize: 14,
+    fontWeight: "bold"
+  }
 })
 
+const Manage = (props) => {
+  const { t, i18n } = useTranslation();
+  const [fecha, setfecha] = useState(currentValue(0));
+  const [hora, sethora] = useState(currentValue(1));
+  const [openCalendary, setopenCalendary] = useState(false);
+  const [openClock, setopenClock] = useState(false);
 
-const VALORATION = (props) => {
+  const config = {
+    theme: "",//light / dark
+    color: color_fifth,//"#FF008B",
+    minDateNow: true,
+    hour: false,
+    rangeDate: true,
+  }
+  function currentValue(type) {
+    let res = null
+    if (props.data.valoration.status === "Procesada" && props.data.scheduled !== null) {
+      if (type === 0) { res = props.data.scheduled.scheduled_date }
+      if (type === 1) { res = props.data.scheduled.scheduled_time }
+    }
+    return res
+  }
+  useEffect(() => {
+    if (fecha !== null && hora === null) {
+      setopenClock(true)
+    }
+  }, [fecha]);
   return (
-    <View style={{}}>
+    <View style={styles.page}>
 
-
+      <Text>{props.data.valoration.status}</Text>
+      <TouchableOpacity onPress={() => setopenCalendary(true)} style={styles.inputBtn}>
+        <Icon name={"calendar-outline"} width={25} height={25} fill={color_grey_half} />
+        <Text style={styles.inputBtnLabel}>Fecha: </Text>
+        <Text style={styles.inputBtnText}>
+          {fecha !== null && fecha}
+          {fecha === null && "Seleccionar fecha"}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setopenClock(true)} style={styles.inputBtn}>
+        <Icon name={"calendar-outline"} width={25} height={25} fill={color_grey_half} />
+        <Text style={styles.inputBtnLabel}>Hora: </Text>
+        <Text style={styles.inputBtnText}>
+          {hora !== null && hora}
+          {hora === null && "Seleccionar hora"}
+        </Text>
+      </TouchableOpacity>
+      {
+        props.data.valoration.status === "Pendiente" && props.data.scheduled === null && fecha !== null && hora !== null &&
+        <TouchableOpacity onPress={() => props.saveDate(fecha, hora)} style={styles.btn}>
+          <Text style={styles.btnText}>Guardar</Text>
+        </TouchableOpacity>
+      }
+      {
+        props.data.valoration.status === "Procesada" && props.data.scheduled === null && fecha !== null && hora !== null &&
+        <TouchableOpacity onPress={() => props.saveDate(fecha, hora)} style={styles.btn}>
+          <Text style={styles.btnText}>Guardar</Text>
+        </TouchableOpacity>
+      }
+      {
+        props.data.valoration.status === "Procesada" && props.data.scheduled !== null && (fecha !== props.data.scheduled.scheduled_date || hora !== props.data.scheduled.scheduled_time) &&
+        <TouchableOpacity onPress={() => props.updateDate(fecha, hora)} style={styles.btn}>
+          <Text style={styles.btnText}>Actualizar</Text>
+        </TouchableOpacity>
+      }
+      <Calendary
+        data={fecha}
+        config={config}
+        open={openCalendary}
+        close={setopenCalendary}
+        getChange={setfecha}
+      />
+      <GetHour
+        display={openClock}
+        title={''}
+        color={color_fifth}
+        mode={'light'}// dark- light 
+        onChange={sethora}
+        cancel={setopenClock}
+      />
     </View>
   )
 }
@@ -743,122 +464,124 @@ const VALORATION = (props) => {
 
 
 
-*/
+const Client = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}>
+      <Text>{props.data.client.id}</Text>
+      <Text>{props.data.client.img}</Text>
+      <Text>{props.data.client.phone}</Text>
+      <Text>{props.data.client.name}</Text>
+      <Text>{props.data.client.surname}</Text>
+      <Text>{props.data.client.identificacion}</Text>
+      <Text>{props.data.client.dateOfBirth}</Text>
+      <Text>{props.data.client.country}</Text>
+      <Text>{props.data.client.country_id}</Text>
+      <Text>{props.data.client.distric}</Text>
+      <Text>{props.data.client.city_id}</Text>
+      <Text>{props.data.client.city}</Text>
+      <Text>{props.data.client.adress}</Text>
+      <Text>{props.data.client.facebook}</Text>
+      <Text>{props.data.client.instagram}</Text>
+      <Text>{props.data.client.twitter}</Text>
+      <Text>{props.data.client.youtube}</Text>
+      <Text>{props.data.client.created_at}</Text>
+      <Text>{props.data.client.updated_at}</Text>
+    </View>
+  )
+}
+
+
+
+const Procedure = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}>
+
+      {/* "id": 9,
+		"name": "BLEFAROPLASTIA",
+		"name_ingles": "BLEPHAROPLASTY",
+		"name_italiano": "BLEFAROPLASTIA",
+		"name_frances": "BLÉPHAROPLASTIE",
+		"name_portugues": "BLEFAROPLASTIA",
+		"id_category": 2,
+		"state": 1,
+		"description":
+    "information": "",
+		"foto": "Portadas cirugías_Otoplastia.png",
+		"foto_before": "https:\/\/image.freepik.com\/foto-gratis\/gatito-pared-monocromatica-detras-ella_23-2148955134.jpg",
+		"foto_after": "https:\/\/image.freepik.com\/foto-gratis\/gato-rojo-o-blanco-i-estudio-blanco_155003-13189.jpg",
+		"rating": 5,
+		"basedOn": 1,
+		"stars": 5,
+		"recommended": 0 */}
+
+
+    </View>)
+}
+
+const ClinicHistory = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}></View>)
+}
+
+const Images = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}>
+      {props.data.images === null ?
+        <View>
+          <Text>null</Text>
+        </View>
+        :
+        <View>
+          <Text>....</Text>
+        </View>
+      }
+
+
+    </View>)
+}
+
+const Scheduled = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}></View>)
+}
+
+const Valoration = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}></View>)
+}
+
+
+
+
 /*
 
 
-const PATIENT = (props) => {
-  const [open, setopen] = useState(false);
-  return (
-    <View style={styles.label}>
-      <TouchableOpacity onPress={() => setopen(!open)} style={styles.labelHeat}>
-        <View style={{ flexDirection: "row" }}>
-          <Icon name={"person-outline"} width={25} height={25} fill={color_grey_half} />
-          <Text style={styles.labelHeatText}>PATIENT</Text>
-        </View>
-        <Icon name={open ? 'arrow-ios-downward-outline' : 'arrow-ios-forward-outline'} width={20} height={20} fill={color_grey_dark} />
-      </TouchableOpacity>
-      {open &&
-        <View style={{
-          padding: 10
-        }}>
-          <Text>{props.data.email}</Text>
-          <Text>{props.data.id}</Text>
-          <Text>{props.data.id_cliente}</Text>
-          <Text>{props.data.img}</Text>
-          <Text>{props.data.names}</Text>
-          <Text>{props.data.phone}</Text>
-          <Text>{props.data.surnames}</Text>
-        </View>
-      }
-    </View>
-  )
-}
 
 
-
-
-const PROCEDURE = (props) => {
-  const [open, setopen] = useState(false);
-  return (
-    <View style={styles.label}>
-      <TouchableOpacity onPress={() => setopen(!open)} style={styles.labelHeat}>
-        <View style={{ flexDirection: "row" }}>
-          <Icon name={"activity-outline"} width={25} height={25} fill={color_grey_half} />
-          <Text style={styles.labelHeatText}>PROCEDURE</Text>
-        </View>
-        <Icon name={open ? 'arrow-ios-downward-outline' : 'arrow-ios-forward-outline'} width={20} height={20} fill={color_grey_dark} />
-      </TouchableOpacity>
-      {open &&
-        <View style={{
-          padding: 10
-        }}>
-          <Text>{props.data.basedOn}</Text>
-          <Text>{props.data.categori_img}</Text>
-          <Text>{props.data.category_id}</Text>
-          <Text>{props.data.category_name}</Text>
-          <Text>{props.data.category_photo}</Text>
-          <Text>{props.data.created_at}</Text>
-          <Text>{props.data.email}</Text>
-          <Text>{props.data.id}</Text>
-          <Text>{props.data.id_category}</Text>
-          <Text>{props.data.id_subcategory}</Text>
-          <Text>{props.data.rating}</Text>
-          <Text>{props.data.recommended}</Text>
-          <Text>{props.data.stars}</Text>
-          <Text>{props.data.sub_category_description}</Text>
-          <Text>{props.data.sub_category_id}</Text>
-          <Text>{props.data.sub_category_information}</Text>
-          <Text>{props.data.sub_category_name}</Text>
-          <Text>{props.data.sub_category_photo}</Text>
-        </View>
-      }
-    </View>
-  )
-}
-
-const HC = (props) => {
-  const [open, setopen] = useState(false);
-  return (
-    <View style={styles.label}>
-      <TouchableOpacity onPress={() => setopen(!open)} style={styles.labelHeat}>
-        <View style={{ flexDirection: "row" }}>
-          <Icon name={"list-outline"} width={25} height={25} fill={color_grey_half} />
-          <Text style={styles.labelHeatText}>historia clinica</Text>
-        </View>
-        <Icon name={open ? 'arrow-ios-downward-outline' : 'arrow-ios-forward-outline'} width={20} height={20} fill={color_grey_dark} />
-      </TouchableOpacity>
-      {open &&
-        <View style={{
-          padding: 10
-        }}>
-          <Text>open</Text>
-        </View>
-      }
-    </View>
-  )
-}
-
-
-const IMAGES = (props) => {
-  const [open, setopen] = useState(false);
-  return (
-    <View style={styles.label}>
-      <TouchableOpacity onPress={() => setopen(!open)} style={styles.labelHeat}>
-        <View style={{ flexDirection: "row" }}>
-          <Icon name={"image-outline"} width={25} height={25} fill={color_grey_half} />
-          <Text style={styles.labelHeatText}>IMAGES</Text>
-        </View>
-        <Icon name={open ? 'arrow-ios-downward-outline' : 'arrow-ios-forward-outline'} width={20} height={20} fill={color_grey_dark} />
-      </TouchableOpacity>
-      {open &&
-        <View style={{
-          padding: 10
-        }}>
-          <Text>open</Text>
-        </View>
-      }
-    </View>
-  )
-}
+<Text>{props.data.basedOn}</Text>
+<Text>{props.data.categori_img}</Text>
+<Text>{props.data.category_id}</Text>
+<Text>{props.data.category_name}</Text>
+<Text>{props.data.category_photo}</Text>
+<Text>{props.data.created_at}</Text>
+<Text>{props.data.email}</Text>
+<Text>{props.data.id}</Text>
+<Text>{props.data.id_category}</Text>
+<Text>{props.data.id_subcategory}</Text>
+<Text>{props.data.rating}</Text>
+<Text>{props.data.recommended}</Text>
+<Text>{props.data.stars}</Text>
+<Text>{props.data.sub_category_description}</Text>
+<Text>{props.data.sub_category_id}</Text>
+<Text>{props.data.sub_category_information}</Text>
+<Text>{props.data.sub_category_name}</Text>
+<Text>{props.data.sub_category_photo}</Text>
 */
+
+export default ValorationManager;

@@ -22,16 +22,11 @@ import {
   color_transparent,
   color_screen,
 } from '../../styles/Colors'
-
 import { profile, notifications } from '../../services/connection.js';
 import { file_server1 } from '.././../../Env.js'
 
 // import { MyValorationScheduled, getMyProfile, updateMyProfile, mySharedExperiences, MyProceduresPerformed } from '../../src/api/https.js'
 // import { NotNetwork } from '../components/generic/NotNetwork';
-
-
-
-
 
 import Head from './components/Head.js'
 import HorizontalMenu from './components/HorizontalMenu.js'
@@ -45,24 +40,16 @@ import ProfileShares from './pages/ProfileShares.js'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-
 function ProfileClient(props) {
-  console.log("*** ------------------- profile client ------------------- ***")
   const { t, i18n } = useTranslation();
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [Load, setLoad] = useState(true);
   const [Data, setData] = useState(false);
   const [vertical, setvertical] = useState(false);
   const [Page, setPage] = useState(1);
-
-
-
+  const [colorStickerMenu, setcolorStickerMenu] = useState(color_primary);
 
   const [notificationsList, setnotificationsList] = useState([]);
-
-
-
-
 
   // const [menu, setmenu] = useState(false);
   // const [Editing, setEditing] = useState(false);
@@ -74,8 +61,6 @@ function ProfileClient(props) {
   // const [country, setcountry] = useState("");
   // const [city, setcity] = useState("");
   // const [dateBirthDay, setdateBirthDay] = useState("");
-
-
 
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
@@ -91,7 +76,6 @@ function ProfileClient(props) {
     get()
   }, [randomCode]);
 
-
   async function get() {
     setLoad(true)
     const res = await profile.getProfile(userDetails.id, userDetails.rol)
@@ -103,58 +87,40 @@ function ProfileClient(props) {
     setLoad(false)
   }
 
-
-
-
-  const [colorStickerMenu, setcolorStickerMenu] = useState(color_primary);
-
-
-
-
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
 
-
-
-  function goToScreenData(data) {
-    let screen, key_conference
-		if(data.type_event === "valoration"){screen = 'ValorationView'; }
-    else{screen = 'Home';}
+  function goToScreenData(res) {
+    let screen
+    const data = { id: res.id_event }
+    if (res.type_event === "valoration") { screen = 'ValorationView' }
+    else {
+      screen = 'Home';
+    }
     // if (data.status === 0) { screen = 'HistoryClinicForm'; }
     // if (data.status === 1) { screen = 'UploadPictures'; }
     // if (data.status === 2) { screen = 'Sala'; }
-    
-    props.navigation.navigate(screen, { randomCode: Math.random(), data})
+    goToScreen(screen, data)
   }
 
-
-
   const HorizontalMenuOpntionList = [
-
-    { value: 1, name: 'person-outline', counter: 0 },       //perfil
+    { value: 1, name: 'person-outline', counter: 0 },
     { value: 2, name: 'settings-outline', counter: 0 },
     { value: 3, name: 'message-circle-outline', counter: 0 },
     { value: 4, name: 'folder-add-outline', counter: 0 },
     { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
     { value: 6, name: 'heart', counter: 0 }
-
   ]
 
-
-
-
-async function NotificationUpdateToRead(id){
-  const update = await notifications.UpdateToRead(id)
-
-  if(update === true){
-    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
-    setnotificationsList(noti)
-    console.log("updating notifications")
+  async function NotificationUpdateToRead(id) {
+    const update = await notifications.UpdateToRead(id)
+    if (update === true) {
+      const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+      setnotificationsList(noti)
+      console.log("updating notifications")
+    }
   }
-}
-
-  
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_white }}>
@@ -229,7 +195,7 @@ async function NotificationUpdateToRead(id){
         {!Load && Page === 1 && <ProfileInfo data={Data} goToScreen={goToScreen} />}
 
 
-        {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} update={NotificationUpdateToRead}/>}
+        {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} update={NotificationUpdateToRead} />}
 
 
 
