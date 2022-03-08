@@ -11,7 +11,7 @@ import UserContext from '../../contexts/UserContext'
 import FilterByLocation from '../components/filters/FilterByLocation.js';
 import ChangeLanguage from '../../Language/ChangeLanguage.js';
 import { useTranslation } from 'react-i18next';
-
+import { session } from '../services/connection.js';
 import PreRegistration from './PreRegistration.js'
 import {
   color_primary,
@@ -46,20 +46,27 @@ function Register(props) {
   const [selectingType, setselectingType] = useState(false);
   const [Load, setLoad] = useState(false);
   const [successful, setsuccessful] = useState(0);
-
+  const [secretPassOne, setsecretPassOne] = useState(true);
+  const [secretPassTwo, setsecretPassTwo] = useState(true);
   const [notificationToken, setNotificationToken] = useState('')
   const { UserDetails, setUserDetails } = useContext(UserContext)
   const [ERROR, setERROR] = useState(0);
-  const [typeUser, settypeUser] = useState([
-    { value: "medic", name: t("medic"), description: t("descriptionUserClient") },
-    { value: "client", name: t("client"), description: t("descriptionUserMedic") },
-    { value: "service", name: t("service"), description: t("descriptionUserServer") }
-  ]);
-
-
   const [instructions, setinstructions] = useState(false);
 
+  const [typeUser, settypeUser] = useState([
+    { id: 0, value: "medic", name: "1medic", color: "#F39C12", img: "formZero.png", description: "1descriptionUserClient"},
+    { id: 1, value: "medic", name: "1medic", color: "#3498DB", img: "formOne.png", description: "1descriptionUserClient" },
+    { id: 2, value: "medic", name: "2medic", color: "#2ECC71", img: "formTwo.png", description: "2descriptionUserClient" },
+    { id: 3, value: "medic", name: "3medic", color: "#F39C12", img: "formThree.png", description: "3descriptionUserClient" },
+    { id: 4, value: "medic", name: "4medic", color: "#E74C3C", img: "formTwo.png", description: "4descriptionUserClient" },
+    { id: 5, value: "medic", name: "5medic", color: "red", img: "formOne.png", description: "5descriptionUserClient" }
 
+
+
+    //{ value: "medic", name: t("medic"), description: t("descriptionUserClient") },
+    // { value: "client", name: t("client"), description: t("descriptionUserMedic") },
+    // { value: "service", name: t("service"), description: t("descriptionUserServer") }
+  ]);
   const [formInfo, setFormInfo] = useState({
     name: '',
     surname: '',
@@ -80,11 +87,18 @@ function Register(props) {
     status: 1,
   })
 
+  let randomCode
+  if (props.route.params) { randomCode = props.route.params.randomCode }
+  else { randomCode = 1 }
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("........")
+      //setinstructions(true)
+    }, 10000);
+  }, [randomCode]);
+
 
   useEffect(() => {
-    // setTimeout(() => {
-    //   setEditable(true)
-    // }, 100)
     async function getToken() {
       const fcmToken = await messaging().getToken();
       if (fcmToken) { setNotificationToken(fcmToken) }
@@ -93,9 +107,6 @@ function Register(props) {
     getToken()
   }, [])
 
-
-
-
   function onChangeText(text, key) {
     setFormInfo({
       ...formInfo,
@@ -103,11 +114,9 @@ function Register(props) {
     })
   }
 
-
   function goToScreen(screen) {
     navigation.navigate(screen)
   }
-
 
   async function getLocation(i) {
     const res1 = i[1].name;
@@ -115,7 +124,6 @@ function Register(props) {
     const res3 = i[2].CiudadDistrito;
     const res4 = i[2].name;
     const res5 = i[2].id;
-
     setFormInfo({
       ...formInfo,
       "id_country": res2,
@@ -126,70 +134,74 @@ function Register(props) {
     })
   }
 
-
-
-
-  function sendForm() {
-
+  async function sendForm() {
     const data = {
       ...formInfo
     }
-
-    // if (data.avatar === "") { setERROR(1); Toast.show("..."); }
-    // else {
     if (data.name === "") { setERROR(2); Toast.show("debe ingresar su nombre"); }
     else {
       if (data.surname === "") { setERROR(3); Toast.show("Debe ingrsar su apellido"); }
       else {
-        // if (data.phone === "") { setERROR(4); Toast.show("..."); }
-        // else {
         if (data.email === "") { setERROR(5); Toast.show("Debe ingresar el Email"); }
         else {
           if (data.password === "") { setERROR(6); Toast.show("Debe ingresar una lave"); }
           else {
             if (data.password_repeat === "") { setERROR(7); Toast.show("Debe confirmar la clave"); }
             else {
-              // if (data.city === "") { setERROR(8); Toast.show("..."); }
-              // else {
-              //   if (data.adress === "") { setERROR(9); Toast.show("..."); }
-              //   else {
               if (data.rol === "") { setERROR(10); Toast.show("..."); }
               else {
                 if (data.password !== data.password_repeat) { setERROR(7); Toast.show("claves no coinciden"); }
                 else {
                   setLoad(true);
                   setERROR(0)
-
-
-                  console.log("__________________________ *** ___________________")
-                  console.log(data)
-                  console.log("__________________________ *** ____________________")
-                  axios.post(base_url(serverCrm, `wellezy/register`), data).then(function (res) {
-                    if (res.data === true) {
-                      setsuccessful(1);
-                      _storeData(data.email, data.password)
+                  const res = await session.register(data)
+                  if (res === true) {
+                    setsuccessful(1);
+                    _storeData(data.email, data.password)
+                  }
+                  else {
+                    if (res.data === "email_used") {
+                      setsuccessful(3);
+                      setERROR(5)
+                      setTimeout(() => {
+                        setLoad(false);
+                        setsuccessful(0);
+                      }, 3000);
                     }
                     else {
-                      if (res.data === "email_used") {
-                        setsuccessful(3);
-                        setERROR(5)
-                        setTimeout(() => {
-                          setLoad(false);
-                          setsuccessful(0);
-                        }, 3000);
-                      }
-                      else {
-                        console.log("error------------------>", res.data);
-                        setsuccessful(2)
-                        setTimeout(() => {
-                          setLoad(false);
-                          setsuccessful(0);
-                        }, 3000);
-                      }
+                      setsuccessful(2)
+                      setTimeout(() => {
+                        setLoad(false);
+                        setsuccessful(0);
+                      }, 3000);
                     }
-                  }).catch(function (error) {
-                    console.log("error al registrar usuario", error.data)
-                  });
+                  }
+                  // axios.post(base_url(serverCrm, `wellezy/register`), data).then(function (res) {
+                  //   if (res.data === true) {
+                  //     setsuccessful(1);
+                  //     _storeData(data.email, data.password)
+                  //   }
+                  //   else {
+                  //     if (res.data === "email_used") {
+                  //       setsuccessful(3);
+                  //       setERROR(5)
+                  //       setTimeout(() => {
+                  //         setLoad(false);
+                  //         setsuccessful(0);
+                  //       }, 3000);
+                  //     }
+                  //     else {
+                  //       console.log("error------------------>", res.data);
+                  //       setsuccessful(2)
+                  //       setTimeout(() => {
+                  //         setLoad(false);
+                  //         setsuccessful(0);
+                  //       }, 3000);
+                  //     }
+                  //   }
+                  // }).catch(function (error) {
+                  //   console.log("error al registrar usuario", error.data)
+                  // });
                 }
               }
             }
@@ -219,12 +231,8 @@ function Register(props) {
   }
 
   const _Init = async (data) => {
-
     try {
-
-      //console.log("into init before ---------->", data)
       await AsyncStorage.setItem('@Passport', JSON.stringify(data));
-      //console.log("into init after ---------->", data)
       setLoad(false)
       setsuccessful(0)
       setUserDetails({ ...data })
@@ -233,38 +241,21 @@ function Register(props) {
     catch (error) { }
   }
 
-
-
-
-  let randomCode
-  if (props.route.params) { randomCode = props.route.params.randomCode }
-  else { randomCode = 1 }
-  useEffect(() => {
-    setTimeout(() => {
-      //setinstructions(true)
-    }, 1000);
-  }, [randomCode]);
-
-
   function getTypeUser(value, name) {
     setinstructions(false)
     setFormInfo({ ...formInfo, "rolName": name, "rol": value })
   }
 
-
-  const [secretPassOne, setsecretPassOne] = useState(true);
-  const [secretPassTwo, setsecretPassTwo] = useState(true);
-
-
-
   return (
     <SafeAreaView style={{ backgroundColor: color_screen, flex: 1 }}>
       <StatusBar translucent backgroundColor="transparent" />
-      <PreRegistration status={instructions} close={setinstructions} get={getTypeUser} />
 
-
-
-
+      <PreRegistration
+        data={typeUser}
+        status={instructions}
+        close={setinstructions}
+        get={getTypeUser}
+      />
 
       {Load &&
         <View style={{
@@ -298,8 +289,6 @@ function Register(props) {
               <View style={{ justifyContent: "center", alignSelf: "center", alignItems: "center" }}>
                 <Icon name='alert-circle-outline' width={80} height={80} fill='red' />
               </View>}
-
-
             {successful === 3 &&
               <View style={{ paddingVertical: 15, justifyContent: "center", alignSelf: "center", alignItems: "center" }}>
                 <Icon name='alert-circle-outline' width={80} height={80} fill='#F5B041' />
@@ -308,22 +297,11 @@ function Register(props) {
           </View>
         </View>
       }
-
-
-
-
-
-
-
       <ImageBackground source={require('../images/background_register.png')} style={styles.back}>
         <View style={{ marginTop: 30, width: windowWidth, height: windowHeight }}>
           <ScrollView horizontal={false} scrollEventThrottle={16}>
             <View style={styles.card}>
-              {/*___________________________________________________________*/}
-
-
               <Text style={styles.titleCard}>{t("createAnAccount")}</Text>
-
               {
                 formInfo.avatar !== "" &&
                 <TouchableOpacity onPress={() => onChangeText('', 'avatar')}
@@ -341,16 +319,9 @@ function Register(props) {
                 </TouchableOpacity>
               }
 
-
-
-
-
-
-
               <View style={{
                 justifyContent: "center",
                 alignItems: "center",
-                //backgroundColor: "yellow",
                 height: formInfo.avatar !== "" ? 200 : 105,
                 marginBottom: formInfo.avatar === "" ? 20 : 80,
                 marginTop: formInfo.avatar === "" ? 10 : 80,
@@ -374,7 +345,6 @@ function Register(props) {
                       alignItems: "center",
                       paddingHorizontal: 50,
                       paddingVertical: 20,
-
                     }}>
                       <Icon name={'image-outline'} height={30} width={30} fill={color_grey_light} />
                       <Text style={{ color: color_grey_light, fontSize: 18 }}>Upload a file</Text>
@@ -387,13 +357,6 @@ function Register(props) {
                   }
                 </PhotoUpload>
               </View>
-
-
-
-
-
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 2 ? "red" : "#EAECEE" }}>
                 <TextInput
                   value={formInfo.name}
@@ -403,8 +366,6 @@ function Register(props) {
                   onChangeText={text => onChangeText(text, 'name')} />
                 <View style={styles.icon}><Icon name='person' width={25} height={25} fill='#aaa' /></View>
               </View>
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 3 ? "red" : "#EAECEE" }}>
                 <TextInput
                   value={formInfo.surname}
@@ -414,11 +375,6 @@ function Register(props) {
                   onChangeText={text => onChangeText(text, 'surname')} />
                 <View style={styles.icon}><Icon name='person' width={25} height={25} fill='#aaa' /></View>
               </View>
-
-
-
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 4 ? "red" : "#EAECEE" }}>
                 <TextInput
                   value={formInfo.phone}
@@ -431,9 +387,6 @@ function Register(props) {
                   onChangeText={text => onChangeText(text, 'phone')} />
                 <View style={styles.icon}><Icon name='phone' width={25} height={25} fill='#aaa' /></View>
               </View>
-
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 5 ? "red" : "#EAECEE" }}>
                 <TextInput
                   value={formInfo.email}
@@ -444,11 +397,6 @@ function Register(props) {
                   onChangeText={text => onChangeText(text, 'email')} />
                 <View style={styles.icon}><Icon name='email' width={25} height={25} fill='#aaa' /></View>
               </View>
-
-
-
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 6 ? "red" : "#EAECEE" }}>
                 <TextInput
                   secureTextEntry={secretPassOne}
@@ -458,13 +406,9 @@ function Register(props) {
                   placeholderTextColor="#aaa"
                   onChangeText={text => onChangeText(text, 'password')} />
                 <TouchableOpacity style={styles.icon} onPress={() => setsecretPassOne(!secretPassOne)}>
-                  <Icon name={secretPassOne ? 'eye-off-outline':'eye-outline'} width={25} height={25} fill='#aaa' />
+                  <Icon name={secretPassOne ? 'eye-off-outline' : 'eye-outline'} width={25} height={25} fill='#aaa' />
                 </TouchableOpacity>
               </View>
-
-
-
-
               <View style={{ ...styles.group, borderColor: ERROR === 7 ? "red" : "#EAECEE" }}>
                 <TextInput
                   secureTextEntry={secretPassTwo}
@@ -473,16 +417,10 @@ function Register(props) {
                   placeholder="password repeat"
                   placeholderTextColor="#aaa"
                   onChangeText={text => onChangeText(text, 'password_repeat')} />
-
                 <TouchableOpacity style={styles.icon} onPress={() => setsecretPassTwo(!secretPassTwo)}>
-                  <Icon name={secretPassTwo ? 'eye-off-outline':'eye-outline'} width={25} height={25} fill='#aaa' />
+                  <Icon name={secretPassTwo ? 'eye-off-outline' : 'eye-outline'} width={25} height={25} fill='#aaa' />
                 </TouchableOpacity>
               </View>
-
-
-
-
-
               <TouchableOpacity onPress={() => setLocation(!Location)} style={{ width: "100%" }}>
                 {formInfo.id_country === '' ?
                   <View style={{
@@ -495,7 +433,6 @@ function Register(props) {
                     backgroundColor: "#EAECEE",
                     height: 45,
                     borderRadius: 15
-
                   }}>
                     <Text style={{ width: "90%", lineHeight: 40, paddingHorizontal: 20, color: color_grey_half }}>Dirección</Text>
                     <View style={styles.icon}><Icon name='pin' width={25} height={25} fill='#aaa' /></View>
@@ -508,9 +445,6 @@ function Register(props) {
                   </View>
                 }
               </TouchableOpacity>
-
-
-
               {formInfo.id_country !== '' &&
                 <View style={{ ...styles.group, borderColor: ERROR === 9 ? "red" : "#EAECEE" }}>
                   <TextInput
@@ -522,20 +456,16 @@ function Register(props) {
                   <View style={styles.icon}><Icon name='pin' width={25} height={25} fill='#aaa' /></View>
                 </View>
               }
-
-
-
-
-
               <TouchableOpacity style={{ ...styles.group, borderColor: ERROR === 10 ? "red" : "#EAECEE" }} onPress={() => setselectingType(!selectingType)}>
                 <Text style={styles.inputText}>{formInfo.rolName === '' ? "Select a user type" : formInfo.rolName}</Text>
                 <View style={styles.icon}><Icon name='layers' width={25} height={25} fill='#aaa' /></View>
               </TouchableOpacity>
 
 
+              {//{id:0, value: "medic", name: "1medic", color:"#3498DB", img:"formZero.png",  description: "1descriptionUserClient" },
 
 
-              {selectingType === true &&
+                selectingType === true &&
                 <View style={{ paddingTop: 25, paddingHorizontal: 25, paddingBottom: 10, borderRadius: 12, marginBottom: 15, backgroundColor: "#D5D8DC", width: "90%", position: "relative", zIndex: 1, marginTop: -35, }}>
                   {
                     typeUser.map((i, key) => {
@@ -549,10 +479,19 @@ function Register(props) {
                             backgroundColor: "#EAECEE",
                             borderRadius: 8,
                             paddingVertical: 5,
+                            flexDirection:"row",
+                            justifyContent:"space-around"
                           }}
                         >
-                          <Text style={{ textTransform: "capitalize", textAlign: "left", fontSize: 16, fontWeight: "bold", paddingHorizontal: 20 }}>{i.name}</Text>
-                          <Text style={{ color: color_grey_half, paddingHorizontal: 20, textAlign: "justify", fontSize: 14 }}>{i.description}</Text>
+                   
+                              
+                            <View style={{width:40, height:40, borderRadius:40, backgroundColor:"white", overflow:"hidden" }}></View>
+                      
+                          <View style={{ flexDirection: "column", width:"75%"}}>
+                            <Text style={{ textTransform: "capitalize", textAlign: "left", fontSize: 16, fontWeight: "bold",}}>{i.name}</Text>
+                            <Text style={{ color: color_grey_half, textAlign: "justify", fontSize: 14 }}>{i.description}</Text>
+                          </View>
+
                         </TouchableOpacity>
                       )
                     })
@@ -563,33 +502,12 @@ function Register(props) {
               <TouchableOpacity onPress={() => setinstructions(true)} style={{ position: "absolute", bottom: 20, left: 15 }}>
                 <Icon name={"alert-circle"} width={30} height={30} fill="#ccc" />
               </TouchableOpacity>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
               <TouchableOpacity style={styles.BtnPrimary} onPress={() => sendForm()}>
                 <Text style={styles.loginText}>SING UP</Text>
               </TouchableOpacity>
-
-
               <TouchableOpacity onPress={() => setlanguage(true)} style={{ position: "absolute", bottom: 20, right: 15 }}>
                 <Icon name='settings-outline' width={25} height={25} fill="#ccc" />
               </TouchableOpacity>
-
             </View>
             <View style={{ width: "90%", marginBottom: "15%", marginTop: 20, flexDirection: "row", alignSelf: "center", justifyContent: "space-around" }}>
               <TouchableOpacity style={styles.btndown} onPress={() => goToScreen('Login')}><Text style={styles.btndownText}>{t("Login")}</Text></TouchableOpacity>
@@ -602,11 +520,6 @@ function Register(props) {
       {
         language &&
         <View style={{ backgroundColor: "rgba(0,0,0,0.8)", position: "absolute", width: "100%", height: "100%", paddingHorizontal: "10%", justifyContent: "center" }}>
-
-
-
-
-
           <TouchableOpacity onPress={() => setlanguage(false)} style={{
             position: "relative",
             alignSelf: "flex-end",
@@ -615,8 +528,6 @@ function Register(props) {
           }}>
             <Icon name='close-circle-outline' width={30} height={30} fill="#FFF" />
           </TouchableOpacity>
-
-
           <ChangeLanguage />
         </View>
       }
@@ -663,8 +574,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   titleCard: {
-    textTransform:"capitalize",
-    color:color_primary,
+    textTransform: "capitalize",
+    color: color_primary,
     paddingTop: 30,
     width: "100%",
     fontSize: 20,

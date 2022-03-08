@@ -21,44 +21,56 @@ function DashboardServices(props) {
   const { t, i18n } = useTranslation();
   const { navigation } = props
   const [horizonOptions, sethorizonOptions] = useState([]);
-  const [TIP, setTIP] = useState(7);
+  const [TIP, setTIP] = useState(null);
 
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
 
   useEffect(async () => {
-   await GetServices();
+    await GetServices();
   }, [randomCode]);
 
   async function GetServices() {
     setLoad(true)
     const servicesList = await services.servicesList(i18n.language)
     sethorizonOptions(servicesList);
-    // if (props.route.params.data !== undefined) {
-    //   setTIP(props.route.params.data)
-    // } else {
-    //   const res = servicesList[0].id
-    //   setTIP(res)
-    // }
     setLoad(false)
   }
+
+
+  useEffect(() => {
+    if (horizonOptions.length > 0) {
+      if (props.route.params.data !== undefined) {
+        console.log("if")
+        setTIP(props.route.params.data)
+      }
+      else {
+        console.log("else")
+        const res = horizonOptions[0].id
+        setTIP(res)
+      }
+    }
+  }, [horizonOptions]);
+
+
 
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
+
 
   function Horizon(data) {
     try {
       if (data.length !== 0) {
         return (
           <ScrollView scrollEventThrottle={16} horizontal={true} showsHorizontalScrollIndicator={false}
-          style={{
-            borderTopColor: color_grey_light,
-            borderTopWidth: 0.5,
-            backgroundColor: color_white,
-            paddingVertical: 5
-          }}>
+            style={{
+              borderTopColor: color_grey_light,
+              borderTopWidth: 0.5,
+              backgroundColor: color_white,
+              paddingVertical: 5
+            }}>
             {
               data.map((i, key) => {
                 return (
@@ -75,28 +87,63 @@ function DashboardServices(props) {
       }
     } catch (error) {
       console.log("error Horizontal()", error)
-     }
+    }
   }
+
+
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Head props={props} return=""
-        show={vertical}
-        action={setvertical}
-      />
+      <Head props={props} return="" show={vertical} action={setvertical} />
       <ScrollView tickyHeaderIndices={[0]} scrollEventThrottle={16} horizontal={false}>
-        {!Load && Horizon(horizonOptions)}
-        <View style={styles.wrap}>
-          {TIP == 1 && <Drivers goToScreen={goToScreen} />}
-          {TIP == 2 && <Hotels goToScreen={goToScreen} />}
-          {/* 
-          TIP === 3 plan Nutritional
-          TIP === 4 Tours
-          */}
-          {TIP == 6 && <Nurses goToScreen={goToScreen} />}
-          {TIP == 7 && <HomeRecovery goToScreen={goToScreen} />}
-          {TIP == 8 && <Specials goToScreen={goToScreen} />}
-        </View>
+       
+       
+
+
+        {/* {!Load && horizonOptions.length > 0 && Horizon(horizonOptions)} */}
+
+
+        {!Load && horizonOptions.length > 0 && 
+
+
+
+
+        <ScrollView scrollEventThrottle={16} horizontal={true} showsHorizontalScrollIndicator={false}
+            style={{
+              borderTopColor: color_grey_light,
+              borderTopWidth: 0.5,
+              backgroundColor: color_white,
+              paddingVertical: 5
+            }}>
+            {
+              horizonOptions.map((i, key) => {
+                return (
+                  <TouchableOpacity key={key}
+                    onPress={() => setTIP(i.id)}
+                    style={[styles.optionHorizon, { borderBottomColor: TIP == i.id ? color_primary : color_primary, borderBottomWidth: TIP == i.id ? 1 : 0, }]}>
+                    <Text style={[styles.nameOptHorizon, { color: TIP == i.id ? color_primary : color_grey_half }]}>{i.name}</Text>
+                  </TouchableOpacity>
+                )
+              })
+            }
+          </ScrollView>
+}
+
+
+
+
+        {TIP !== null &&
+          <View style={styles.wrap}>
+            {TIP == 1 && <Drivers goToScreen={goToScreen} />}
+            {TIP == 2 && <Hotels goToScreen={goToScreen} />}
+            {/* TIP === 3 plan Nutritional*/}
+            {/* TIP === 4 Tours */}
+            {TIP == 6 && <Nurses goToScreen={goToScreen} />}
+            {TIP == 7 && <HomeRecovery goToScreen={goToScreen} />}
+            {TIP == 8 && <Specials goToScreen={goToScreen} />}
+          </View>
+        }
       </ScrollView>
       <Menu props={props} option={3} />
       {/* <WellezyInfo /> */}
@@ -127,7 +174,7 @@ const styles = StyleSheet.create({
     color: "red"
   },
   wrap: {
-    paddingTop:20,
+    paddingTop: 20,
     flexDirection: "column",
     justifyContent: 'center',
     paddingBottom: 60

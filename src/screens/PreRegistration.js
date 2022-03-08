@@ -23,10 +23,9 @@ import {
 } from '../styles/Colors.js'
 import { ScrollView } from 'react-native-gesture-handler';
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 function PreRegistration(props) {
-  const [page, setpage] = useState(1);
+  const [page, setpage] = useState(0);
   const { t, i18n } = useTranslation();
   const size = 20
   function onSwipeLeft(gestureState) { }
@@ -42,25 +41,31 @@ function PreRegistration(props) {
       }
     }
   }
-
   if (props.status === true) {
     return (
       <GestureRecognizer style={styles.wrap} onSwipeLeft={() => pagination(+1)} onSwipeRight={() => pagination(-1)}>
         <View style={styles.wrapper}>
+          {/* <Text style={{position: "absolute",top: 5,left: 5,}}>count: {props.data.length}</Text> */}
           <TouchableOpacity
             style={{ position: "absolute", zIndex: 9, top: 5, right: 5 }}
             onPress={() => props.close(false)}>
             <Icon name={"close"} width={25} height={25} fill={color_fifth} />
           </TouchableOpacity>
-          {page === 1 && <PageOne  getTypeUser={props.get} _color={"#3498DB"} id={null}      value={null} />}
-          {page === 2 && <PageTwo  getTypeUser={props.get} _color={"#2ECC71"} id={"client"}  value={t("client")} />}
-          {page === 3 && <PageTree getTypeUser={props.get} _color={"#F39C12"} id={"service"} value={t("service")} />}
-          {page === 4 && <PageFour getTypeUser={props.get} _color={"#E74C3C"} id={"medic"}   value={t("medic")} />}
+          {props.data.map((i, key) => {
+            if (page === i.id) {
+              return (
+                <Page key={key} data={i} getTypeUser={props.get} />
+              )
+            }
+          })}
           <View style={styles.footer}>
-            <TouchableOpacity onPress={() => setpage(1)}><Icon name={page === 1 ? "radio-button-on" : "radio-button-off"} width={size} height={size} fill={color_white} style={{ marginHorizontal: 5 }} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setpage(2)}><Icon name={page === 2 ? "radio-button-on" : "radio-button-off"} width={size} height={size} fill={color_white} style={{ marginHorizontal: 5 }} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setpage(3)}><Icon name={page === 3 ? "radio-button-on" : "radio-button-off"} width={size} height={size} fill={color_white} style={{ marginHorizontal: 5 }} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setpage(4)}><Icon name={page === 4 ? "radio-button-on" : "radio-button-off"} width={size} height={size} fill={color_white} style={{ marginHorizontal: 5 }} /></TouchableOpacity>
+            {props.data.map((i, key) => {
+              return (
+                <TouchableOpacity key={key} onPress={() => setpage(i.id)}>
+                  <Icon name={page === i.id ? "radio-button-on" : "radio-button-off"} width={size} height={size} fill={color_white} style={{ marginHorizontal: 5 }} />
+                </TouchableOpacity>
+              )
+            })}
           </View>
         </View>
       </GestureRecognizer>
@@ -70,93 +75,34 @@ function PreRegistration(props) {
 }
 export default PreRegistration;
 
-const PageOne = (props) => {
-  return (
-    <View style={styles.page}>
-    <Text style={{...styles.title, color: props._color}}>
-      nuestros usuarios
-      </Text>
-    <ScrollView>
-      <View style={styles.imagen}>
-        <Image style={styles.img} source={require("../images/formZero.png")} />
-      </View>
-      <Text style={styles.description}>
-        Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
-      </Text>
-    </ScrollView>
-  <TouchableOpacity
-    onPress={()=>props.getTypeUser(null, null)}
-    style={{...styles.btnRegister, backgroundColor: props._color}}>
-      <Text style={styles.btnRegisterText}>Volver</Text>
-    </TouchableOpacity>
-    <View style={{ ...styles.shadow, backgroundColor: props._color, height: "40%" }}></View>
-  </View>
-  )
-}
 
-const PageTwo = (props) => {
+const Page = (props) => {
   return (
     <View style={styles.page}>
-    <Text style={{...styles.title, color: props._color}}>¿Qué es {props.value}?</Text>
-    <ScrollView>
-      <View style={styles.imagen}>
-        <Image style={styles.img} source={require("../images/formOne.png")} />
-      </View>
-      <Text style={styles.description}>
-        Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
-      </Text>
-    </ScrollView>
-    <TouchableOpacity
-    onPress={()=>props.getTypeUser(props.id,props.value)}
-    style={{...styles.btnRegister, backgroundColor: props._color}}>
-      <Text style={styles.btnRegisterText}>registrarme</Text>
-    </TouchableOpacity>
-    <View style={{ ...styles.shadow, backgroundColor: props._color, height: "40%" }}></View>
-  </View>
-  )
-}
-
-const PageTree = (props) => {
-  return (
-    <View style={styles.page}>
-      <Text style={{...styles.title, color: props._color}}>¿Qué es {props.value}?</Text>
+      <Text style={{ ...styles.title, color: props._color }}>....{props.data.name}</Text>
       <ScrollView>
         <View style={styles.imagen}>
-          <Image style={styles.img} source={require("../images/formTwo.png")} />
+          {/* <Image style={styles.img} source={require(`../images/${props.data.img}`)} /> */}
         </View>
         <Text style={styles.description}>
-          Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
+          {props.data.description}
         </Text>
       </ScrollView>
-      <TouchableOpacity
-       onPress={()=>props.getTypeUser(props.id,props.value)}
-      style={{...styles.btnRegister, backgroundColor: props._color}}>
-      <Text style={styles.btnRegisterText}>registrarme</Text>
-    </TouchableOpacity>
-    <View style={{ ...styles.shadow, backgroundColor: props._color, height: "40%" }}></View>
+      {props.data.id === 0 ?
+        <TouchableOpacity
+          onPress={() => props.getTypeUser(null, null)}
+          style={{ ...styles.btnRegister, backgroundColor: props._color }}>
+          <Text style={styles.btnRegisterText}>Volver</Text>
+        </TouchableOpacity>
+        :
+        <TouchableOpacity
+          onPress={() => props.getTypeUser(props.id, props.value)}
+          style={{ ...styles.btnRegister, backgroundColor: props._color }}>
+          <Text style={styles.btnRegisterText}>registrarme cómo {props.data.name}</Text>
+        </TouchableOpacity>
+      }
+      <View style={{ ...styles.shadow, backgroundColor: props.data.color, height: "40%" }}></View>
     </View>
-  )
-}
-
-const PageFour = (props) => {
-  return (
-    <View style={styles.page}>
-    <Text style={{...styles.title, color: props._color}}>¿Qué es {props.value}?</Text>
-    <ScrollView>
-      <View style={styles.imagen}>
-        <Image style={styles.img} source={require("../images/formThree.png")} />
-      </View>
-      <Text style={styles.description}>
-        Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.
-      </Text>
-    </ScrollView>
-    <TouchableOpacity
-    onPress={()=>props.getTypeUser(props.id,props.value)}
-    style={{...styles.btnRegister, backgroundColor: props._color}}>
-      <Text style={styles.btnRegisterText}>registrarme</Text>
-    </TouchableOpacity>
-    <View style={{ ...styles.shadow, backgroundColor: props._color, height: "40%" }}></View>
-  </View>
   )
 }
 
@@ -208,16 +154,16 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom:10
+    marginBottom: 10
   },
   description: {
-    paddingBottom:60,
+    paddingBottom: 60,
     color: color_grey_dark,
     fontSize: 13,
     textAlign: "justify"
   },
   imagen: {
-    alignSelf:"center",
+    alignSelf: "center",
     width: windowWidth / 2,
     height: windowWidth / 2,
   },
@@ -228,18 +174,18 @@ const styles = StyleSheet.create({
     resizeMode: "cover"
   },
   btnRegister: {
-    marginTop:10,
+    marginTop: 10,
     position: "relative",
     zIndex: 99999,
     borderColor: color_white,
     borderWidth: 1,
     borderRadius: 12,
-    width: "60%",
+    width: "80%",
     alignSelf: "center",
-    paddingVertical: 5
+    paddingVertical: 10
   },
   btnRegisterText: {
-    textTransform: "capitalize",
+    textTransform: "uppercase",
     fontSize: 14,
     fontWeight: "bold",
     textAlign: "center",

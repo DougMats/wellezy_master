@@ -6,9 +6,9 @@ const CARTSHOP = () => ({
 
   insertcartshop: async (data) => {
     let res
-     console.log(" ____url: ",base_url(serverCrm, 'insert/cart/shop'))
+    console.log(" ____url: ", base_url(serverCrm, 'insert/cart/shop'))
 
-     console.log("____data: ", data)
+    console.log("____data: ", data)
     await axios.post(base_url(serverCrm, 'insert/cart/shop'), data)
       .then(function (response) {
         res = response.data
@@ -21,19 +21,9 @@ const CARTSHOP = () => ({
   },
 
 
-
-
-
-//Route::get('get/cart/shop/{id}','CartShop@GetCartshop');
-
-
-
-
-
-
-getCartShop: async (id) => {
+  getCartShop: async (id) => {
     let res
-    //console.log("getCartShop link ---> ",base_url(serverCrm, `get/cart/shop/${id}`))
+    console.log("getCartShop link ---> ",base_url(serverCrm, `get/cart/shop/${id}`))
     await axios.get(base_url(serverCrm, `get/cart/shop/${id}`))
       .then(function (response) {
         res = response.data
@@ -46,50 +36,20 @@ getCartShop: async (id) => {
   },
 
 
-
-
-
-  // create: async (leng, premium, stars, search, page) => {},
-  // select: async (leng, premium, stars, search, page) => {},
-  // update: async (leng, premium, stars, search, page) => {},
-  // deleted: async (leng, premium, stars, search, page) => {},
-
-
-  // GetClinics: async (leng, premium, stars, search, page) => {
-  //   let res
-  //   console.log("get all clinics ---->", base_url(serverCrm, `get/clinics/list/${leng}/${premium}/${stars}/${search}?page=${page}`))
-  //   await axios.get(base_url(serverCrm, `get/clinics/list/${leng}/${premium}/${stars}/${search}?page=${page}`))
-  //     .then(function (response) {
-  //       res = response.data
-  //     })
-  //     .catch((error) => {
-  //       console.log("error: ", error.data)
-  //       return false
-  //     })
-  //   return res;
-  // },
-
-
-
-
-  
-deletedSelectes: async (data) => {
-  let res
-  console.log("link: ---->", base_url(serverCrm, 'delete/items/selectes/in/cart/shop'))
-  console.log("data:----->", data)
-  await axios.post(base_url(serverCrm, 'delete/items/selectes/in/cart/shop'), data)
-    .then(function (response) {
-      res = response.data
-    })
-    .catch((error) => {
-      console.log("error: ", error.data)
-      return false
-    })
-  return res;
-},
-
-
-
+  deletedSelectes: async (data) => {
+    let res
+    console.log("link: ---->", base_url(serverCrm, 'delete/items/selectes/in/cart/shop'))
+    console.log("data:----->", data)
+    await axios.post(base_url(serverCrm, 'delete/items/selectes/in/cart/shop'), data)
+      .then(function (response) {
+        res = response.data
+      })
+      .catch((error) => {
+        console.log("error: ", error.data)
+        return false
+      })
+    return res;
+  },
 
 
   savePayment: async (data) => {
@@ -110,5 +70,4 @@ deletedSelectes: async (data) => {
 
 
 });
-
 export default CARTSHOP;

@@ -17,7 +17,8 @@ import {
 } from '../../styles/Colors.js'
 import { file_server1 } from '../../../Env'
 import styles from '../../styles/styles.js'
-import { toBase64Format } from '../../components/Logic.js'
+//import { toBase64Format } from '../../components/Logic.js'
+
 import RNFetchBlob from "rn-fetch-blob";
 
 function SimpleForm(props) {
@@ -42,22 +43,6 @@ function SimpleForm(props) {
     })
   }
 
-  function urlToBlob(url) {
-    return new Promise((resolve, reject) => {
-      var xhr = new XMLHttpRequest();
-      xhr.onerror = reject;
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          resolve(xhr.response);
-        }
-      };
-      xhr.open('GET', url);
-      xhr.responseType = 'base64'; // convert type
-      xhr.send();
-    })
-  }
-
-
   async function sendForm() {
     const data = { ...formInfo }
     if (
@@ -76,16 +61,19 @@ function SimpleForm(props) {
       data.id_procedure = props.route.params.data.id;
       data.id_category = props.route.params.data.id_category;
       const response = await formularios.SimpleFormulario(data);
+      console.log("1- res:", response)
       if (response !== false) {
-        let imagen = props.route.params.data.foto
-        if (imagen !== undefined) { imagen = "https://wellezy.com/wp-content/uploads/2020/12/Logo-final-wellezy-blanco.png"}
-        let newImagen, imagePath = null;
-        newImagen = await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
-          .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
-          .then(base64Data => {
-            return base64Data
-            //return fs.unlink(imagePath);
-          });
+        let imagen = "cart_shop.png"
+        // let imagen = props.route.params.data.foto
+        // if (imagen !== undefined) { imagen = "cart_shop.png"}
+        // let newImagen, imagePath = null;
+        // newImagen = await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
+        //   .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
+        //   .then(base64Data => {
+        //     return base64Data
+        //     //return fs.unlink(imagePath);
+        //   });
+          
         const toCar = {
           id_client: userDetails.id,
           id_medic: 2,
@@ -94,22 +82,22 @@ function SimpleForm(props) {
               type: "item",
               code: response.id,
               relation: "valoration",
-              name: `Video Valoración-(${props.route.params.data.name})`,
-              description: "solicitud de video valoracion",
+              name: `valoration. ${props.route.params.data.name}`,
+              description: `solicitud de video valoracion para ${props.route.params.data.name}`,
               price: 50,
               qty: 1,
-              img: newImagen,
-              coin: "$"
+              coin: "$",
+              id_service:props.route.params.data.id,
+              type_service:"sub_category",
+              img: "video_valoration.png"
             }
           ]
         }
+
+
         const res = await cartShop.insertcartshop(toCar);
+        console.log("2- res:", res)
         if (res === true) {
-
-          console.log("save successful...!")
-          console.log("Angie Acosta -> Te Quiero.")
-
-
           setLoad(false);
           setTimeout(() => {
             setFormOn(false);
@@ -118,8 +106,6 @@ function SimpleForm(props) {
         }
         else {
           Toast.show("Error");
-          console.error("error al enviar formulario")
-          console.log("error al enviar formulario")
           setTimeout(() => {
             goToScreen("Home", null);
           }, 3000);
@@ -127,7 +113,6 @@ function SimpleForm(props) {
      }
       else {
         setLoad(false)
-        console.log("response..... response = false")
       }
     }
   }
@@ -214,6 +199,7 @@ function SimpleForm(props) {
           goToScreen={goToScreen}
         />
       }
+
       <Image source={{ uri: `${file_server1}/img/category/picture/${props.route.params.data.foto}` }}
         style={{
           opacity: 0.5,
@@ -294,30 +280,6 @@ const styles2 = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center"
   },
-  // body: {
-  //   alignSelf: "center",
-  //   borderRadius: 12,
-  //   width: "100%",
-  //   padding: 20,
-  //   alignContent: "center",
-  //   alignItems: "center",
-  // },
-  // row: {
-  //   marginVertical: 10,
-  //   width: "100%",
-  //   flexDirection: "column"
-  // },
-  // label: {
-  //   fontSize: 12,
-  //   fontWeight: "600",
-  //   marginBottom: 5
-  // },
-  // text: {
-  //   borderRadius: 8,
-  //   paddingHorizontal: 10,
-  //   height: 40,
-  //   backgroundColor: "#eee"
-  // },
   terminos: {
     marginTop: 20,
     flexDirection: "row"

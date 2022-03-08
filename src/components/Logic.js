@@ -1,6 +1,9 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { showLocation } from 'react-native-map-link'
+import RNFetchBlob from "rn-fetch-blob";
+
+const fs = RNFetchBlob.fs;
 // import ImgToBase64 from 'react-native-image-base64';
 
 //var base64Img = require('base64-img');
@@ -200,12 +203,18 @@ const GotoMaps = (lat, lon) => {
 }
 
 
-const toBase64Format = (file) => {
-  
-  // base64Img.base64(file, function (err, data) {
-  //   console.log("err: ", err)
-  //   console.log("data: ", data)
-  // })
+
+
+
+const toBase64Format = async (imagen) => {
+
+  await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
+    .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
+    .then(base64Data => {
+      return base64Data
+      //return fs.unlink(imagePath);
+    });
+    
 }
 
 

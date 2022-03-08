@@ -54,6 +54,7 @@ function UploadPictures(props) {
 
 
 
+
   function sendForm() {
     if (PhotosUplaods.length > 0) {
       if (PhotosUplaods.length < dataSlots[category_key].images.length) {
@@ -61,13 +62,11 @@ function UploadPictures(props) {
       }
       else {
         setLoad(true)
-
         let data = {
           "id_valoration": props.route.params.data.id_valoration,
           "id_valoration_scheduled":1,
           "photos": PhotosUplaods
         }
-
         axios.post(base_url(serverCrm, `wellezy/cotization/createImg`), data).then(function (response) {
           if (response.data === true) {
             setLoad(false)
@@ -81,6 +80,8 @@ function UploadPictures(props) {
       return false;
     }
   }
+
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -128,6 +129,7 @@ function UploadPictures(props) {
       }}>
         <PhotoUpload onPhotoSelect={avatar => {
           if (avatar) {
+            console.log("avatar: ", avatar)
             let number = Math.random()
             PhotosUplaods = [
               ...PhotosUplaods,

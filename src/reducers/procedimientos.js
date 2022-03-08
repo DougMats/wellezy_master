@@ -14,14 +14,15 @@ export default function index(){
 
 
 async function getData(){
-  const data = await procedimientos.List("en", null)
-  return data
+  // const data = await procedimientos.List("en", null)
+  // return data
+  return []
 }
 
 
 
 const datasglobal = getData()
-console.log("_____________datasglobal",datasglobal)
+//console.log("_____________datasglobal",datasglobal)
 
 const datas =[{name:"name jajaja"}, "","plastia", "otroplastia", "mas plastia"];
 return datas

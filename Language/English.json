@@ -196,10 +196,7 @@
     "Europe": "Europe",
     "NorthAmerica": "North America",
     "Oceania": "Oceania",
-    "SouthAmerica": "South America",
+    "SouthAmerica": "South America"
 
-    "descriptionUserClient":"111111",
-    "descriptionUserMedic":"2222",
-    "descriptionUserServer":"3333"
   }
 }

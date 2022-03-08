@@ -47,7 +47,7 @@ function ProcessList(props) {
     <View style={styles.wrap}>
       {Load === false &&
         <View style={styles.head}>
-          <Text style={styles.title}>Combos Especiales</Text>
+          <Text style={styles.title}>Ofertas Especiales</Text>
            <TouchableOpacity
             onPress={() => props.goToScreen("DashboardServices", 8)}
             style={styles.btn}>
@@ -79,11 +79,12 @@ export default React.memo(ProcessList);
 const styles = StyleSheet.create({
 
   wrap: {
+    //backgroundColor:"red",
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 20,
     flexDirection: "column",
-    borderBottomColor: color_grey_light,
-    borderBottomWidth: 0.5
+    // borderBottomColor: color_grey_light,
+    // borderBottomWidth: 0.5
   },
   head: {
     flexDirection: "row",
@@ -94,15 +95,16 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "700",
     fontSize: 16,
-    color: color_primary
+    color: color_grey_dark
   },
   btn: {
     backgroundColor: color_white,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     borderRadius: 12
   },
   btnText: {
+    textTransform:"capitalize",
     fontSize:12,
     color: color_grey_dark
   },

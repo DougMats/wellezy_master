@@ -9,6 +9,7 @@ import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage'
 import UserContext from '../../contexts/UserContext'
 //import styles from '../images/css/Login.js'
+import {session } from '../services/connection.js'
 import { useTranslation } from 'react-i18next';
 import { color_primary, color_white, color_black_a, color_grey_light, color_grey_half } from '../styles/Colors.js'
 
@@ -55,7 +56,7 @@ function Index(props) {
     })
   }
 
-  function sendForm() {
+  async function sendForm() {
     const data = {
       ...formInfo
     }
@@ -68,12 +69,23 @@ function Index(props) {
     setLoad(true)
     setBtnDisable(true)
 
-    //wellezy/auth
-    //wellezy/authMed
+console.log("----> GO.")
+    const res = await session.login(data)
 
-    // console.log("login link ----->", base_url(serverCrm, `wellezy/auth`))
-    // console.log("login data: -----> ", data)
+    if(res === false){
+      setLoad(false)
+      setBtnDisable(false)
+      console.log('***** ',error)
+      Toast.show("Email or password was not correct")
+    }
+    else{ 
+      console.log(res, "SAAS")
+      _storeData(res)
+      setLoad(false)
+      setBtnDisable(false)
+    }
 
+/*
     axios.post(base_url(serverCrm, `wellezy/auth`), data).then(function (response) {
       console.log(response.data, "SAAS")
       _storeData(response.data)
@@ -86,8 +98,11 @@ function Index(props) {
         console.log('***** ',error)
         Toast.show("Email or password was not correct")
       })
-      .then(function () { });
+      .then(function () { });*/
+
   }
+
+
 
   const _storeData = async (data) => {
     try {

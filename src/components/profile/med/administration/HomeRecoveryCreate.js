@@ -98,6 +98,9 @@ function HomeRecoveryCreate(props) {
     }
   }
 
+
+  console.log("data: ", data)
+
   return (
     <View style={{
       alignItems: "center",
@@ -125,13 +128,19 @@ function HomeRecoveryCreate(props) {
               <Icon name={'close'} height={30} width={30} fill={"rgba(0,0,0,0.25)"} />
             </TouchableOpacity>
           }
+
+
+          
           <PhotoUpload
             onPhotoSelect={avatar => {
               if (avatar) {
-                onChangeText(avatar, 'banner')
+                console.log("avatar: ", avatar)
+                //onChangeText(avatar, 'banner')
               }
             }}
           >
+
+
             {data.banner === "" ?
               <View style={{ flexDirection: "column", backgroundColor: "rgba(255,255,255,0.1)", marginBottom: 10, justifyContent: "center", alignItems: "center", paddingHorizontal: 50, paddingVertical: 20, borderRadius: 12 }}>
                 <Icon name={'image-outline'} height={30} width={30} fill={color_grey_light} />

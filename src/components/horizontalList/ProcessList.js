@@ -96,13 +96,14 @@ else{
 
 }
 export default React.memo(ProcessList);
+
 const styles = StyleSheet.create({
   wrap: {
     paddingTop: 10,
-    paddingBottom: 10,
+    paddingBottom: 20,
     flexDirection: "column",
-    borderBottomColor: color_grey_light,
-    borderBottomWidth: 0.5
+    // borderBottomColor: color_grey_light,
+    // borderBottomWidth: 0.5
   },
   head: {
     flexDirection: "row",
@@ -113,15 +114,16 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "700",
     fontSize: 16,
-    color: color_primary
+    color: color_grey_dark
   },
   btn: {
     backgroundColor: color_white,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     borderRadius: 12
   },
   btnText: {
+    textTransform:"capitalize",
     fontSize:12,
     color: color_grey_dark
   },
@@ -130,28 +132,31 @@ const styles = StyleSheet.create({
 
 
   card: {
-    justifyContent:"center",
+
+    overflow:"hidden",
+    width: windowWidth/2.8,
+    justifyContent:"space-between",
     alignItems:"center",
     flexDirection: "column",
-    padding: 10,
-    backgroundColor: color_white,
-    borderRadius: 12,
+    paddingVertical: 5,
+    backgroundColor: "rgba(255,255,255,0.5)",//color_white,
+    borderRadius: 8,
     margin: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 5,
   },
 
   cardL: {
     backgroundColor: "#F4F6F6",
-    width: 90,
-    height: 90,
-    borderRadius: 20,
+    width: windowWidth/3.5,
+    height:  windowWidth/3.5,
+    borderRadius: 12,
     overflow: "hidden"
   },
   img: {
@@ -161,28 +166,31 @@ const styles = StyleSheet.create({
     resizeMode: "cover"
   },
   cardR: {
+
+    //marginTop:5,
+    width:"100%",
     flexDirection: "column",
-    paddingLeft: 10,
-    //width: windowWidth / 2,
-    overflow: "hidden"
+    paddingHorizontal: 10,
+    //marginBottom:-8
   },
   name: {
-    marginTop:5,
     textAlign:"center",
     textTransform: "uppercase",
-    fontSize: 14,
+    fontSize: 12,
+    lineHeight:15,
     fontWeight: "bold",
     color: color_primary
   },
   wrapper: {
-    marginBottom: 2,
-    borderBottomColor: color_grey_light,
-    borderBottomWidth: 0.5,
-    flexDirection: "row"
+    //display:"none"
+   // borderBottomColor: color_grey_light,
+    //borderBottomWidth: 0.5,
+    // flexDirection: "row"
   },
   text: {
+    textAlign:"center",
     color: color_grey_half,
-    fontSize: 14,
+    fontSize: 10,
     fontWeight: "700"
   }
 })
@@ -194,14 +202,14 @@ const Card = (props) => {
       <View style={styles.cardL}>
         <Image style={styles.img} source={{ uri: `${file_server1}/img/category/picture/${props.data.foto}` }} />
       </View>
-
       <View style={styles.cardR}>
         <Text style={styles.name}>{letterCounter(props.data.name, 21)}</Text>
-        <View style={styles.wrapper}>
-          <Text style={styles.text}>{t("recommendedBy")}: {props.data.recommended}</Text>
+        {/* <View style={styles.wrapper}> */}
+          <Text style={styles.text}>{
+          t("recommendedBy")}: {"\n"} {props.data.recommended}</Text>
         </View>
-        <ScoreStars stars={props.data.stars} size={20} color={color_star} />
-      </View> 
+        <ScoreStars stars={props.data.stars} size={18} color={color_star} />
+      {/* </View> */}
     </TouchableOpacity>
   )
-}
+  }

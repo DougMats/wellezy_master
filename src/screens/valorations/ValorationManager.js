@@ -50,13 +50,14 @@ function ValorationManager(props) {
 
 
   const [optionesList, setoptionesList] = useState([
-    { id: 1, name: 'manage', color: "red" },
-    { id: 2, name: 'client', color: "blue" },
-    { id: 3, name: 'procedure', color: "green" },
-    { id: 4, name: 'clinicHistory', color: "pink" },
-    { id: 5, name: 'images', color: "orange" },
-    { id: 6, name: 'scheduled', color: "red" },
-    { id: 7, name: 'valoration', color: "red" }
+    { id: 1, name: 'manage',  },
+    { id: 2, name: 'client',  },
+    { id: 3, name: 'procedure',  },
+    { id: 4, name: 'clinicHistory',  },
+    { id: 5, name: 'images', },
+    { id: 6, name: 'scheduled',  },
+    { id: 7, name: 'valoration',  },
+    { id: 8, name: 'quote',  }
   ]);
 
   const [view, setview] = useState(selectView());
@@ -192,6 +193,7 @@ function ValorationManager(props) {
             {view.name === 'clinicHistory' && <ClinicHistory data={data} setview={setview} goToScreen={goToScreen} />}
             {view.name === 'images' && <Images data={data} setview={setview} goToScreen={goToScreen} />}
             {view.name === 'valoration' && <Valoration data={data} setview={setview} goToScreen={goToScreen} />}
+            {view.name === 'quote' && <Quote data={data} setview={setview} goToScreen={goToScreen} />}
           </ScrollView>
         </LinearGradient>
       }
@@ -556,14 +558,14 @@ const Valoration = (props) => {
     <View style={styles.page}></View>)
 }
 
-
+const Quote = (props) => {
+  const { t, i18n } = useTranslation();
+  return (
+    <View style={styles.page}></View>)
+}
 
 
 /*
-
-
-
-
 <Text>{props.data.basedOn}</Text>
 <Text>{props.data.categori_img}</Text>
 <Text>{props.data.category_id}</Text>

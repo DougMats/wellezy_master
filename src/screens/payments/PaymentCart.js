@@ -7,6 +7,7 @@ import _ from 'lodash';
 import UserContext from '../../../contexts/UserContext'
 import MenuVertical from '../../components/generic/MenuVertical.js';
 import { cartShop } from '../../services/connection.js';
+import { file_server1 } from '../../../Env.js';
 import {
   color_primary,
   color_secondary,
@@ -182,8 +183,6 @@ function PaymentCart(props) {
                 itemUnselect={itemUnselect}
               />
             )
-            // if (i.type === "item") { return (<Item key={key} data={i} selectList={itemsSelect} itemSelect={itemSelect} itemDelect={itemDelect} itemUnselect={itemUnselect} />) }
-            // if (i.type === "group") { return (<Group key={key} data={i} selectList={itemsSelect} itemSelect={itemSelect} itemDelect={itemDelect} itemUnselect={itemUnselect} />) }
           })}
         </View>
       </ScrollView>
@@ -247,22 +246,46 @@ const Item = (props) => {
   return (
     <View style={styles.item}>
       <TouchableOpacity style={styles.wrapperUp} onLongPress={() => long()} onPress={() => simple()} >
-        <View style={styles.wrap}>
-          {props.selectList.length > 0 &&
+
+
+
+        {props.selectList.length > 0 &&
+          <View style={{ width: "10%", justifyContent:"center", left: -5,  }}>
+
             <TouchableOpacity onPress={() => check ? props.itemUnselect(props.data) : props.itemSelect(props.data)} style={styles.btn}>
               <Icon name={check ? 'checkmark-square-2-outline' : 'square-outline'} width={25} height={25} fill={check ? color_primary : color_grey_light} />
             </TouchableOpacity>
-          }
-          <View style={styles.image}>
-            <Image style={styles.img} source={{ uri: props.data.img }} />
+
           </View>
-          <View style={{ ...styles.info, width: props.selectList.length > 0 ? "80%" : null }}>
-            <Text style={styles.name}>{props.data.name}</Text>
-            <Text style={styles.desc}>{props.data.description}</Text>
-            <Text style={styles.price}>({props.data.qty} X {currencyFormat(props.data.coin, props.data.price)})
-              <Text style={styles.priceTotal}> {currencyFormat(props.data.coin, (props.data.qty * props.data.price))}</Text></Text>
+        }
+
+
+
+        <View style={{ width: "20%", alignItems: "center", justifyContent:"center"  }}>
+          <View style={{...styles.image,borderColor: color_grey_light, borderWidth:0.5,  transform: [{ scale: props.selectList.length > -10 ? 0.9:1 }] }}>
+            <Image
+              style={styles.img}
+              source={{ uri: `${file_server1}/img/wellezy/cart_shop/${props.data.relation}/${props.data.img}` }}
+            />
           </View>
         </View>
+
+
+
+
+        <View style={{ ...styles.info, width: props.selectList.length > 0 ? "60%" : "70%" }}>
+          <Text style={styles.name}>{props.data.name}</Text>
+          <Text style={styles.desc}>{props.data.description}</Text>
+          <Text style={styles.price}>({props.data.qty} X {currencyFormat(props.data.coin, props.data.price)})
+            <Text style={styles.priceTotal}> {currencyFormat(props.data.coin, (props.data.qty * props.data.price))}</Text></Text>
+        </View>
+
+
+
+
+
+
+
         <View style={styles.itemBtn}>
           <TouchableOpacity onPress={() => setmodal(true)} style={styles.btn} >
             <Icon name={'trash-outline'} width={25} height={25} fill={color_grey_light} />
@@ -274,6 +297,9 @@ const Item = (props) => {
           }
         </View>
       </TouchableOpacity>
+
+
+
       {open &&
         <View style={styles.childWrap}>
           {props.data.child.map((i, key) => {
@@ -448,6 +474,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   wrapperUp: {
+    width: "100%",
     padding: 5,
     flexDirection: "row",
   },
@@ -457,7 +484,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   image: {
-    backgroundColor:"rgba(0,0,0,0.05)",
+    backgroundColor: "rgba(0,0,0,0.05)",
     width: 60,
     height: 60,
     overflow: "hidden",
@@ -492,7 +519,7 @@ const styles = StyleSheet.create({
   },
   itemBtn: {
     flexDirection: "column",
-    minWidth: "10%",
+    width: "10%",
     justifyContent: "space-around",
     alignItems: "center",
   },

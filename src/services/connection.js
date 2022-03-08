@@ -43,18 +43,17 @@ const valorations = VALORATIONS()
 import PROFILE from './profile'
 const profile = PROFILE()
 
-
-
 import SEARCH from './search'
 const search = SEARCH()
-
 
 import CARTSHOP from './cartShop'
 const cartShop =CARTSHOP()
 
-
 import NOTIFICATIONS from './notifications'
 const notifications = NOTIFICATIONS()
+
+import SESSION from './session'
+const session = SESSION()
 
 export {
   procedimientos,
@@ -74,5 +73,6 @@ export {
   profile,
   search,
   cartShop,
-  notifications
+  notifications,
+  session
 };
