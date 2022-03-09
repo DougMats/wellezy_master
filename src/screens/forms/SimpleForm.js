@@ -17,8 +17,6 @@ import {
 } from '../../styles/Colors.js'
 import { file_server1 } from '../../../Env'
 import styles from '../../styles/styles.js'
-//import { toBase64Format } from '../../components/Logic.js'
-
 import RNFetchBlob from "rn-fetch-blob";
 
 function SimpleForm(props) {
@@ -29,12 +27,16 @@ function SimpleForm(props) {
   const [Load, setLoad] = useState(false);
   const [FormOn, setFormOn] = useState(false);
 
+  // console.log("**********")
+  // console.log("****", props.route.params.id_MedicSource, "***")
+  // console.log("**********")
+
   const [formInfo, setFormInfo] = useState({
-      Nombres: userDetails.name,
-      Apellidos: userDetails.surname,
-      Email: userDetails.email,
-      Phone: userDetails.phone
-    });
+    Nombres: userDetails.name,
+    Apellidos: userDetails.surname,
+    Email: userDetails.email,
+    Phone: userDetails.phone
+  });
 
   function onChangeText(text, key) {
     setFormInfo({
@@ -58,59 +60,70 @@ function SimpleForm(props) {
       setFormOn(true);
       data.id_client = userDetails.id;
       data.id_medic = props.route.params.id_MedicSource,
-      data.id_procedure = props.route.params.data.id;
+        data.id_procedure = props.route.params.data.id;
       data.id_category = props.route.params.data.id_category;
       const response = await formularios.SimpleFormulario(data);
-      console.log("1- res:", response)
+      //console.log("1- res:", response)
+
       if (response !== false) {
-        let imagen = "cart_shop.png"
-        // let imagen = props.route.params.data.foto
-        // if (imagen !== undefined) { imagen = "cart_shop.png"}
-        // let newImagen, imagePath = null;
-        // newImagen = await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
-        //   .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
-        //   .then(base64Data => {
-        //     return base64Data
-        //     //return fs.unlink(imagePath);
-        //   });
-          
-        const toCar = {
-          id_client: userDetails.id,
-          id_medic: 2,
-          items: [
-            {
-              type: "item",
-              code: response.id,
-              relation: "valoration",
-              name: `valoration. ${props.route.params.data.name}`,
-              description: `solicitud de video valoracion para ${props.route.params.data.name}`,
-              price: 50,
-              qty: 1,
-              coin: "$",
-              id_service:props.route.params.data.id,
-              type_service:"sub_category",
-              img: "video_valoration.png"
-            }
-          ]
-        }
+        setLoad(false)
+        setFormOn(true);
 
-
-        const res = await cartShop.insertcartshop(toCar);
-        console.log("2- res:", res)
-        if (res === true) {
-          setLoad(false);
-          setTimeout(() => {
-            setFormOn(false);
-            goToScreen("PaymentCart", null);
-          }, 10000);
-        }
-        else {
-          Toast.show("Error");
-          setTimeout(() => {
-            goToScreen("Home", null);
-          }, 3000);
-        }
-     }
+        setTimeout(() => {
+          setFormOn(false);
+          //goToScreen("PaymentCart", null);
+          props.navigation.goBack()
+        }, 10000);
+      }
+      /*
+            if (response !== false) {
+              let imagen = "cart_shop.png"
+              // let imagen = props.route.params.data.foto
+              // if (imagen !== undefined) { imagen = "cart_shop.png"}
+              // let newImagen, imagePath = null;
+              // newImagen = await RNFetchBlob.config({ fileCache: true }).fetch("GET", imagen)
+              //   .then(resp => { imagePath = resp.path(); return resp.readFile("base64");})
+              //   .then(base64Data => {
+              //     return base64Data
+              //     //return fs.unlink(imagePath);
+              //   });
+                
+              const toCar = {
+                id_client: userDetails.id,
+                id_medic: 2,
+                items: [
+                  {
+                    type: "item",
+                    code: response.id,
+                    relation: "valoration",
+                    name: `valoration. ${props.route.params.data.name}`,
+                    description: `solicitud de video valoracion para ${props.route.params.data.name}`,
+                    price: 50,
+                    qty: 1,
+                    coin: "$",
+                    id_service:props.route.params.data.id,
+                    type_service:"sub_category",
+                    img: "video_valoration.png"
+                  }
+                ]
+              }
+              const res = await cartShop.insertcartshop(toCar);
+              console.log("2- res:", res)
+              if (res === true) {
+                setLoad(false);
+                setTimeout(() => {
+                  setFormOn(false);
+                  goToScreen("PaymentCart", null);
+                }, 10000);
+              }
+              else {
+                Toast.show("Error");
+                setTimeout(() => {
+                  goToScreen("Home", null);
+                }, 3000);
+              }
+           }
+      */
       else {
         setLoad(false)
       }
@@ -145,8 +158,6 @@ function SimpleForm(props) {
             <Text style={styles2.title}>Complete el formulario</Text>
           </View>
           <Text style={{ color: color_grey_dark, marginTop: 10 }}>(*) todos los campos son obligatorios.</Text>
-
-
           <View style={styles.formBody}>
             <View style={styles.formRow}>
               <Text style={styles.formLabel}>* Nombres</Text>
@@ -199,7 +210,6 @@ function SimpleForm(props) {
           goToScreen={goToScreen}
         />
       }
-
       <Image source={{ uri: `${file_server1}/img/category/picture/${props.route.params.data.foto}` }}
         style={{
           opacity: 0.5,
@@ -211,7 +221,6 @@ function SimpleForm(props) {
           width: "100%",
           height: "100%"
         }} />
-
       <Modal animationType="slide" transparent={true} visible={FormOn} >
         <View style={{ backgroundColor: "rgba(0,0,0,0.8)", width: "100%", height: "100%", justifyContent: "center", alignItems: "center" }}>
           <TouchableOpacity
@@ -227,17 +236,28 @@ function SimpleForm(props) {
               <View style={{
                 justifyContent: "center", alignItems: "center", alignContent: "center",
               }}>
-                <Icon name='checkmark-circle-outline' width={50} height={50} fill={color_fifth} />
-                <Text style={{ fontSize: 16, width: "90%", textAlign: "center", color: color_grey_dark }}>
+                <Icon name='checkmark-circle-outline' width={100} height={100} fill={color_fifth} />
+                <Text style={{ marginTop: 20, fontSize: 18, width: "90%", textAlign: "center", color: color_grey_dark }}>
                   Tus solicitud ha sido registrada correctamente...
                 </Text>
+                <Text style={{ fontSize: 14, marginTop: 20, width: "90%", textAlign: "justify", color: color_grey_dark }}>
+                  Estamos evaluando tus datos, pronto un asesor o asesora se comunicará contigo...
+                </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 20, width: "100%", textAlign: "center", color: color_fifth }}>
+                  ¡Gracias por confiar en nosotros!
+                </Text>
+                <TouchableOpacity
+                  onPress={() => props.navigation.goBack()} style={{ backgroundColor: color_fifth, width: "50%", alignSelf: "center", justifyContent: "center", alignItems: "center", borderRadius: 8, padding: 10, marginTop: 20 }}>
+                  <Text style={{ color: color_white }}>Aceptar</Text>
+                </TouchableOpacity>
+                {/* 
                 <Text style={{ fontSize: 14, marginTop: 20, width: "90%", textAlign: "center", textAlign: "justify", color: color_grey_dark }}>
                   Hemos añadido a tu carrito de compras la solicitud de la valoración para continuar, necesitamos comprobar el pago de la misma para agendar tu cita de video valoracón.
                 </Text>
                 <TouchableOpacity
                   onPress={() => goToScreen("PaymentCart", null)} style={{ backgroundColor: color_fifth, width: "50%", alignSelf: "center", justifyContent: "center", alignItems: "center", borderRadius: 8, padding: 10, marginTop: 20 }}>
                   <Text style={{ color: color_white }}>Pagar ahora</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             }
           </View>
@@ -251,8 +271,8 @@ const styles2 = StyleSheet.create({
   wrap: {
     alignSelf: "center",
     borderRadius: 12,
-    marginTop:20,
-    marginBottom:"25%",
+    marginTop: 20,
+    marginBottom: "25%",
     width: "90%",
     backgroundColor: "rgba(255,255,255,0.8)",
     alignSelf: "center",

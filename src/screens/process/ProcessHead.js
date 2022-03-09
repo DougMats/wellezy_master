@@ -123,6 +123,9 @@ function ProcessHead(props) {
         </View>
       </View>
 
+
+
+
       <View style={styles.right}>
 
 
@@ -130,10 +133,19 @@ function ProcessHead(props) {
           <View style={styles.up}>{ThisFavorite()}</View>
         } */}
 
-
-
         <TouchableOpacity
-          style={{ ...styles.Favorites, marginTop: 5 }}
+          style={{
+            position:"absolute",
+            width: 60,
+            height: 45,
+            right: 0,
+            top:30,
+            backgroundColor: "#FFF",
+            justifyContent: "center",
+            alignItems:"center",
+            borderTopLeftRadius: 30,
+            borderBottomLeftRadius: 30,
+      }}
           onPress={() => props.action(!props.show)}>
           <Icon name="more-vertical" width={30} height={30} fill={color_primary} />
         </TouchableOpacity>
@@ -147,6 +159,12 @@ function ProcessHead(props) {
           </TouchableOpacity>
         }
       </View>
+
+
+
+
+
+
 
       <View style={styles.backBannerImage}>
         <View
@@ -204,7 +222,7 @@ const styles = StyleSheet.create({
   left: {
     position: "relative",
     zIndex: 999,
-    width: "80%",
+    width: "60%",
     padding: 10,
     paddingTop: 60,
     left: 10
@@ -271,10 +289,10 @@ const styles = StyleSheet.create({
 
 
   right: {
-    //backgroundColor:"red",
+    //backgroundColor:"rgba(255,0,0,0.5)",
     position: "relative",
     zIndex: 999,
-    width: "20%",
+    width: "40%",
     //paddingHorizontal: 10,
     flexDirection: "column",
     alignContent: "center",
@@ -291,7 +309,6 @@ const styles = StyleSheet.create({
     height: 45,
     right: -10,
     backgroundColor: "#FFF",
-
     justifyContent: "center",
     borderTopLeftRadius: 30,
     borderBottomLeftRadius: 30,

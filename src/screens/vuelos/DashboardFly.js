@@ -1,74 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
-
-import { StatusBar, TextInput, Image, Modal, TouchableHighlight, BackHandler, StyleSheet, SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Dimensions } from 'react-native'
-// import { ScrollView } from 'react-native-gesture-handler';
-
-
-import { useTranslation } from 'react-i18next';
-import Head from '../../components/generic/Head';
-import MenuVertical from '../../components/generic/MenuVertical.js';
-import Menu from '../../components/generic/Menu';
-import UserContext from '../../../contexts/UserContext'
-import { Icon } from 'react-native-eva-icons';
-
-import {
-  color_primary,
-  color_secondary,
-  color_tertiary,
-  color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
-  color_screen,
-  color_star,
-  color_fifth
-} from '../../styles/Colors.js'
-
-
-
-
-
-
-
-
-
-import { base_url, serverAmadeus, serverCrm } from '../../../Env'
-
-// import axios from 'axios'
-// import { ActionSheet } from 'react-native-cross-actionsheet'
-// import DatepickerRange from 'react-native-range-datepicker';
-// import GetDateRange from '../../../components/time/getDateRange'
-
-
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-function DashboardFly(props) {
-  const { t, i18n } = useTranslation();
-  const { navigation } = props;
-  const { userDetails, setUserDetails } = useContext(UserContext);
-  const [vertical, setvertical] = useState(false);
-  const [tip, settip] = useState(1);
-  const [modalVisible, setmodalVisible] = useState(false); // ---> modal
-
-
-
-  const [itsSeletingPassengers, setitsSeletingPassengers] = useState(false);
-
-
-  const [CountChild, setCountChild] = useState(0)
-  const [CountBaby, setCountBaby] = useState(0)
-  const [CountAdults, setCountAdults] = useState(0)
-
-
-
-
-
+/*
   //   const [FocusDeparture, setFocusDeparture] = useState(false)
   //   const [FocusDestination, setFocusDestination] = useState(false)
   //   const [ShowCalendar, setShowCalendar] = useState(false)
@@ -76,9 +6,6 @@ function DashboardFly(props) {
   //   const [CodeAirpotyDeparture, setCodeAirpotyDeparture] = useState("")
   //   const [NameDestination, setNameDestination] = useState("")
   //   const [CodeAirpotyDestination, setCodeAirpotyDestination] = useState("")
-  //   const [DateDeparture, setDateDeparture] = useState(false)
-  //   const [DateDestination, setDateDestination] = useState(false)
-
 
   //   const [Rate, setRate] = useState("Economical")
   //   const [ListServices, setListServices] = useState([])
@@ -88,16 +15,7 @@ function DashboardFly(props) {
   //   const [clases, setclases] = useState([{'text':'Economical'},{'text':'Business'},{'text':'FirstClass'}]);
   //   const [clasesActivated, setclasesActivated] = useState('Economical');
 
-  const [FlyType, setFlyType] = useState([{ 'text': 'ida y vuelta' }, { 'text': 'solo ida' }, { 'text': 'multidestino' }]);
-  const [FlyTypeActivated, setFlyTypeActivated] = useState('ida y vuelta');
 
-  let randomCode
-  if (props.route.params) { randomCode = props.route.params.randomCode }
-  else { randomCode = 1 }
-
-  // function goToScreen(screen, data) {
-  //   props.navigation.navigate(screen, { randomCode: Math.random(), data })
-  // }
   //   function goToScreen(screen, category, name_category) {
   //     navigation.navigate(screen, { randomCode: Math.random(), DateDeparture, DateDestination })
   //   }
@@ -120,10 +38,6 @@ function DashboardFly(props) {
 
   //   const color_grey_half = "#05293b"
   //   const color_primary = "#00afe8"
-
-  //   // useEffect(() => {
-  //   // }, [randomCode])
-
 
   //   function OpenActionShet() {
   //     ActionSheet.options({
@@ -186,54 +100,6 @@ function DashboardFly(props) {
   //     console.log("TRAVELS")
   //   }
 
-    function CountAdult(type) {
-      if (type) {
-        setCountAdults(CountAdults + 1)
-      } else {
-        if ((CountAdults - 1) > 0) {
-          setCountAdults(CountAdults - 1)
-        } else {
-          setCountAdults(0)
-        }
-      }
-    }
-
-  //   function CountYoungs(type) {
-  //     if (type) {
-  //       setCountYoung(CountYoung + 1)
-  //     } else {
-  //       if ((CountYoung - 1) > 0) {
-  //         setCountYoung(CountYoung - 1)
-  //       } else {
-  //         setCountYoung(0)
-  //       }
-  //     }
-  //   }
-
-  //   function CountChilds(type) {
-  //     if (type) {
-  //       setCountChild(CountChild + 1)
-  //     } else {
-  //       if ((CountChild - 1) > 0) {
-  //         setCountChild(CountChild - 1)
-  //       } else {
-  //         setCountChild(0)
-  //       }
-  //     }
-  //   }
-
-  //   function CountBabys(type) {
-  //     if (type) {
-  //       setCountBaby(CountBaby + 1)
-  //     } else {
-  //       if ((CountBaby - 1) > 0) {
-  //         setCountBaby(CountBaby - 1)
-  //       } else {
-  //         setCountBaby(0)
-  //       }
-  //     }
-  //   }
-
   //   const SearchAirport = async (keywords) => {
   //     console.log(keywords)
   //     setNameAirportDeparture(keywords)
@@ -250,7 +116,6 @@ function DashboardFly(props) {
   //       })
   //       .then(function () { });
   //   }
-
   //   const SearchAirportDestination = async (keywords) => {
   //     console.log(keywords)
   //     setNameDestination(keywords)
@@ -267,19 +132,153 @@ function DashboardFly(props) {
   //       })
   //       .then(function () { });
   //   }
-
   //   function RangeGet(data) {
   //     console.log("rango obtenido")
   //     console.log("init: ", data[0])
   //     console.log("end: ", data[1])
   //   }
-
   //   function RangeCancel() {
   //     setrangeDate(false)
   //   }
+  */
 
 
+import React, { useState, useEffect, useContext } from 'react'
+import { StatusBar, TextInput, Image, Modal, TouchableHighlight, BackHandler, StyleSheet, SafeAreaView, View, Text, TouchableOpacity, ActivityIndicator, ScrollView, Dimensions } from 'react-native'
+import { useTranslation } from 'react-i18next';
+import Head from '../../components/generic/Head';
+import MenuVertical from '../../components/generic/MenuVertical.js';
+import Menu from '../../components/generic/Menu';
+import UserContext from '../../../contexts/UserContext'
+import { Icon } from 'react-native-eva-icons';
+import Calendary from '../../components/time/Calendary.js'
+import {
+  color_primary,
+  color_secondary,
+  color_tertiary,
+  color_white,
+  color_white_a,
+  color_black,
+  color_black_a,
+  color_grey_light,
+  color_grey_half,
+  color_grey_dark,
+  color_transparent,
+  color_screen,
+  color_star,
+  color_fifth
+} from '../../styles/Colors.js'
+import { base_url, serverAmadeus, serverCrm } from '../../../Env'
 
+
+// import axios from 'axios'
+// import { ActionSheet } from 'react-native-cross-actionsheet'
+// import DatepickerRange from 'react-native-range-datepicker';
+// import GetDateRange from '../../../components/time/getDateRange'
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+function DashboardFly(props) {
+  const { t, i18n } = useTranslation();
+  const { navigation } = props;
+  const { userDetails, setUserDetails } = useContext(UserContext);
+  const [vertical, setvertical] = useState(false);
+  const [tip, settip] = useState(1);
+  const [countBabys, setcountBabys] = useState(0)
+  const [countChilds, setcountChilds] = useState(0)
+  const [countAdults, setcountAdults] = useState(1)
+  const [itsSeletingPassengers, setitsSeletingPassengers] = useState(false);
+  const [dateDeparture, setdateDeparture] = useState(null)
+  const [selectingDateDeparture, setselectingDateDeparture] = useState(false)
+  const [dateDestination, setdateDestination] = useState(null)
+  const [selectingdateDestination, setselectingdateDestination] = useState(false)
+  const [dateUndefined, setdateUndefined] = useState(false);
+
+  const [FlyType, setFlyType] = useState([{ id: 1, 'text': 'ida y vuelta' }, { id: 2, 'text': 'solo ida' }, { id: 3, 'text': 'multidestino' }]);
+  const [FlyTypeActivated, setFlyTypeActivated] = useState(null);
+  const [selectingFlyTypeActivated, setselectingFlyTypeActivated] = useState(false);
+
+  const [FlyCategory, setFlyCategory] = useState([{ id: 1, 'text': 'economy' }, { id: 2, 'text': 'premium economy' }, { id: 3, 'text': 'premium busines' }]);
+  const [FlyCategoryActivated, setFlyCategoryActivated] = useState(null);
+  const [selectingFlyCategoryActivated, setselectingFlyCategoryActivated] = useState(false);
+
+  const config = {
+    theme: "",//light / dark
+    color: color_fifth,//"#FF008B",
+    minDateNow: true,
+    hour: false,
+    rangeDate: false,
+  }
+
+  const [cabinas, setcabinas] = useState([
+    { id: 1, name: "economy", columns: 2, seatingByRow: 3, rows: 30 },
+    { id: 2, name: "premium economy", columns: 2, seatingByRow: 3, rows: 30 },
+    { id: 3, name: "premium busines", columns: 2, seatingByRow: 3, rows: 30 }
+  ]);
+
+  let randomCode
+  if (props.route.params) { randomCode = props.route.params.randomCode }
+  else { randomCode = 1 }
+
+
+  useEffect(() => {
+    if (dateUndefined) {
+      // setdateDeparture(null)
+      // setdateDestination(null)
+    }
+  }, [dateUndefined]);
+
+  function onChangeText(text, key) {
+    setFormInfo({
+      ...formInfo,
+      [key]: text
+    })
+  }
+
+
+  function changeAdult(type) {
+    if (type) {
+      setcountAdults(countAdults + 1)
+    } else {
+
+      if ((countAdults - 1) > 0) {
+        setcountAdults(countAdults - 1)
+      } else {
+        setcountAdults(1)
+      }
+    }
+  }
+
+
+  function changeChild(type) {
+    if (type) {
+      setcountChilds(countChilds + 1)
+    } else {
+      if ((countChilds - 1) > 0) {
+        setcountChilds(countChilds - 1)
+      } else {
+        setcountChilds(0)
+      }
+    }
+  }
+
+
+  function changeBaby(type) {
+    if (type) {
+      setcountBabys(countBabys + 1)
+    } else {
+      if ((countBabys - 1) > 0) {
+        setcountBabys(countBabys - 1)
+      } else {
+        setcountBabys(0)
+      }
+    }
+  }
+
+  function goToScreen(screen, data) {
+    props.navigation.navigate(screen, { randomCode: Math.random(), data })
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_fifth }}>
@@ -301,16 +300,9 @@ function DashboardFly(props) {
         </View>
       </View>
 
-
-
-
-
-
       <View style={styles.imageBackground}>
         <Image style={{ ...styles.imgCover, opacity: 0.25 }} source={require("../../images/map.png")} />
       </View>
-
-
 
       <ScrollView scrollEventThrottle={16}>
         <View style={{
@@ -323,68 +315,115 @@ function DashboardFly(props) {
               <Text style={{ ...styles.menuBtnText, color: tip === 1 ? color_white : color_grey_light }}>Fechas</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => settip(2)} style={{ ...styles.menuBtn, borderBottomWidth: tip === 2 ? 1 : 0 }}>
-              <Text style={{ ...styles.menuBtnText, color: tip === 2 ? color_white : color_grey_light }}>Personas</Text>
+              <Text style={{ ...styles.menuBtnText, color: tip === 2 ? color_white : color_grey_light }}>Asientos</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => settip(3)} style={{ ...styles.menuBtn, borderBottomWidth: tip === 3 ? 1 : 0 }}>
               <Text style={{ ...styles.menuBtnText, color: tip === 3 ? color_white : color_grey_light }}>Destinos</Text>
             </TouchableOpacity>
           </View>
 
-
-
           <View style={styles.wrapper}>
-
 
 
             {tip === 1 &&
               <View style={styles.page}>
-
-
-
-
-
-
-                <View style={{ padding: 5, marginVertical: 10, flexDirection: "row", justifyContent: "space-around", backgroundColor: "white" }}>
-                  {
-                    FlyType.map((i, key) => {
-                      return (
-                        <TouchableOpacity key={key} onPress={() => setFlyTypeActivated(i.text)}
-                          style={{
-                            color: FlyTypeActivated === i.text ? "#00afe8" : "#ccc",
-                            alignItems: "center"
-                          }}>
-                          <Icon name={FlyTypeActivated === i.text ? 'checkmark-circle-2-outline' : 'radio-button-off-outline'} width={20} height={20} fill={FlyTypeActivated === i.text ? "#00afe8" : "#ccc"} />
-                          <Text style={{ textTransform: "uppercase", color: FlyTypeActivated === i.text ? "#00afe8" : "#ccc" }}>{i.text}</Text>
-                        </TouchableOpacity>
-                      )
-                    })
-                  }
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>¿A dónde viajas?</Text>
+                  <View style={styles.sectionBody}>
+                  </View>
                 </View>
-
-                <View>
-                  <Text>¿A dónde viajas?</Text>
-                </View>
-
-
-
-                <TouchableOpacity onPress={() => [setmodalVisible(!modalVisible), setitsSeletingPassengers(!itsSeletingPassengers)]}>
-                  <Text>¿cómo viajas?</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text>pasajeros: </Text><Text>
-                      {CountAdults + CountChild + CountBaby}
-                    </Text>
+                <TouchableOpacity style={styles.section} onPress={() => setitsSeletingPassengers(!itsSeletingPassengers)}>
+                  <Text style={styles.sectionTitle}>¿Con quien viajas?</Text>
+                  <View style={styles.sectionBody}>
+                    <Icon name={"person-outline"} width={25} height={25} fill={color_grey_dark} />
+                    <Text style={styles.sectionBodytext}>pasajeros: {countBabys + countChilds + countAdults}</Text>
                   </View>
                 </TouchableOpacity>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>¿Cuando viajas?</Text>
+                  <View style={{ ...styles.sectionBody, justifyContent: "space-between", paddingHorizontal: 10 }}>
+                    {!dateUndefined &&
+                      <TouchableOpacity onPress={() => setselectingDateDeparture(true)}
+                        style={{ backgroundColor: "#f5f5f5", width: "45%", padding: 5, borderRadius: 8, flexDirection: "row", alignItems: "center" }}>
+                        <Icon name={"calendar-outline"} width={25} height={25} fill={color_fifth} />
+                        {dateDeparture === null ?
+                          <Text style={{ marginLeft: 10, fontSize: 14, fontWeight: "bold", color: color_fifth, }}>Salida</Text>
+                          :
+                          <View style={{ marginLeft: 10, flexDirection: "column" }}>
+                            <Text style={{ fontSize: 12 }}>fecha de salida</Text>
+                            <Text style={{ fontSize: 14, color: color_grey_dark, fontWeight: "bold" }}>{dateDeparture}</Text>
+                          </View>
+                        }
+                      </TouchableOpacity>
+                    }
+                    {!dateUndefined &&
+                      <TouchableOpacity onPress={() => setselectingdateDestination(true)}
+                        style={{ backgroundColor: "#f5f5f5", width: "45%", padding: 5, borderRadius: 8, flexDirection: "row", alignItems: "center" }}>
+                        <Icon name={"calendar-outline"} width={25} height={25} fill={color_fifth} />
+                        {dateDestination === null ?
+                          <Text style={{ marginLeft: 10, fontSize: 14, fontWeight: "bold", color: color_fifth, }}>Retorno</Text>
+                          :
+                          <View style={{ marginLeft: 10, flexDirection: "column" }}>
+                            <Text style={{ fontSize: 12 }}>fecha de retorno</Text>
+                            <Text style={{ fontSize: 14, color: color_grey_dark, fontWeight: "bold" }}>{dateDestination}</Text>
+                          </View>
+                        }
+                      </TouchableOpacity>
+                    }
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => setdateUndefined(!dateUndefined)}
+                    style={{ marginVertical: 10, alignSelf: "center", flexDirection: "row", alignItems: "center" }}>
+                    <Icon name={dateUndefined ? "checkmark-square-2-outline" : "square-outline"} width={25} height={25} fill={dateUndefined ? color_fifth : color_grey_dark} />
+                    <Text style={{ marginLeft: 10, fontSize: 14, color: dateUndefined ? color_fifth : color_grey_dark }}>Aun no decido la fecha</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>¿Cómo viajas?</Text>
+                  <View style={{ paddingTop: 5, paddingBottom: 10, flexDirection: "row", justifyContent: "space-between" }}>
+                    <TouchableOpacity onPress={() => setselectingFlyTypeActivated(true)}
+                      style={{ backgroundColor: "#f5f5f5", width: "48%", padding: 5, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                      <Icon name={"checkmark-square-2-outline"} width={25} height={25} fill={color_fifth} />
+                      {FlyTypeActivated === null ?
+                        <Text style={{ textAlign: "center", color: color_fifth, fontWeight: "bold", marginLeft: 10 }}>select a type </Text>
+                        :
+                        <Text style={{ textAlign: "center", color: color_fifth, fontWeight: "bold", marginLeft: 10 }}>{FlyTypeActivated.text}</Text>
+                      }
+                    </TouchableOpacity>
 
-
+                    <TouchableOpacity onPress={() => setselectingFlyCategoryActivated(true)}
+                      style={{ backgroundColor: "#f5f5f5", width: "48%", padding: 5, borderRadius: 8, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                      <Icon name={"checkmark-square-2-outline"} width={25} height={25} fill={color_fifth} />
+                      {FlyCategoryActivated === null ?
+                        <Text style={{ textAlign: "center", color: color_fifth, fontWeight: "bold", marginLeft: 5 }}>select a category </Text>
+                        :
+                        <Text style={{ textAlign: "center", color: color_fifth, fontWeight: "bold", marginLeft: 5 }}>{FlyCategoryActivated.text}</Text>
+                      }
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </View>
             }
 
             {tip === 2 &&
               <View style={styles.page}>
-                <Text>_ _</Text>
+                {FlyCategoryActivated !== null ?
+                  <Cabina cabinas={cabinas} select={FlyCategoryActivated} />
+                  :
+                  <View>
+                    <Text>debes sellecioanr una categoria de vuelo</Text>
+                  </View>
+                }
               </View>
             }
+
+
+
+
+
+
+
+
 
             {tip === 3 &&
               <View style={styles.page}>
@@ -587,41 +626,31 @@ function DashboardFly(props) {
 
 
 
-
+      {/*
 
       <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => { setmodalVisible(false) }}>
-
-        <View style={{
-          backgroundColor: "rgba(0,0,0,0.5)",
-          width: "100%",
-          height: "100%",
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: "absolute",
-          zIndex: 999
-        }}>
-
-
-
+        <View style={styles.backgroundModal}>
 
           {itsSeletingPassengers &&
             <View style={{ padding: 10, width: "90%", height: 300, backgroundColor: "white", borderRadius: 12 }}>
-
-
-
               <View style={{ marginBottom: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomColor: "#eee", borderBottomWidth: 1, paddingBottom: 10 }}>
 
 
-              <View>
+
+
+
+
+
+              {/* <View>
                <Text>
                  <Text style={{ fontSize: 17, color: color_grey_half, marginRight: 100 }}>Adults </Text>
                  <Text style={{ fontSize: 12, color: "#aaa" }}>over 18 years</Text>
                </Text>
              </View>
-             
+              */}
 
 
-             {/*             
+      {/*             
              <View style={{ width: 100, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                <TouchableHighlight
                  style={{ ...styles.ButtonPlusMinus, backgroundColor: "#eee", marginTop: 10 }}
@@ -643,7 +672,7 @@ function DashboardFly(props) {
                  </Text>
                </TouchableHighlight>
              </View>
-             */}
+             ****}
            </View>
 
 
@@ -746,11 +775,11 @@ function DashboardFly(props) {
              <Text style={{ ...styles.loginText, color: "white" }}>Close</Text>
            </TouchableOpacity>
          </View>
-         */}
+         ****}
         </View>
       </Modal>
 
-
+        */}
 
 
 
@@ -765,12 +794,333 @@ function DashboardFly(props) {
           goToScreen={goToScreen}
         />
       }
+
+
+
+
+
+
+
+      <Calendary
+        data={dateDeparture}
+        config={config}
+        open={selectingDateDeparture}
+        close={setselectingDateDeparture}
+        getChange={setdateDeparture}
+      />
+
+      <Calendary
+        data={dateDestination}
+        config={config}
+        open={selectingdateDestination}
+        close={setselectingdateDestination}
+        getChange={setdateDestination}
+      />
+
+
+
+
+      <Modal animationType="slide" transparent={true} visible={itsSeletingPassengers} onRequestClose={() => { setitsSeletingPassengers(false) }}>
+        <View style={styles.backgroundModal}>
+          <View style={styles.modalWrap}>
+            <View style={styles.modalTitle}>
+              <Text style={styles.modalTitleText}>total pasajeros: {countBabys + countChilds + countAdults}</Text>
+            </View>
+
+            <View style={styles.formWrap}>
+              <View style={styles.formWrapL}>
+                <Text style={styles.formWrapLTitle}>Adultos</Text>
+                <Text style={styles.formWrapLSubtitle}>Igual o mayor a 12 años</Text>
+              </View>
+              <View style={styles.formWrapR}>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeAdult(false)}>
+                  <Icon name={"minus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+                <View style={styles.formWrapRValue}>
+                  <Text style={styles.formWrapRValueText}>{countAdults}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeAdult(true)}>
+                  <Icon name={"plus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.formWrap}>
+              <View style={styles.formWrapL}>
+                <Text style={styles.formWrapLTitle}>Niños</Text>
+                <Text style={styles.formWrapLSubtitle}>de 2 a 11 años</Text>
+              </View>
+              <View style={styles.formWrapR}>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeChild(false)}>
+                  <Icon name={"minus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+                <View style={styles.formWrapRValue}>
+                  <Text style={styles.formWrapRValueText}>{countChilds}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeChild(true)}>
+                  <Icon name={"plus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.formWrap}>
+              <View style={styles.formWrapL}>
+                <Text style={styles.formWrapLTitle}>bebes</Text>
+                <Text style={styles.formWrapLSubtitle}>menores de 2 años</Text>
+              </View>
+              <View style={styles.formWrapR}>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeBaby(false)}>
+                  <Icon name={"minus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+                <View style={styles.formWrapRValue}>
+                  <Text style={styles.formWrapRValueText}>{countBabys}
+                  </Text>
+                </View>
+                <TouchableOpacity style={styles.formWrapRBtn} onPress={() => changeBaby(true)}>
+                  <Icon name={"plus-circle-outline"} width={25} height={25} fill={color_grey_half} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.modalFootBtn}
+              onPress={() => setitsSeletingPassengers(false)}>
+              <Text style={styles.modalFootBtnText}>Guardar</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+
+
+      <Modal animationType="slide" transparent={true} visible={selectingFlyTypeActivated} >
+        <View style={styles.backgroundModal}>
+          <View style={styles.modalWrap}>
+            <View style={styles.modalTitle}>
+              <Text style={styles.modalTitleText}> {FlyTypeActivated === null ? "Select a type" : FlyTypeActivated.text}</Text>
+            </View>
+            <View style={{ flexDirection: "column", marginTop: 20 }}>
+              {
+                FlyType.map((i, key) => {
+                  let active, icon
+                  if (FlyTypeActivated === null) {
+                    active = color_grey_dark
+                    icon = 'radio-button-off-outline'
+                  }
+                  else {
+                    if (FlyTypeActivated.id === i.id) {
+                      active = color_fifth;
+                      icon = 'checkmark-circle-2-outline'
+                    }
+                    else { active = color_grey_dark; icon = 'radio-button-off-outline'; }
+                  }
+                  return (
+                    <TouchableOpacity key={key} onPress={() => setFlyTypeActivated(i)} style={{ flexDirection: "row", alignItems: "center" }}>
+                      <Icon name={icon} width={20} height={20} fill={active} />
+                      <Text style={{ marginLeft: 10, fontSize: 14, textTransform: "capitalize", color: active }}>{i.text}</Text>
+                    </TouchableOpacity>
+                  )
+                })
+              }
+            </View>
+            <TouchableOpacity style={styles.modalFootBtn}
+              onPress={() => setselectingFlyTypeActivated(false)}>
+              <Text style={styles.modalFootBtnText}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal animationType="slide" transparent={true} visible={selectingFlyCategoryActivated}>
+        <View style={styles.backgroundModal}>
+          <View style={styles.modalWrap}>
+            <View style={styles.modalTitle}>
+              <Text style={styles.modalTitleText}> {FlyCategoryActivated === null ? "Select a category" : FlyCategoryActivated.text}</Text>
+            </View>
+            <View style={{ flexDirection: "column", marginTop: 20 }}>
+              {
+                FlyCategory.map((i, key) => {
+                  let active, icon
+
+                  if (FlyCategoryActivated === null) {
+                    active = color_grey_dark
+                    icon = 'radio-button-off-outline'
+                  }
+                  else {
+                    if (FlyCategoryActivated.id === i.id) {
+                      active = color_fifth;
+                      icon = 'checkmark-circle-2-outline'
+                    }
+                    else { active = color_grey_dark; icon = 'radio-button-off-outline'; }
+                  }
+                  return (
+                    <TouchableOpacity key={key} onPress={() => setFlyCategoryActivated(i)}
+                      style={{
+                        flexDirection: "row",
+                        color: active,
+                        alignItems: "center"
+                      }}>
+                      <Icon name={icon} width={20} height={20} fill={active} />
+                      <Text style={{ marginLeft: 10, fontSize: 14, color: active }}>{i.text}</Text>
+                    </TouchableOpacity>
+                  )
+                })
+              }
+            </View>
+            <TouchableOpacity style={styles.modalFootBtn}
+              onPress={() => setselectingFlyCategoryActivated(false)}>
+              <Text style={styles.modalFootBtnText}>Guardar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
     </SafeAreaView>
   )
 }
 export default DashboardFly;
 
 const styles = StyleSheet.create({
+
+
+  section: {
+    paddingVertical: 5,
+    marginTop: 10,
+    marginBottom: 5,
+    flexDirection: "column",
+    borderBottomColor: color_grey_light,
+    borderBottomWidth: 0.5,
+  },
+  sectionTitle: {
+    marginLeft: 30,
+    fontSize: 14,
+    color: color_grey_dark,
+    textTransform: "capitalize",
+  },
+  sectionBody: {
+    paddingTop: 5,
+    paddingBottom: 10,
+    flexDirection: "row",
+  },
+  sectionBodytext: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: color_grey_dark,
+  },
+
+
+
+
+  backgroundModal: {
+    backgroundColor: "rgba(0,0,0,0.5)",
+    width: "100%",
+    height: "100%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: "absolute",
+    zIndex: 999
+  },
+  modalWrap: {
+    overflow: "hidden",
+    backgroundColor: color_white,
+    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12
+  },
+  modalTitle: {
+    backgroundColor: color_fifth,
+    width: "100%",
+    paddingVertical: 10,
+  },
+  modalTitleText: {
+    color: color_white,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "center"
+  },
+  formWrap: {
+    marginTop: 10,
+    width: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomColor: color_grey_light,
+    borderBottomWidth: 0.5,
+    flexDirection: "row",
+  },
+  formWrapL: {
+    width: "50%",
+    flexDirection: "column"
+  },
+  formWrapLTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: color_grey_dark
+  },
+  formWrapLSubtitle: {
+    fontSize: 12,
+    color: color_grey_half
+  },
+  formWrapR: {
+    flexDirection: "row",
+    width: "50%",
+    justifyContent: "space-between"
+  },
+  formWrapRBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5"
+  },
+  formWrapRValue: {
+    backgroundColor: "#f5f5f5",
+    width: "40%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8
+  },
+  formWrapRValueText: {
+    fontSize: 14,
+    fontWeight: "bold",
+    lineHeight: 30
+  },
+  modalFootBtn: {
+    backgroundColor: color_fifth,
+    width: "60%",
+    paddingVertical: 10,
+    borderRadius: 12,
+    marginTop: 20,
+    marginBottom: 20,
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  modalFootBtnText: {
+    color: color_white,
+    fontWeight: "bold",
+    fontSize: 14
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   barUp: {
     padding: 10,
     flexDirection: "row",
@@ -841,7 +1191,7 @@ const styles = StyleSheet.create({
   },
   page: {
     paddingBottom: 20,
-    height:windowHeight
+    height: windowHeight
     //backgroundColor:"red"
   }
 
@@ -906,3 +1256,96 @@ const styles = StyleSheet.create({
   //   padding: 5
   // }
 });
+
+const Cabina = (props) => {
+
+  const cabina = props.cabinas.find(obj => obj.id === props.select.id)
+
+
+
+
+  {/* 
+  const [cabinas, setcabinas] = useState([
+    { id: 1, name: "economy", columns: 2, seatingByRow: 3, rows: 30 },
+    { id: 2, name: "premium economy", columns: 2, seatingByRow: 3, rows: 30 },
+    { id: 3, name: "premium busines", columns: 2, seatingByRow: 3, rows: 30 }
+  ]);
+*/}
+
+  function builder() {
+    // let column=[]
+    // let rows =[]
+    // let seat = {}
+    // for(var x =0; x < cabina.columns; x++){}
+    // for(var y =0; y < cabina.columns; y++){}
+    // for(var z =0; z < cabina.columns; z++){}
+
+
+
+    // for(var x =0;  < cabina.columns; x++){
+    // for(var i =0; i < cabina.columns; i++){
+    // let column = []
+    // for(var g =0; g < cabina.seatingByRow; g++){
+    //   column.push(" *")
+    // }
+    // tree.push(column)
+    // }
+    // }
+
+    // for (var i=1;i<10;i++){ 
+    //   tree.push("La tabla del " ++ "")
+    //   for (var j=1;j<10;j++) { 
+    //      tree.push(i + " x " + j + ": ") 
+    //      tree.push(i*j) 
+    //   } 
+    // }
+    // console.log("tree: ", tree)
+    //   return tree
+  }
+
+
+
+  let tree = [
+    { column: "l", },
+    {
+      column: "r",
+      rows: [
+
+      ]
+    }
+  ]
+
+
+
+
+  return (
+    <View style={{}}>
+      <Text style={{}}>{cabina.name}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        {tree.map((i, key) => {
+          return (
+            <View key={key} style={{ width: "40%", backgroundColor: "#f5f5f5", borderRadius: 8 }}>
+              {/* <Text>{i.column}</Text> */}
+              <Text>.</Text>
+              <View>{/*
+          tree.rows.map((g,k)=>{
+            return (
+            <Text>*
+<Icon name={"square-outline"} width={30} height={30} fill={"red"} />
+
+            </Text>
+            
+            )
+          })
+        */}
+              </View>
+
+            </View>
+          )
+        })
+        }</View>
+
+
+    </View>
+  )
+}

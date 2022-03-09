@@ -92,7 +92,7 @@ function MedicsView(props) {
     { "name": t("Procedures"), "value": 0 },
   ]);
 
-  console.log("UserDetails: ", userDetails)
+  //console.log("UserDetails: ", userDetails)
   //{"city": "Medellín", "country": "COLombia", "email": "maxuel@gmail.com", "id": "1", "id_user": 43, "language": "ru", "mensagge": "Ha iniciado sesion exitosamente", "name": "Daniel Andres", "photo_profile": "https://danielandrescorreaposadacirujano.com/wp-content/uploads/2021/01/IMG-20210118-WA0056.jpg", "rol": "client", "surname": "correa posada", "telefono": "3124348384"}
 
   let randomCode
@@ -116,7 +116,7 @@ function MedicsView(props) {
     setLoad(true)
     const res = await doctors.thisDoctor(id, i18n.language)
     const qualified = await doctors.MedicGetQualified(props.route.params.data.id, userDetails.id)
-    console.log("::::::::::::..................::::::::::::::::::", qualified)
+    //console.log("::::::::::::..................::::::::::::::::::", qualified)
     setData(res)
     setQualified(qualified)
     setLoad(false)

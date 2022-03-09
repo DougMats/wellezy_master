@@ -73,10 +73,15 @@ function Process(props) {
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
 
+
   let id_Medic
-  if (props.route.params.id_Medic) { id_Medic = props.route.params.id_Medic }
+  if (props.route.params.id_Medic) {
+    console.log("como es posible que ------> ", props.route.params.id_Medic)
+    id_Medic = props.route.params.id_Medic }
   else { id_Medic = 0 }
 
+
+  console.log("entonces.... id_Medic in process: ----->", id_Medic)
 
   useEffect(() => {
     Get();

@@ -14,6 +14,8 @@ function CardProcedure(props) {
   }
 
 
+  console.log("id_Medic in cardProcedures (from medics view): ", props.id_Medic)
+
 
   return (
     <TouchableOpacity
