@@ -3,12 +3,9 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, StatusBar, ImageBa
 import Toast from 'react-native-simple-toast';
 import ChangeLanguage from '../../Language/ChangeLanguage.js';
 import { Icon } from 'react-native-eva-icons';
-import { serverCrm, base_url } from '../../Env'
-import axios from 'axios'
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-community/async-storage'
 import UserContext from '../../contexts/UserContext'
-//import styles from '../images/css/Login.js'
 import {session } from '../services/connection.js'
 import { useTranslation } from 'react-i18next';
 import { color_primary, color_white, color_black_a, color_grey_light, color_grey_half } from '../styles/Colors.js'
@@ -16,16 +13,13 @@ import { color_primary, color_white, color_black_a, color_grey_light, color_grey
 function Index(props) {
   const { t, i18n } = useTranslation();
   const { navigation } = props
-  function goToScreen(screen) {
-    navigation.navigate(screen)
-  }
   const [language, setlanguage] = useState(false);
   const [notificationToken, setNotificationToken] = useState('')
   const { UserDetails, setUserDetails } = useContext(UserContext)
   const [editable, setEditable] = useState(false)
   const [Load, setLoad] = useState(false)
   const [BtnDisable, setBtnDisable] = useState(false)
-
+  const [formInfo, setFormInfo] = useState({ email: '', password: ''})
 
   useEffect(() => {
     setTimeout(() => {
@@ -42,12 +36,6 @@ function Index(props) {
     }
     getToken()
   }, [])
-
-  const [formInfo, setFormInfo] = useState({
-    email: '',//'dougrafic.art@gmail.com',
-    password: '',//'123456'
-  })
-
 
   function onChangeText(text, key) {
     setFormInfo({
@@ -68,8 +56,6 @@ function Index(props) {
     }
     setLoad(true)
     setBtnDisable(true)
-
-console.log("----> GO.")
     const res = await session.login(data)
 
     if(res === false){
@@ -84,25 +70,7 @@ console.log("----> GO.")
       setLoad(false)
       setBtnDisable(false)
     }
-
-/*
-    axios.post(base_url(serverCrm, `wellezy/auth`), data).then(function (response) {
-      console.log(response.data, "SAAS")
-      _storeData(response.data)
-      setLoad(false)
-      setBtnDisable(false)
-    })
-      .catch(function (error) {
-        setLoad(false)
-        setBtnDisable(false)
-        console.log('***** ',error)
-        Toast.show("Email or password was not correct")
-      })
-      .then(function () { });*/
-
   }
-
-
 
   const _storeData = async (data) => {
     try {
@@ -118,17 +86,14 @@ console.log("----> GO.")
     catch (error) { }
   }
 
+  function goToScreen(screen) {
+    navigation.navigate(screen)
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
-      <ImageBackground source={require('../images/solo-fondo.png')}
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          resizeMode: "cover",
-          width: "100%",
-          height: "100%"
-        }}>
+      <ImageBackground source={require('../images/solo-fondo.png')} style={{ flex: 1, justifyContent: "center", resizeMode: "cover", width: "100%", height: "100%" }}>
         <View style={styles.cardLogin}>
           <View style={{ alignItems: "center", marginTop: 30 }}>
             <View style={{ width: "85%", flexDirection: "row" }}>
@@ -185,13 +150,7 @@ console.log("----> GO.")
       </ImageBackground>
       {
         language &&
-        <View style={{
-          backgroundColor: color_black_a,
-          position: "absolute",
-          width: "100%",
-          height: "100%",
-          justifyContent:"center"
-          }}>
+        <View style={{ backgroundColor: color_black_a, position: "absolute", width: "100%", height: "100%", justifyContent:"center" }}>
            <TouchableOpacity onPress={() => setlanguage(false)} style={{ position: "absolute", top:40, right:20 }}>
             <Icon name='close' width={30} height={30} fill={color_white} />
           </TouchableOpacity>
@@ -226,7 +185,7 @@ const styles = StyleSheet.create({
     color: color_grey_light,
   },
   forgot: {
-    color: color_primary,//color_grey_light,
+    color: color_primary,
     fontSize: 15,
     marginBottom: 10
   },
@@ -298,7 +257,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 7
   },
-
 })
 
 export default Index;

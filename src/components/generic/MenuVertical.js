@@ -10,6 +10,7 @@ import { InitialsName } from '../Logic.js';
 import { file_server1 } from '../../../Env.js';
 import { color_primary, color_secondary, color_white, color_grey_half } from '../../styles/Colors.js'
 import styles from '../../styles/styles.js'
+import IconSvg from '../../cvg/icon_svg.js'
 
 function Menu(props) {
   const WIDTH = props.width;
@@ -202,7 +203,7 @@ function Menu(props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.sidebarbodyLabel} onPress={() => logOut()}>
-              <Icon name='power-outline' fill={color_grey_half} width={30} height={30} />
+              <IconSvg name='power-outline' fill={color_grey_half} width={30} height={30} />
               <Text style={styles.sidebarbodyLabelText}>Cerrar Sesión</Text>
             </TouchableOpacity>
 

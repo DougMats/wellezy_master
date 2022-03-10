@@ -5,12 +5,11 @@ import MenuVertical from '../components/generic/MenuVertical.js';
 import Menu from '../components/generic/Menu';
 import { color_fifth, color_primary, color_screen, color_secondary, color_star } from '../styles/Colors'
 import { Icon } from 'react-native-eva-icons';
-// import ProcessList from '../components/horizontalList/ProcessList.js'
-// import SpecialsList from '../components/horizontalList/SpecialsList.js'
-
-
+import IconSvg from '../cvg/icon_svg.js'
 
 import { connect } from 'react-redux'
+
+  
 
 
 
@@ -59,6 +58,7 @@ function DashboardMedic(props) {
   // }
 
 
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
       <Head props={props} return=""
@@ -66,6 +66,23 @@ function DashboardMedic(props) {
         action={setvertical}
       />
       <ScrollView scrollEventThrottle={16}>
+
+
+{/*
+<IconSvg name={'power-outline'} width={40} height={40} fill={"green"} />
+<IconSvg name={'homer'} width={300} height={300} fill={"green"} />
+*/}
+{/*
+<IconSvg name={'calendar-outline'} width={30} height={30} fill={"red"} gradient={false} colors={['red','blue','pink']}/>
+*/}
+{/*
+<IconSvg name={'circle-gradient'} width={60} height={60} fill={"black"} gradient={true} colors={['red','blue','pink']}/>
+<IconSvg name={'checkmark-circle-outline'} width={60} height={60} fill={"black"} />
+<IconSvg name={'arrow-ios-back-outline'} width={30} height={30} fill={"blue"} />
+<Icon name={'arrow-ios-back-outline'} width={30} height={30} fill={"blue"} />
+*/}
+
+  
 
         <View style={{
           flexDirection: 'row',
@@ -76,7 +93,6 @@ function DashboardMedic(props) {
           flexWrap: 'wrap',
           paddingHorizontal: 10
         }}>
-
           {optionsList.map((i, key) => {
             return (
               <Option key={key} data={i} goToScreen={goToScreen} />
@@ -85,25 +101,14 @@ function DashboardMedic(props) {
         </View>
 
         {/* {getsuperheroes()}
-
         <Text>--------</Text>
-        {procedimientosList()} */}
-
-
-
-
-
-        {/* <ValorationsListMedic goToScreen={goToScreen}/> */}
-        {/*
+        {procedimientosList()}  <ValorationsListMedic goToScreen={goToScreen}/>
         <View style={{ paddingBottom: 60 }}>
           <ProcessList goToScreen={goToScreen} />
           <SpecialsList goToScreen={goToScreen} /> 
         </View
       */}
-
-
       </ScrollView>
-
       <Menu
         props={props}
         option={1}

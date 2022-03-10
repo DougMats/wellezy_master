@@ -54,18 +54,9 @@ function Register(props) {
   const [instructions, setinstructions] = useState(false);
 
   const [typeUser, settypeUser] = useState([
-    { id: 0, value: "medic", name: "1medic", color: "#F39C12", img: "formZero.png", description: "1descriptionUserClient"},
-    { id: 1, value: "medic", name: "1medic", color: "#3498DB", img: "formOne.png", description: "1descriptionUserClient" },
-    { id: 2, value: "medic", name: "2medic", color: "#2ECC71", img: "formTwo.png", description: "2descriptionUserClient" },
-    { id: 3, value: "medic", name: "3medic", color: "#F39C12", img: "formThree.png", description: "3descriptionUserClient" },
-    { id: 4, value: "medic", name: "4medic", color: "#E74C3C", img: "formTwo.png", description: "4descriptionUserClient" },
-    { id: 5, value: "medic", name: "5medic", color: "red", img: "formOne.png", description: "5descriptionUserClient" }
-
-
-
-    //{ value: "medic", name: t("medic"), description: t("descriptionUserClient") },
-    // { value: "client", name: t("client"), description: t("descriptionUserMedic") },
-    // { value: "service", name: t("service"), description: t("descriptionUserServer") }
+    { id: 1, value: "medic", name: "medic", color: "#F39C12", img: "formZero.png", description: "medicos"},
+    { id: 2, value: "client", name: "client", color: "#3498DB", img: "formOne.png", description: "los pacientes ....." },
+    { id: 3, value: "service", name: "service", color: "#2ECC71", img: "formTwo.png", description: "usuarios que prestan servicios como, enfermeras, choferes, etc" },
   ]);
   const [formInfo, setFormInfo] = useState({
     name: '',
@@ -85,6 +76,7 @@ function Register(props) {
     avatar: '',
     language: i18n.language,
     status: 1,
+    //"react-native-svg": "9.13.3",
   })
 
   let randomCode
