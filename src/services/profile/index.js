@@ -6,7 +6,7 @@ const PROFILE = () => ({
 
   getProfile: async (id, rol) => {
     let res
-    //console.log(base_url(serverCrm, `get/usuario/profile/${id}/${rol}`))
+    console.log("getProfile ---> ", base_url(serverCrm, `get/usuario/profile/${id}/${rol}`))
     await axios.get(base_url(serverCrm, `get/usuario/profile/${id}/${rol}`)).then(function (response) {
       res = response.data
     })
@@ -21,7 +21,7 @@ const PROFILE = () => ({
 
   getNotificationsClients: async (id) => {
     let res
-    console.log(base_url(serverCrm, `valoration/scheduled/${id}`))
+    console.log("getNotificationsClients: ---> " ,base_url(serverCrm, `valoration/scheduled/${id}`))
     await axios.get(base_url(serverCrm, `valoration/scheduled/${id}`)).then(function (response) {
       res = response.data
     })
@@ -32,6 +32,22 @@ const PROFILE = () => ({
   },
 
 
+
+  updateProfile: async (e, data) =>{
+    let res
+
+    console.log("update profile: ", base_url(serverCrm, `update/profile/${e}`))
+    //console.log("update profile data: ", data)
+
+
+    await axios.put(base_url(serverCrm, `update/profile/${e}`), data).then(function (response) {
+      res = response.data
+    })
+      .catch(() => {
+        return false
+      })
+    return res;
+  },
 
 
 

@@ -125,6 +125,7 @@ function Register(props) {
       "city": res4
     })
   }
+  
 
   async function sendForm() {
     const data = {

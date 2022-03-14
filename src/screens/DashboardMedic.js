@@ -5,7 +5,7 @@ import MenuVertical from '../components/generic/MenuVertical.js';
 import Menu from '../components/generic/Menu';
 import { color_fifth, color_primary, color_screen, color_secondary, color_star } from '../styles/Colors'
 import { Icon } from 'react-native-eva-icons';
-import IconSvg from '../cvg/icon_svg.js'
+import IconSvg from '../svg/icon_svg.js'
 
 import { connect } from 'react-redux'
 

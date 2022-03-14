@@ -6,7 +6,7 @@ const color_quarter    = "#FFD900" // amarillo logo
 const color_fifth = "#00A7B4"
 
 //#004074 "#7f79da" "#8E44AD"
-const color_white      = "#FFFFFF" //blanco
+const color_white      = "#FFF" //blanco
 const color_white_a    = "rgba(255,255,255,0.5)" // blanco transparente fuerte
 const color_black      = "#000000" // negro
 const color_black_a    = "rgba(0,0,0,0.8)" // negro transparente oscuro

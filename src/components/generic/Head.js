@@ -1,10 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar, Text, View, TouchableOpacity, Image, StyleSheet, Modal } from 'react-native';
-import { Icon } from 'react-native-eva-icons';
+import IconSvg from '../../svg/icon_svg.js'
 import UserContext from '../../../contexts/UserContext';
 import { useTranslation } from 'react-i18next';
+
 import CartShop from '../icons/CartShop.js'
 import Alert from '../icons/Alert.js'
+
 import { file_server1 } from '../../../Env.js';
 import { InitialsName } from '../Logic.js';
 
@@ -54,10 +56,10 @@ function Index(props) {
           <TouchableOpacity onPress={() => goToScreen("Search")}
             style={{ width: "90%", height: 40, paddingHorizontal: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#F0F0F0", borderRadius: 8 }}>
             <Text style={{ color: "silver" }}>Search...</Text>
-            <Icon name={"search-outline"} width={30} height={30} fill={"silver"} />
+            <IconSvg name={"search-outline"} width={30} height={30} fill={"silver"} />
           </TouchableOpacity>
         </View>
-        <View style={{ justifyContent:"space-around", width:"30%", flexDirection:"row"}}>
+        <View style={{ justifyContent:"space-around", width:"30%", flexDirection:"row"}}>   
         {userDetails.rol === "client" &&
           <View style={{ justifyContent: "center", alignItems: "center", width: "33%" }}>
             <CartShop user={userDetails.id} goToScreen={goToScreen} />
@@ -68,70 +70,12 @@ function Index(props) {
         </View>
 
         <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", width: "33%", }} onPress={() => props.action(true)}>
-          <Icon name={"menu-outline"} width={30} height={30} fill={"silver"} />
+         <IconSvg name={"menu-outline"} width={30} height={30} fill={"silver"} />
         </TouchableOpacity>
         </View>
       </View>
     </View>
   )
-
-  return (
-    <View style={{
-      width: "100%",
-      flexDirection: "row",
-      justifyContent: "space-around",
-      backgroundColor: color_white,
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      height: 75,
-      minHeight: 75,
-    }}>
-      <StatusBar backgroundColor={color_white} barStyle='dark-content' translucent={false} />{/*translucent 'default' 'light-content' 'dark-content'*/}
-      <View style={{ width: "70%", marginTop: 10 }}>
-        <Image style={{
-          width: 120,
-          height: 50,
-        }}
-          source={require("../../images/logo2.png")}
-        />
-      </View>
-      <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", width: "30%", height: 60 }}>
-        <TouchableOpacity
-          style={{ flexDirection: "row", alignItems: "center" }}
-          onPress={() => [props.action(true), console.log("press head")]}/* onPress={() => goToScreen("Profile")} */ >
-          <View style={{
-            width: 60,
-            height: 60,
-            borderRadius: 60,
-            overflow: "hidden",
-            borderWidth: 2,
-            borderColor: colorUser,
-            borderColor: userDetails.photo_profile === "" ? color_star : color_grey_light,
-            backgroundColor: userDetails.photo_profile === "" ? color_star : color_white,
-          }}>
-            {userDetails.photo_profile !== "" && <Image style={{
-              width: null,
-              height: null,
-              resizeMode: "cover",
-              flex: 1
-            }} source={{ uri: `${file_server1}/img/wellezy/users/${userDetails.photo_profile}` }} />}
-            {userDetails.photo_profile === "" && <Text style={{
-              textTransform: "uppercase",
-              backgroundColor: color_star,
-              width: 65,
-              height: 60,
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              lineHeight: 50,
-              fontSize: 30,
-              fontWeight: "bold",
-            }} >{InitialsName(userDetails.name, userDetails.surname)} </Text>}
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
 }
 const stylesHead = StyleSheet.create({});
 export default React.memo(Index);

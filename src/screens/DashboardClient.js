@@ -9,6 +9,8 @@ import ServicesList from '../components/horizontalList/ServicesList.js'
 import SpecialsList from '../components/horizontalList/SpecialsList.js'
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import Logo from '../components/generic/Logo';
+import IconSvg from '../svg/icon_svg.js';
+import LinearGradient from 'react-native-linear-gradient';
 
 function DashboardClient(props) {
   const [vertical, setvertical] = useState(false);
@@ -32,12 +34,12 @@ function DashboardClient(props) {
       <Head alert={0} props={props} return="" show={vertical} action={setvertical} />
       <ScrollView scrollEventThrottle={16}>
         <View style={{ paddingBottom: 60, }}>
+        <IconSvg name={"icono-two"} width={100} height={100} fill={"red"} gradient={true} colors={["red","yellow"]}/>
           <ServicesList goToScreen={goToScreen} />
           <SpecialsList goToScreen={goToScreen} />
           <ProcessList goToScreen={goToScreen} />
         </View>
       </ScrollView>
-
       <Menu
         props={props}
         option={1}
@@ -52,6 +54,9 @@ function DashboardClient(props) {
           goToScreen={goToScreen}
         />
       }
+
+
+
     </SafeAreaView>
   )
 }

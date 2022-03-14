@@ -1,7 +1,12 @@
-
 import React, { useState, useContext, useEffect } from 'react'
-import { Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity, Dimensions, StatusBar, ActivityIndicator, StyleSheet, ListViewBase } from 'react-native'
+import { RefreshControl, Image, SafeAreaView, ScrollView, Text, View, TouchableOpacity, Dimensions, StatusBar, ActivityIndicator, StyleSheet } from 'react-native'
 import UserContext from '../../../contexts/UserContext'
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-community/async-storage'
+import { Icon } from 'react-native-eva-icons';
+import Toast from 'react-native-simple-toast';
+import LinearGradient from 'react-native-linear-gradient';
+import MenuVertical from '../../components/generic/MenuVertical.js';
 import {
   color_primary,
   color_secondary,
@@ -19,21 +24,25 @@ import {
   color_screen,
   color_star
 } from '../../styles/Colors'
-import { useTranslation } from 'react-i18next';
-import { Icon } from 'react-native-eva-icons';
-import LinearGradient from 'react-native-linear-gradient';
-import MenuVertical from '../../components/generic/MenuVertical.js';
-import { file_server1 } from '../../../Env'
-
 import { profile, notifications } from '../../services/connection.js';
-
+import { file_server1 } from '../../../Env'
 import Head from './components/Head.js'
+import HorizontalMenu from './components/HorizontalMenu.js'
+
+// 
+// 
+// 
+// 
+
+// 
+
+// import Head from './components/Head.js'
 
 
-import MyServices from '../../components/profile/med/MyServices.js'
+// import MyServices from '../../components/profile/med/MyServices.js'
 
 
-import ProfileNotifications from './pages/ProfileNotifications.js';
+// import ProfileNotifications from './pages/ProfileNotifications.js';
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -44,147 +53,105 @@ function ProfileMedic(props) {
   const { t, i18n } = useTranslation();
   const { userDetails, setUserDetails } = useContext(UserContext);
   const [vertical, setvertical] = useState(false);
-  const [Page, setPage] = useState(1);
-  const [headColor, setheadColor] = useState(color_primary);
   const [Load, setLoad] = useState(true);
-  const [Data, setData] = useState(false);
-  const [notificationsList, setnotificationsList] = useState([]);
+  const [Page, setPage] = useState(1);
 
+  const [colorStickerMenu, setcolorStickerMenu] = useState(color_primary);
 
+//   
+//   const [headColor, setheadColor] = useState(color_primary);
+//   
+//   const [Data, setData] = useState(false);
+//   const [notificationsList, setnotificationsList] = useState([]);
 
-  const ListProfile = [
-
-    // { value: 1, name: 'person-outline', counter: 0 },       //perfil
-    // { value: 2, name: 'settings-outline', counter: 0 },
-    // { value: 3, name: 'message-circle-outline', counter: 0 },
-    // { value: 4, name: 'folder-add-outline', counter: 0 },
-    // { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
-    // { value: 6, name: 'heart', counter: 0 }
-
-
-    { value: 1, status: 1, icon: 'person-outline', counter: 0 },
-    { value: 2, status: 1, icon: 'activity', counter: 0},
-    { value: 3, status: 1, icon: 'folder-add-outline', counter: 0 },
-    { value: 4, status: 1, icon: 'settings-outline', counter: 0 },
-    { value: 5, status: 1, icon: 'bell-outline', counter: 0 },
-    { value: 6, status: 1, icon: 'settings-outline' , counter: 0},
-   
-  ];
-
+//   const ListProfile = [
+//     { value: 1, status: 1, icon: 'person-outline', counter: 0 },
+//     { value: 2, status: 1, icon: 'activity', counter: 0 },
+//     { value: 3, status: 1, icon: 'folder-add-outline', counter: 0 },
+//     { value: 4, status: 1, icon: 'settings-outline', counter: 0 },
+//     { value: 5, status: 1, icon: 'bell-outline', counter: 0 },
+//     { value: 6, status: 1, icon: 'settings-outline', counter: 0 }
+//   ];
 
 
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
 
+  useEffect(() => {
+    get()
+  }, [randomCode]);
 
 
-  async function get() {
-    setLoad(true)
-    const res = await profile.getProfile(userDetails.id, userDetails.rol)
-    setData(res)
+   async function get() {
+//     setLoad(true)
+//     const res = await profile.getProfile(userDetails.id, userDetails.rol)
+//     setData(res)
 
-    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
-    setnotificationsList(noti)
+//     const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+//     setnotificationsList(noti)
 
-    setLoad(false)
-  }
+//     setLoad(false)
+   }
 
+//   function sticker(y) {
+//     // console.log("fixed", fixed)
+//     // console.log("y", y)
+//     if (y >= 310) { setheadColor(color_fifth) }
+//     else {
+//       if (y < 310) {
+//         setheadColor(color_primary)
+//       }
+//     }
+//   }
 
+//   function goToScreen(screen, data) {
+//     console.log("douglas matos")
+//     props.navigation.navigate(screen, { randomCode: Math.random(), data })
+//   }
 
-
-  //console.log("userDetails: ", userDetails)
-  /*
-   {
-     "city": "Medellín",
-     "country": "COLombia",
-     "email": "maxuel@gmail.com",
-     "id": "1",
-     "id_user": 43,
-     "language": "ru",
-     "mensagge": "Ha iniciado sesion exitosamente",
-     "name": "daniel andres",
-     "photo_profile": "IMG-20210118-WA0056.jpg",
-     "rol": "client",
-     "surname": "correa posada",
-     "telefono": "3124348384"}
-  */
-
-
+//   function goToScreenData(data) {
+//     console.log("..........", data)
+//   }
 
 
-
-  function sticker(y) {
-    // console.log("fixed", fixed)
-    // console.log("y", y)
-    if (y >= 310) { setheadColor(color_fifth) }
-    else {
-      if (y < 310) {
-        setheadColor(color_primary)
-      }
-    }
-  }
-
-
-
-
-  function goToScreen(screen, data) {
-console.log("douglas matos")
-props.navigation.navigate(screen, { randomCode: Math.random(), data })
-  }
-
-
-
-
-
-
-
-  {/*
-<Text>{userDetails.city}</Text>
-<Text>{userDetails.country}</Text>
-<Text>{userDetails.email}</Text>
-<Text>{userDetails.id}</Text>
-<Text>{userDetails.id_user}</Text>
-<Text>{userDetails.language}</Text>
-<Text>{userDetails.mensagge}</Text>
-<Text>{userDetails.rol}</Text>
-<Text>{userDetails.photo_profile}</Text>
-<Text>{userDetails.telefono}</Text>
-*/}
-
-
-
-
-function goToScreenData(data) {
-  console.log("..........", data)
+function goToScreen(screen, data) {
+  props.navigation.navigate(screen, { randomCode: Math.random(), data })
 }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
       <StatusBar backgroundColor={color_fifth} barStyle='light-content' />
       <View style={{ paddingBottom: 60 }}>
-        
+
         <ScrollView
-        scrollEventThrottle={16}
-        stickyHeaderIndices={[1]}
+          scrollEventThrottle={16}
+          stickyHeaderIndices={[1]}
+          refreshControl={
+            <RefreshControl
+              refreshing={Load}
+              onRefresh={get}
+            />
+          }
           onScroll={event => {
             const y = event.nativeEvent.contentOffset.y;
-            sticker(y)
-          }}>
+            if (y >= windowWidth / 1.3) { setcolorStickerMenu(color_secondary) }
+            else { setcolorStickerMenu(color_primary) }
+          }}
+  
 
+          
+          >
 
-<Head
-          user={userDetails}
-          color_primary={color_primary}
-          color_secondary={color_secondary}
-          color_white={color_white}
-          back={props.navigation.goBack}
-          setvertical={setvertical}
-        />
+          {/* <Head
+            user={userDetails}
+            color_primary={color_primary}
+            color_secondary={color_secondary}
+            color_white={color_white}
+            back={props.navigation.goBack}
+            setvertical={setvertical}
+          /> */}
 
-
-
-{/*         
+          {/*         
           <LinearGradient
             colors={[color_fifth, color_fifth, color_fifth, color_primary]}
             start={{ x: 0, y: 0 }}
@@ -213,9 +180,7 @@ function goToScreenData(data) {
           </LinearGradient>
  */}
 
-
-
-          <View style={[{elevation: 6, flexDirection: "row", width: "100%", padding: 5, backgroundColor: headColor }]}>
+          {/* <View style={[{ elevation: 6, flexDirection: "row", width: "100%", padding: 5, backgroundColor: headColor }]}>
             <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
               {ListProfile.map((i, key) => {
                 return (
@@ -226,22 +191,15 @@ function goToScreenData(data) {
                 )
               })}
             </ScrollView>
-          </View>
+          </View> */}
 
-
-
-
-
-
-          
-          
           {/*
           {Page === 1 && <User data={data} />}
           {Page === 2 && <Statistics data={data} Load={Load} />}
           */}
-          {Page === 3 && <MyServices /*data={data}*/ /*Load={Load}*/ userDetails={userDetails} goToScreen={goToScreen} />}
+          {/* {Page === 3 && <MyServices /*data={data}*/ /*Load={Load}*** userDetails={userDetails} goToScreen={goToScreen} />}
 
-          {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} />}
+          {/* {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} />} */}
 
           {/*
           {Page === 5 && <Setting data={data} Load={Load} />}          
@@ -283,9 +241,7 @@ export default ProfileMedic;
 
 
 
-//   useEffect(() => {
-//     Get()
-//   }, [randomCode]);
+
 
 //   async function Get() {
 //     let res = await doctors.thisDoctor(userDetails.id, i18n.language)
@@ -372,3 +328,11 @@ export default ProfileMedic;
 //   },
 // });
 // export default Profile;
+
+
+
+
+  // const { userDetails, setUserDetails } = React.useContext(UserContext);
+  // if (userDetails.rol === "client") { return <ProfileClient {...props} /> }
+  // if (userDetails.rol === "medic") { return <ProfileMedic  {...props} /> }
+  // if (userDetails.rol === "client") { return <ProfileClient {...props} /> }

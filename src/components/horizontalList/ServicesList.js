@@ -91,7 +91,7 @@ function ServicesList(props) {
                 width:windowWidth*5,
                 borderRadius: 8,
                 paddingVertical: 3,
-                backgroundColor: "white",
+                backgroundColor: color_white,
                 flexDirection: "row",
                 marginBottom: 10,
                 justifyContent:"space-between"

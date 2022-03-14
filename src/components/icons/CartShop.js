@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
-import { Icon } from 'react-native-eva-icons'
+import IconSvg from '../../svg/icon_svg.js'
 import { cartShop } from '../../services/connection.js';
 
 function Index(props) {
@@ -40,7 +40,7 @@ function Index(props) {
           }}>{count}</Text>
         </View>
       }
-      <Icon name={"shopping-cart-outline"} width={30} height={30} fill={"silver"} />
+      <IconSvg name={"shopping-cart-outline"} width={30} height={30} fill={"silver"} />
     </TouchableOpacity>
   )
 }

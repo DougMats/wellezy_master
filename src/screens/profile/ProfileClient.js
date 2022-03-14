@@ -6,12 +6,13 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { Icon } from 'react-native-eva-icons';
 import Toast from 'react-native-simple-toast';
 import LinearGradient from 'react-native-linear-gradient';
-//import NetInfo from "@react-native-community/netinfo";
 import MenuVertical from '../../components/generic/MenuVertical';
 import {
   color_primary,
   color_secondary,
   color_tertiary,
+  color_quarter,
+  color_fifth,
   color_white,
   color_white_a,
   color_black,
@@ -21,132 +22,152 @@ import {
   color_grey_dark,
   color_transparent,
   color_screen,
+  color_star
 } from '../../styles/Colors'
 import { profile, notifications } from '../../services/connection.js';
 import { file_server1 } from '.././../../Env.js'
-
-// import { MyValorationScheduled, getMyProfile, updateMyProfile, mySharedExperiences, MyProceduresPerformed } from '../../src/api/https.js'
-// import { NotNetwork } from '../components/generic/NotNetwork';
-
 import Head from './components/Head.js'
 import HorizontalMenu from './components/HorizontalMenu.js'
 
-import ProfileInfo from './pages/ProfileInfo.js';
-import ProfileConfig from './pages/ProfileConfig.js';
-import ProfileFavorites from './pages/ProfileFavorites.js';
-import ProfileNotifications from './pages/ProfileNotifications.js';
-import ProfileShares from './pages/ProfileShares.js'
+// // import { MyValorationScheduled, getMyProfile, updateMyProfile, mySharedExperiences, MyProceduresPerformed } from '../../src/api/https.js'
+// // import { NotNetwork } from '../components/generic/NotNetwork';
+
+
+
+// import ProfileInfo from './pages/ProfileInfo.js';
+// import ProfileConfig from './pages/ProfileConfig.js';
+// import ProfileFavorites from './pages/ProfileFavorites.js';
+// import ProfileNotifications from './pages/ProfileNotifications.js';
+// import ProfileShares from './pages/ProfileShares.js'
+
+
+
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+const fixed = windowWidth / 12;
 
 function ProfileClient(props) {
   const { t, i18n } = useTranslation();
   const { userDetails, setUserDetails } = useContext(UserContext);
-  const [Load, setLoad] = useState(true);
-  const [Data, setData] = useState(false);
   const [vertical, setvertical] = useState(false);
+  const [Load, setLoad] = useState(true);
   const [Page, setPage] = useState(1);
+  
   const [colorStickerMenu, setcolorStickerMenu] = useState(color_primary);
-
-  const [notificationsList, setnotificationsList] = useState([]);
-
-  // const [menu, setmenu] = useState(false);
-  // const [Editing, setEditing] = useState(false);
-  // const [connet, setconnet] = useState(null);
-  // const [myData, setmyData] = useState(null)
-  // const [Valoraciones, setValoraciones] = useState(null);
-  // const [MyShared, setMyShared] = useState(null);
-  // const [ProceduresPerformed, setProceduresPerformed] = useState(null);
-  // const [country, setcountry] = useState("");
-  // const [city, setcity] = useState("");
-  // const [dateBirthDay, setdateBirthDay] = useState("");
+//   
+//   const [Data, setData] = useState(false);
+//   
+//   
+//   
+//   const [notificationsList, setnotificationsList] = useState([]);
+//   // const [menu, setmenu] = useState(false);
+//   // const [Editing, setEditing] = useState(false);
+//   // const [connet, setconnet] = useState(null);
+//   // const [myData, setmyData] = useState(null)
+//   // const [Valoraciones, setValoraciones] = useState(null);
+//   // const [MyShared, setMyShared] = useState(null);
+//   // const [ProceduresPerformed, setProceduresPerformed] = useState(null);
+//   // const [country, setcountry] = useState("");
+//   // const [city, setcity] = useState("");
+//   // const [dateBirthDay, setdateBirthDay] = useState("");
 
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }
 
   useEffect(() => {
-    if (props.route.params.data) {
-      setPage(props.route.params.data)
-    }
-    else {
-      setPage(1)
-    }
     get()
   }, [randomCode]);
 
+//   useEffect(() => {
+//     if (props.route.params.data) {
+//       setPage(props.route.params.data)
+//     }
+//     else {
+//       setPage(1)
+//     }
+//     get()
+//   }, [randomCode]);
+
   async function get() {
-    setLoad(true)
-    const res = await profile.getProfile(userDetails.id, userDetails.rol)
-    setData(res)
+//     setLoad(true)
+//     const res = await profile.getProfile(userDetails.id, userDetails.rol)
+//     setData(res)
 
-    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
-    setnotificationsList(noti)
+//     const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+//     setnotificationsList(noti)
 
-    setLoad(false)
-  }
+//     setLoad(false)
+   }
 
-  function goToScreen(screen, data) {
-    props.navigation.navigate(screen, { randomCode: Math.random(), data })
-  }
 
-  function goToScreenData(res) {
-    let screen
-    const data = { id: res.id_event }
-    if (res.type_event === "valoration") { screen = 'ValorationView' }
-    else {
-      screen = 'Home';
-    }
-    // if (data.status === 0) { screen = 'HistoryClinicForm'; }
-    // if (data.status === 1) { screen = 'UploadPictures'; }
-    // if (data.status === 2) { screen = 'Sala'; }
-    goToScreen(screen, data)
-  }
 
-  const HorizontalMenuOpntionList = [
-    { value: 1, name: 'person-outline', counter: 0 },
-    { value: 2, name: 'settings-outline', counter: 0 },
-    { value: 3, name: 'message-circle-outline', counter: 0 },
-    { value: 4, name: 'folder-add-outline', counter: 0 },
-    { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
-    { value: 6, name: 'heart', counter: 0 }
-  ]
+//   function goToScreenData(res) {
+//     let screen
+//     const data = { id: res.id_event }
+//     if (res.type_event === "valoration") { screen = 'ValorationView' }
+//     else {
+//       screen = 'Home';
+//     }
+//     // if (data.status === 0) { screen = 'HistoryClinicForm'; }
+//     // if (data.status === 1) { screen = 'UploadPictures'; }
+//     // if (data.status === 2) { screen = 'Sala'; }
+//     goToScreen(screen, data)
+//   }
 
-  async function NotificationUpdateToRead(id) {
-    const update = await notifications.UpdateToRead(id)
-    if (update === true) {
-      const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
-      setnotificationsList(noti)
-      console.log("updating notifications")
-    }
-  }
+//   const HorizontalMenuOpntionList = [
+//     { value: 1, name: 'person-outline', counter: 0 },
+//     { value: 2, name: 'settings-outline', counter: 0 },
+//     { value: 3, name: 'message-circle-outline', counter: 0 },
+//     { value: 4, name: 'folder-add-outline', counter: 0 },
+//     { value: 5, name: 'bell-outline', counter: notificationsList.filter(obj => obj.view === 0).length },
+//     { value: 6, name: 'heart', counter: 0 }
+//   ]
+
+//   async function NotificationUpdateToRead(id) {
+//     const update = await notifications.UpdateToRead(id)
+//     if (update === true) {
+//       const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+//       setnotificationsList(noti)
+//       console.log("updating notifications")
+//     }
+//   }
+
+function goToScreen(screen, data) {
+  props.navigation.navigate(screen, { randomCode: Math.random(), data })
+}
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_white }}>
       <ScrollView
         scrollEventThrottle={16}
+        stickyHeaderIndices={[1]}
         refreshControl={
           <RefreshControl
             refreshing={Load}
             onRefresh={get}
           />
         }
-        stickyHeaderIndices={[1]}
+
         onScroll={event => {
           const y = event.nativeEvent.contentOffset.y;
           if (y >= windowWidth / 1.3) { setcolorStickerMenu(color_secondary) }
           else { setcolorStickerMenu(color_primary) }
-        }}>
-        <Head
+        }}
+
+        >
+        {/* <Head
           user={userDetails}
           color_primary={color_primary}
           color_secondary={color_secondary}
           color_white={color_white}
           back={props.navigation.goBack}
           setvertical={setvertical}
-        />
-        {
+        /> */}
+
+        {/* {
           !Load &&
           <HorizontalMenu
             colorActive={color_white}
@@ -156,7 +177,8 @@ function ProfileClient(props) {
             list={HorizontalMenuOpntionList}
             maxWidth={windowWidth}
           />
-        }
+        } */}
+         
 
         {/* 
         {!Load &&
@@ -188,14 +210,14 @@ function ProfileClient(props) {
 
 
 
-
+{/* 
         {Load && <View style={{ marginTop: 80 }}><ActivityIndicator color={color_primary} size={40} /></View>}
 
 
         {!Load && Page === 1 && <ProfileInfo data={Data} goToScreen={goToScreen} />}
 
 
-        {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} update={NotificationUpdateToRead} />}
+        {!Load && Page === 5 && <ProfileNotifications data={notificationsList} goToScreenData={goToScreenData} update={NotificationUpdateToRead} />} */}
 
 
 
