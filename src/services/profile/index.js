@@ -32,14 +32,11 @@ const PROFILE = () => ({
   },
 
 
-
+  
   updateProfile: async (e, data) =>{
     let res
-
-    console.log("update profile: ", base_url(serverCrm, `update/profile/${e}`))
-    //console.log("update profile data: ", data)
-
-
+    console.log("*** update profile: ", base_url(serverCrm, `update/profile/${e}`))
+    // console.log("*-* update profile data: ", data)
     await axios.put(base_url(serverCrm, `update/profile/${e}`), data).then(function (response) {
       res = response.data
     })

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Linking, StyleSheet, Image, View, Text, TextInput } from 'react-native'
+import { Linking, StyleSheet, Image, View, Text, TextInput, ListViewBase } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon } from 'react-native-eva-icons';
 import IconSvg from '../../../svg/icon_svg.js';
@@ -35,16 +35,11 @@ function ProfileInfo(props) {
   const [openSingle, setopenSingle] = useState(false);
   const [openLocation, setopenLocation] = useState(false);
 
-  /*
-    props.data {  "basedOn" "description" "id" "id_medic" "identification" "" "" "" "title"  "" }
-    props.data { "distric"  "" "id" "identificacion"  "status"}
-  */
-
 
 
   const link = async (url) => {
     console.log("sitio web")
-    await Linking.openURL(url)
+    //await Linking.openURL(url)
   }
 
   function onChangeText(text, key) {
@@ -54,18 +49,16 @@ function ProfileInfo(props) {
     })
   }
 
-  // if (props.data !== data) {
-  //   props.setsaveEditing(true)
-  // } else {
-  //   props.setsaveEditing(false)
-  // }
+  if (props.data !== data) {
+    props.setsaveEditing(true)
+    props.getData(data)
+  } else {
+    props.setsaveEditing(false)
+  }
 
   function getChangeRange(data) {
     console.log("data calendary: ", data)
   }
-
-
-
 
   async function getLocation(i) {
     const res1 = i[1].name;
@@ -83,8 +76,6 @@ function ProfileInfo(props) {
     })
   }
 
-
-
   const config = {
     theme: "",
     color: color_fifth,
@@ -93,11 +84,17 @@ function ProfileInfo(props) {
     rangeDate: false,
   }
 
+
+
+  const [openList, setopenList] = useState(false);
+  const [lisTypeDocument, setlisTypeDocument] = useState([
+    "cedula ciudadania", "cedula extrangeria", "pasaporte"
+  ]);
+
+
+
   return (
     <View style={styles.wrap}>
-
-
-
 
 
       <View style={styles.wrapper}>
@@ -105,7 +102,7 @@ function ProfileInfo(props) {
         {props.editing ?
           <PhotoUpload
             onPhotoSelect={avatar => { if (avatar) { onChangeText(avatar, 'img') } }}>
-            <Image style={{ alignSelf: "center", width: 150, height: 150, borderRadius: 100, marginBottom: 20 }}
+            <Image style={{ alignSelf: "center", width: props.fixed * 4, height: props.fixed * 4, borderRadius: props.fixed * 4, marginBottom: 20 }}
               resizeMode='cover'
               source={{ uri: `${file_server1}/img/wellezy/users/${data.img}` }}
             />
@@ -117,13 +114,41 @@ function ProfileInfo(props) {
           <View style={{ height: 20 }}></View>
         }
 
+
+
+
+        {props.rol === "medic" &&
+          <View style={styles.group}>
+            <Text style={styles.label}>{t("title")}</Text>
+            {props.editing ?
+              <TextInput
+                style={styles.inputText}
+                placeholderTextColor={"silver"}
+                value={data.title}
+                placeholder={t("title")}
+                onChangeText={text => onChangeText(text, 'title')}
+              />
+              :
+              <Text style={styles.text}>{data.title}</Text>
+            }
+          </View>
+        }
+
+
+
+
+
+
+
+
+
+
         <View style={styles.group}>
           <Text style={styles.label}>{t("name")}</Text>
           {props.editing ?
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.name}
               placeholder={t("name")}
               onChangeText={text => onChangeText(text, 'name')}
@@ -133,13 +158,20 @@ function ProfileInfo(props) {
           }
         </View>
 
+
+
+
+
+
+
+
+
         <View style={styles.group}>
           <Text style={styles.label}>{t("surname")}</Text>
           {props.editing ?
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.surname}
               placeholder={t("surname")}
               onChangeText={text => onChangeText(text, 'surname')}
@@ -149,13 +181,72 @@ function ProfileInfo(props) {
           }
         </View>
 
+
+
+
+
+        <View style={styles.group}>
+          <Text style={styles.label}>{openList ? "select a type document" : t("identificationType")}</Text>
+          {props.editing ?
+            <>
+              {openList ?
+                lisTypeDocument.map((i, key) => {
+                  return (
+                    <TouchableOpacity key={key} onPress={() => [onChangeText(i, 'typedocumentIdentification'), setopenList(false)]}
+                      style={{
+                        backgroundColor: "#EAECEE",
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
+                        borderRadius: 8,
+                        marginTop: 5,
+                        flexDirection: "row",
+                        alignItems: "center"
+                      }}>
+                      <Icon name={"arrow-right"} width={20} height={20} fill={"silver"} />
+                      <Text style={{ marginLeft: 5, fontSize: 14, fontWeight: "600", color: color_grey_dark, }}>{i}</Text>
+                    </TouchableOpacity>
+                  )
+                })
+                :
+                <TouchableOpacity
+                  onPress={() => setopenList(!openList)}>
+                  <Text style={{ ...styles.inputText, paddingVertical: 15 }}> {data.typedocumentIdentification === null || data.typedocumentIdentification === "" ? "seleccione tipo de documento" : data.typedocumentIdentification}</Text>
+                </TouchableOpacity>
+              }
+            </>
+            :
+            <Text style={styles.text}>
+              {data.typedocumentIdentification === null || data.typedocumentIdentification === "" ? "seleccione tipo de documento" : data.typedocumentIdentification}
+            </Text>
+          }
+        </View>
+
+
+
+        <View style={styles.group}>
+          <Text style={styles.label}>{t("identification")}</Text>
+          {props.editing ?
+            <TextInput
+              style={styles.inputText}
+              placeholderTextColor={"silver"}
+              value={data.identification}
+              placeholder={t("identification")}
+              onChangeText={text => onChangeText(text, 'identification')}
+            />
+            :
+            <Text style={styles.text}>{data.identification}</Text>
+          }
+        </View>
+
+
+
+
         <View style={styles.group}>
           <Text style={styles.label}>{t("email")}</Text>
           {props.editing ?
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.email}
               placeholder={t("email")}
               onChangeText={text => onChangeText(text, 'email')}
@@ -171,7 +262,6 @@ function ProfileInfo(props) {
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.phone}
               placeholder={t("phone")}
               onChangeText={text => onChangeText(text, 'phone')}
@@ -196,15 +286,6 @@ function ProfileInfo(props) {
             </Text>
           }
         </View>
-
-
-
-
-
-
-
-
-
 
         <View style={styles.group}>
           <Text style={styles.label}>{t("adress")}</Text>
@@ -231,17 +312,26 @@ function ProfileInfo(props) {
           }
         </View>
 
-      {/*
-      "city":
-      "city_id"
-      country
-      "country":
-      "country_id": 
-      id_perfil
-      language
-      rol
-      password
-      */}
+        {props.rol === "medic" &&
+          <View style={styles.group}>
+            <Text style={styles.label}>{t("description")}</Text>
+            {props.editing ?
+              <TextInput
+                multiline={true}
+                numberOfLines={4}
+                style={styles.inputText}
+                placeholderTextColor={"silver"}
+                value={data.description}
+                placeholder={t("description")}
+                onChangeText={text => onChangeText(text, 'description')}
+              />
+              :
+              <Text style={styles.text}>{data.description}</Text>
+            }
+          </View>
+        }
+
+
 
         <View style={styles.group}>
           <Text style={styles.label}>{t("facebbok")}</Text>
@@ -249,7 +339,6 @@ function ProfileInfo(props) {
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.facebbok}
               placeholder={t("facebbok")}
               onChangeText={text => onChangeText(text, 'facebbok')}
@@ -265,7 +354,6 @@ function ProfileInfo(props) {
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.twitter}
               placeholder={t("twitter")}
               onChangeText={text => onChangeText(text, 'twitter')}
@@ -281,7 +369,6 @@ function ProfileInfo(props) {
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.instagram}
               placeholder={t("instagram")}
               onChangeText={text => onChangeText(text, 'instagram')}
@@ -297,7 +384,6 @@ function ProfileInfo(props) {
             <TextInput
               style={styles.inputText}
               placeholderTextColor={"silver"}
-              //secureTextEntry
               value={data.youtube}
               placeholder={t("youtube")}
               onChangeText={text => onChangeText(text, 'youtube')}
@@ -306,33 +392,7 @@ function ProfileInfo(props) {
             <Text style={styles.text}>{data.youtube}</Text>
           }
         </View>
-
-
-
-        <TouchableOpacity
-      style={{
-        position: "relative",
-        // width:"60%",
-        //bottom: 50,
-        zIndex: 999,
-        alignSelf: "center",
-         backgroundColor: color_fifth,
-        // borderRadius: 20,
-        // flexDirection: "row",
-        // paddingHorizontal: 20,
-        // paddingVertical: 5,
-        // justifyContent: "center",
-        // alignItems: "center"
-      }}>
-        <Text>---</Text>
-      </TouchableOpacity>
-
-
       </View>
-
-
-
-
 
       <Calendary
         data={data.dateOfBirth}
@@ -356,15 +416,14 @@ function ProfileInfo(props) {
 
 export default React.memo(ProfileInfo);
 
+
 const styles = StyleSheet.create({
   wrap: {
-    paddingBottom: 60,
+    paddingBottom: 80,
     backgroundColor: color_screen,
   },
-
   wrapper: {
     paddingTop: 10,
-    //paddingBottom: 80,
     width: "90%",
     alignSelf: "center",
   },
@@ -393,28 +452,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#EAECEE",
     borderRadius: 8
   },
-
-
-  // btn: {
-  //   width: 30,
-  //   height: 30,
-  //   borderRadius: 30,
-  //   justifyContent: "center",
-  //   alignItems: "center"
-
-  // },
-  // btnSave: {
-  //   marginTop: 20,
-  //   minWidth: "80%",
-  //   alignSelf: "center",
-  //   backgroundColor: color_fifth,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  //   paddingVertical: 10,
-  //   borderRadius: 12
-  // },
-  // btnText: {
-  //   fontWeight: "bold",
-  //   color: color_white
-  // }
 })
