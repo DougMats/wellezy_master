@@ -28,6 +28,9 @@ import {
 import { profile, notifications } from '../../services/connection.js';
 import { file_server1 } from '../../../Env'
 import Head from './components/Head.js'
+
+import Menu from '../../components/generic/Menu';
+
 import HorizontalMenu from './components/HorizontalMenu.js'
 import ProfileInfo from './pages/ProfileInfo.js';
 import ProfileConfig from './pages/ProfileConfig.js';
@@ -177,27 +180,63 @@ function Profile(props) {
           />
         }
 
+
+
+
+        {!Load && Page === 2 &&
+          <ProfileNotifications
+            goToScreen={goToScreen}
+          />
+        }
+
+{!Load && Page === 3 &&
+          <ProfileConfig
+            data={data}
+            goToScreen={goToScreen}
+          />
+        }
+
+
+
+
+
         {/*
           1157-41709.jpg profile daniel correa
-          {!Load && Page === 2 && <ProfileNotifications goToScreen={goToScreen} />}
+        
           {!Load && Page === 3 && <ProfileConfig goToScreen={goToScreen} />}
         */}
       </ScrollView>
+
+
+
+
+
+      <Menu
+        props={props}
+        option={1}
+        alert={0}
+      />
+
 
       {Page === 1 &&
         <>
           {
             saveEditing &&
-            <TouchableOpacity onPress={() => updateData()} style={{ position: "absolute", width: "60%", bottom: 20, zIndex: 999, alignSelf: "center", backgroundColor: color_fifth, borderRadius: 20, flexDirection: "row", paddingHorizontal: 20, paddingVertical: 10, justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity onPress={() => updateData()} style={{ position: "absolute", width: "60%", bottom: 65, zIndex: 999, alignSelf: "center", backgroundColor: color_fifth, borderRadius: 20, flexDirection: "row", paddingHorizontal: 20, paddingVertical: 10, justifyContent: "center", alignItems: "center" }}>
               <Icon name={"save-outline"} width={25} height={25} fill={color_white} />
               <Text style={{ marginLeft: 5, fontWeight: "700", fontSize: 14, textTransform: "capitalize", color: color_white }}>Guardar Cambios</Text>
             </TouchableOpacity>
           }
-          <TouchableOpacity onPress={() => setediting(!editing)} style={{ backgroundColor: color_fifth, position: "absolute", zIndex: 999, alignSelf: "flex-end", width: fixed * 1.5, height: fixed * 1.5, borderRadius: fixed * 1.5, bottom: 20, right: 20, justifyContent: "center", alignItems: "center" }}>
+          <TouchableOpacity onPress={() => setediting(!editing)} style={{ backgroundColor: color_fifth, position: "absolute", zIndex: 999, alignSelf: "flex-end", width: fixed * 1.5, height: fixed * 1.5, borderRadius: fixed * 1.5, bottom: 65, right: 20, justifyContent: "center", alignItems: "center" }}>
             <Icon name={editing ? "close" : "edit"} width={30} height={30} fill={color_white} />
           </TouchableOpacity>
         </>
       }
+
+
+
+
+
 
       {vertical === true &&
         <MenuVertical

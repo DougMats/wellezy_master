@@ -176,7 +176,7 @@ function Menu(props) {
             <TouchableOpacity
               onPress={() => Go("MedicsList", null)}
               style={styles.sidebarbodyLabel}>
-              <Icon name='activity-outline' fill={color_grey_half} width={30} height={30} />
+              <IconSvg name='medic' fill={color_grey_half} width={30} height={30} />
               <Text style={styles.sidebarbodyLabelText}>Lista de Médicos</Text>
             </TouchableOpacity>
             <TouchableOpacity

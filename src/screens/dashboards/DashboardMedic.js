@@ -1,23 +1,12 @@
 import React, { useState } from 'react'
-import { SafeAreaView, Text, Dimensions, View, ScrollView } from 'react-native'
-import Head from '../components/generic/Head';
-import MenuVertical from '../components/generic/MenuVertical.js';
-import Menu from '../components/generic/Menu';
-import { color_fifth, color_primary, color_screen, color_secondary, color_star } from '../styles/Colors'
+import { TouchableOpacity, SafeAreaView, Text, Dimensions, View, ScrollView } from 'react-native'
+import Head from '../../components/generic/Head';
+import MenuVertical from '../../components/generic/MenuVertical.js';
+import Menu from '../../components/generic/Menu';
 import { Icon } from 'react-native-eva-icons';
-import IconSvg from '../svg/icon_svg.js'
-
-import { connect } from 'react-redux'
-
-  
-
-
-
-
-import ValorationsListMedic from '../components/valorations/ValorationsList.js'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
+import IconSvg from '../../svg/icon_svg.js'
+import { color_fifth, color_primary, color_screen, color_secondary, color_star } from '../../styles/Colors'
+import ValorationsListMedic from '../../components/valorations/ValorationsList.js'
 
 
 const windowWidth = Dimensions.get('window').width;
@@ -35,15 +24,6 @@ function DashboardMedic(props) {
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
-
-
-  // const getsuperheroes = () => {
-  //   const { missuperheores } = props
-  //   return missuperheores.map((heroes, key) => {
-  //     return <Text key={key}>{heroes}</Text>
-  //   })
-  // }
-
 
   // const procedimientosList = () => {
   //   const { procedimientos } = props
@@ -65,25 +45,9 @@ function DashboardMedic(props) {
         show={vertical}
         action={setvertical}
       />
+
+
       <ScrollView scrollEventThrottle={16}>
-
-
-{/*
-<IconSvg name={'power-outline'} width={40} height={40} fill={"green"} />
-<IconSvg name={'homer'} width={300} height={300} fill={"green"} />
-*/}
-{/*
-<IconSvg name={'calendar-outline'} width={30} height={30} fill={"red"} gradient={false} colors={['red','blue','pink']}/>
-*/}
-{/*
-<IconSvg name={'circle-gradient'} width={60} height={60} fill={"black"} gradient={true} colors={['red','blue','pink']}/>
-<IconSvg name={'checkmark-circle-outline'} width={60} height={60} fill={"black"} />
-<IconSvg name={'arrow-ios-back-outline'} width={30} height={30} fill={"blue"} />
-<Icon name={'arrow-ios-back-outline'} width={30} height={30} fill={"blue"} />
-*/}
-
-  
-
         <View style={{
           flexDirection: 'row',
           width: "100%",
@@ -99,6 +63,7 @@ function DashboardMedic(props) {
             )
           })}
         </View>
+
 
         {/* {getsuperheroes()}
         <Text>--------</Text>
@@ -128,22 +93,17 @@ function DashboardMedic(props) {
 
 
 
-const mapStateToProps = state => {
-  return {
-    missuperheores: state.superheroes,
-    procedimientos: state.procedimientos
-  }
-}
+// const mapStateToProps = state => {
+//   return {
+//     missuperheores: state.superheroes,
+//     procedimientos: state.procedimientos
+//   }
+// }
 
 
-
-export default connect(mapStateToProps)(DashboardMedic);
-
-
-
+export default DashboardMedic;
+//export default connect(mapStateToProps)(DashboardMedic);
 //export default connect(mapStateToProps)(React.memo(DashboardMedic));
-
-
 
 const Option = (props) => {
   return (
@@ -162,7 +122,6 @@ const Option = (props) => {
       }}
       onPress={() => props.goToScreen(props.data.goTo, null)}>
       <Icon name={props.data.icon} width={60} height={60} fill={"white"} />
-
       <Text style={{
         textTransform: "capitalize",
         color: "white",
@@ -170,11 +129,6 @@ const Option = (props) => {
         fontWeight: "bold",
         fontSize: 14
       }}>{props.data.name}</Text>
-
-
-
-
-
       <View style={{
         position: "absolute",
         zIndex: -1,
@@ -184,8 +138,6 @@ const Option = (props) => {
         top: MaxWidth * 2.5,
         transform: [{ rotateZ: "-10deg" }]
       }}></View>
-
-
     </TouchableOpacity>
   )
 }

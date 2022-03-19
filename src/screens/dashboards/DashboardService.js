@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { SafeAreaView, Text, View, ScrollView, Modal } from 'react-native'
-import Head from '../components/generic/Head';
-import MenuVertical from '../components/generic/MenuVertical.js';
-import Menu from '../components/generic/Menu';
-import { color_screen } from '../styles/Colors'
+import Head from '../../components/generic/Head';
+import MenuVertical from '../../components/generic/MenuVertical.js';
+import Menu from '../../components/generic/Menu';
+import { color_screen } from '../../styles/Colors'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import UserContext from '../../contexts/UserContext'
-// import ProcessList from '../components/horizontalList/ProcessList.js'
-// import SpecialsList from '../components/horizontalList/SpecialsList.js'
-import { services } from '../services/connection'
+import UserContext from '../../../contexts/UserContext'
+import { services } from '../../services/connection'
+import SelectType from '../../components/dashboard/service/SelectType.js'
 
-import SelectType from '../components/dashboard/service/SelectType.js'
+// import ProcessList from '../../components/horizontalList/ProcessList.js'
+// import SpecialsList from '../../components/horizontalList/SpecialsList.js'
 
 function DashboardService(props) {
   const { userDetails, setUserDetails } = useContext(UserContext);
@@ -37,7 +37,7 @@ function DashboardService(props) {
 
   async function getProfile(type, id) {
     const myProfile = await services.getProfile(type, id)
-    
+  
     if (myProfile[0] !== false) {
       console.log(userDetails.id, "___mi profile /0 : ", myProfile[0])
       console.log(userDetails.id, "___mi profile /1 : ", myProfile[1])
@@ -47,54 +47,9 @@ function DashboardService(props) {
       if(userDetails.service === 2){ goToScreen("CreateProfileNurse", null)}
       if(userDetails.service === 3){ goToScreen("CreateProfileDriver", null)}
     }
-
-
-
-
-
-
-
-
-
-    // [
-    //   false,
-    //   "error"
-    // ]
-
-    // [
-    //   false,
-    //   null
-    // ]
-
-
-    // [
-    //   "name",
-    //  {}
-    // ]
-
   }
 
-
-
-
-
-
-  /*
-  console.log("...... servise dashboard ...........", userDetails.service )
-  {"email": "Cardenas@gmail.com",
-  "id": 9,
-  "language": "en",
-  "name": "Carlos jose",
-  "password": "e10adc3949ba59abbe56e057f20f883e",
-  "phone": "315 2077862",
-  "photo_profile": "85052035-ser.png",
-  "rol": "service",
-  "service": "not assigned",
-  "surname": "Cardenas"
-  }
-  */
   function clear() {
-    console.log("---------- ............ ,,,,,,,,,,,, ")
     setselectType(false)
   }
   return (
@@ -103,7 +58,6 @@ function DashboardService(props) {
         show={vertical}
         action={setvertical}
       />
-
       <Text>id: {userDetails.id}</Text>
       <Text>name: {userDetails.name}</Text>
       <Text>surname: {userDetails.surname}</Text>
@@ -114,7 +68,6 @@ function DashboardService(props) {
       <Text>rol: {userDetails.rol}</Text>
       <Text>service: {userDetails.service}</Text>
       <Text>photo_profile: {userDetails.photo_profile}</Text>
-
       <ScrollView scrollEventThrottle={16}>
         <View style={{ paddingBottom: 60 }}>
           {/* <TouchableOpacity onPress={() => goToScreen("RCU_Service", null)}>
@@ -124,7 +77,6 @@ function DashboardService(props) {
           <SpecialsList goToScreen={goToScreen} /> */}
         </View>
       </ScrollView>
-
       <Menu
         props={props}
         option={1}
@@ -138,13 +90,9 @@ function DashboardService(props) {
           goToScreen={goToScreen}
         />
       }
-
       <SelectType open={selectType} userDetails={userDetails} clear={clear} />
-
     </SafeAreaView>
   )
 }
 
 export default React.memo(DashboardService);
-
-

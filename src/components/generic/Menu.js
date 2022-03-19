@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { StyleSheet, Animated, View, Text, TouchableOpacity, Button } from 'react-native'
 import { Icon } from 'react-native-eva-icons';
+import IconSVG from '../../svg/icon_svg'
 import UserContext from '../../../contexts/UserContext';
 import AsyncStorage from '@react-native-community/async-storage'
 import {
@@ -82,13 +83,31 @@ function Menu(props) {
         <Text style={styles.text}>Services</Text>
       </TouchableOpacity>
 
+
+      
+
+
+
+      {userDetails.rol === "client" &&
+        <TouchableOpacity onPress={() => { goToScreen("MedicsList") }}
+          style={[styles.opt, { width: props.option === 4 ? null : 40, backgroundColor: props.option === 4 ? activeColor : color_transparent }]}>
+          <IconSVG name='medic' width={IconSize} height={IconSize} fill={color_primary} />
+          <Text style={styles.text}>Médicos</Text>
+        </TouchableOpacity>
+      }
+
+
+{/* 
       {userDetails.rol === "client" &&
         <TouchableOpacity onPress={() => { goToScreen("ClinicList") }}
           style={[styles.opt, { width: props.option === 4 ? null : 40, backgroundColor: props.option === 4 ? activeColor : color_transparent }]}>
           <Icon name='activity-outline' width={IconSize} height={IconSize} fill={color_primary} />
           <Text style={styles.text}>Clínicas</Text>
         </TouchableOpacity>
-      }
+      } */}
+
+
+
 
       {userDetails.rol !== "service" &&
         <TouchableOpacity onPress={() => { goToScreen("Sala") }}

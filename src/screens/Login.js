@@ -72,6 +72,8 @@ function Index(props) {
     }
   }
 
+  
+
   const _storeData = async (data) => {
     try {
       console.log("here async")

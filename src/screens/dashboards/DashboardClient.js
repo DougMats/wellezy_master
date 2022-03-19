@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { SafeAreaView, View, Image, Text, TouchableOpacity, ScrollView } from 'react-native'
-import Head from '../components/generic/Head';
-import MenuVertical from '../components/generic/MenuVertical.js';
-import Menu from '../components/generic/Menu';
-import { color_screen, color_white } from '../styles/Colors'
-import ProcessList from '../components/horizontalList/ProcessList.js'
-import ServicesList from '../components/horizontalList/ServicesList.js'
-import SpecialsList from '../components/horizontalList/SpecialsList.js'
+import Head from '../../components/generic/Head';
+import MenuVertical from '../../components/generic/MenuVertical.js';
+import Menu from '../../components/generic/Menu';
+import { color_screen, color_white } from '../../styles/Colors'
+import ProcessList from '../../components/horizontalList/ProcessList.js'
+import ServicesList from '../../components/horizontalList/ServicesList.js'
+import SpecialsList from '../../components/horizontalList/SpecialsList.js'
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import Logo from '../components/generic/Logo';
-import IconSvg from '../svg/icon_svg.js';
+import Logo from '../../components/generic/Logo';
+import IconSvg from '../../svg/icon_svg.js';
 import LinearGradient from 'react-native-linear-gradient';
 
 function DashboardClient(props) {
@@ -36,7 +36,7 @@ function DashboardClient(props) {
         <View style={{ paddingBottom: 60, }}>
         <IconSvg name={"icono-two"} width={100} height={100} fill={"red"} gradient={true} colors={["red","yellow"]}/>
           <ServicesList goToScreen={goToScreen} />
-          <SpecialsList goToScreen={goToScreen} />
+          <SpecialsList goToScreen={goToScreen} /> 
           <ProcessList goToScreen={goToScreen} />
         </View>
       </ScrollView>

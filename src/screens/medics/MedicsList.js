@@ -23,7 +23,6 @@ function MedicsList(props) {
   const [search, setsearch] = useState(null);
   const [page, setpage] = useState(1);
 
-
   let randomCode
   if (props.route.params) { randomCode = props.route.params.randomCode }
   else { randomCode = 1 }

@@ -1,30 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, ActivityIndicator, TextInput, View, TouchableOpacity, Text, Image, Dimensions } from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity, Text, Dimensions } from 'react-native';
 import { specials } from '../../services/connection.js';
 import { useTranslation } from 'react-i18next';
-import { Icon } from 'react-native-eva-icons';
-import {
-  color_primary,
-  color_secondary,
-  color_tertiary,
-  color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
-  color_screen,
-  color_star
-} from '../../styles/Colors.js'
-import { file_server1 } from '../../../Env'
-import ScoreStars from '../stars/ScoreStars.js'
-import { letterCounter } from '../Logic.js';
+import { color_primary, color_white, color_grey_light, color_grey_half, color_grey_dark} from '../../styles/Colors.js'
 import CardSpecialsMini from '../../components/cards/CardSpecialsMini.js';
-
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 function ProcessList(props) {
   const { t, i18n } = useTranslation();
   const [data, setdata] = useState([]);
@@ -41,11 +21,12 @@ function ProcessList(props) {
     setLoad(false)
   }
 
+  const renderItem = ({ item }) => (<CardSpecialsMini data={item} goToScreen={props.goToScreen} />);
 
   if(data.length > 0){
   return (
     <View style={styles.wrap}>
-      {Load === false &&
+
         <View style={styles.head}>
           <Text style={styles.title}>Ofertas Especiales</Text>
            <TouchableOpacity
@@ -54,20 +35,15 @@ function ProcessList(props) {
             <Text style={styles.btnText}>ver más</Text>
           </TouchableOpacity>
         </View>
-      }
-      <View style={styles.body}>
-        {Load === true ?
-          <ActivityIndicator color={color_primary} size={40} />
-          :
-          <ScrollView horizontal={true}>
-           {data.map((i, key) => {
-              return (
-                <CardSpecialsMini key={key} data={i} goToScreen={props.goToScreen} />
-              )
-            })}
-          </ScrollView>
-        }
-      </View>
+
+        <FlatList
+          horizontal={true}
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+         
+        />
+      {/* <View style={styles.body}><ScrollView horizontal={true}>{data.map((i, key) => {return (<CardSpecialsMini key={key} data={i} goToScreen={props.goToScreen} />)})}</ScrollView></View> */}
     </View>
   )
 }
@@ -76,15 +52,12 @@ else{
 }
 }
 export default React.memo(ProcessList);
-const styles = StyleSheet.create({
 
+const styles = StyleSheet.create({
   wrap: {
-    //backgroundColor:"red",
     paddingTop: 10,
     paddingBottom: 20,
     flexDirection: "column",
-    // borderBottomColor: color_grey_light,
-    // borderBottomWidth: 0.5
   },
   head: {
     flexDirection: "row",
@@ -160,7 +133,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700"
   }
-
-
-
 })

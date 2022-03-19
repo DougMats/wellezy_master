@@ -6,7 +6,7 @@ const SERVICES = () => ({
 
   servicesList: async (leng) => {
     let res
-    //console.log("servicesList ->", base_url(serverCrm, `wellezy/service/list/${leng}`))
+    console.log("servicesList ->", base_url(serverCrm, `wellezy/service/list/${leng}`))
     await axios.get(base_url(serverCrm, `wellezy/service/list/${leng}`))
       .then(function (response) {
         res = response.data

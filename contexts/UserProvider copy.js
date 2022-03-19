@@ -17,7 +17,6 @@ const UserProvider = ({ children }) => {
     description : "You will have a nurse for {qty} days for {unit_price} USD per day"
   }
 
-
   const driver_booking = {
     section : 'driver_booking',
     introduced : false,
@@ -39,7 +38,6 @@ const UserProvider = ({ children }) => {
     qty : 0,
     description : "This will be your recovery site for {qty} days after your medical service."
   }
-
 
   const medical_booking = {
       section : 'medical_booking',
@@ -64,7 +62,6 @@ const UserProvider = ({ children }) => {
 		house_booking,
   }
 
-
   const [ userDetails, setUserDetails ] = useState({
     id: null,
     name : null,
@@ -83,13 +80,11 @@ const UserProvider = ({ children }) => {
 
 
 
+
+
   const resetOrderSection = ( section ) => {
     
     if(section === 'products'){
-
-console.log("test infinito")
-console.log("->",userDetails,"<-")
-
 
       setUserDetails({
         ...userDetails,

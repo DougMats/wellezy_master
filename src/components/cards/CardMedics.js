@@ -13,7 +13,8 @@ import {
   color_black,
   color_grey_half,
   color_transparent,
-  color_star
+  color_star,
+  color_grey_dark
 } from '../../styles/Colors.js';
 
 function CardMedics(props) {
@@ -22,6 +23,11 @@ function CardMedics(props) {
   const [modal, setmodal] = useState(false);
   const [Load, setLoad] = useState(false);
   const [ViewMore, setViewMore] = useState(false);
+
+
+
+
+
 
   return (
     <>
@@ -62,23 +68,22 @@ function CardMedics(props) {
           <View style={{ borderColor: "#eee", borderWidth: 2, overflow: "hidden", backgroundColor: "#E9E9E9", width: 80, height: 80, borderRadius: 40 }}>
             <Image
               style={{ flex: 1, width: null, height: null, resizeMode: 'cover' }}
-              source={{ uri: `${file_server1}/img/wellezy/medics/${props.data.img}` }}
+              source={{ uri: `${file_server1}/img/wellezy/users/${props.data.img}` }}
             />
           </View>
-          <View style={{ flexDirection: "column", width: "65%", padding: 10 }}>
-            <Text style={{ fontSize: 14 }}>{props.data.name}</Text>
+
+          <View style={{ flexDirection: "column", width: "65%", paddingHorizontal: 10, paddingVertical:5, justifyContent:"space-between" }}>
+            <Text style={{textTransform:"capitalize", fontWeight:"bold", fontSize: 16 }}>{props.data.surname.split(" ")[0]} {props.data.name.split(" ")[0]}</Text>
             <View style={{ flexDirection: "row" }}>
-              <ScoreStars scale={props.data.basedOn} value={props.data.rating} stars={props.data.stars} size={15} color='orange' />
+              <ScoreStars scale={props.data.basedOn} value={props.data.rating} stars={props.data.stars} size={20} color='orange' />
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Icon name='map-outline' width={15} height={15} fill='#555' style={{ top: 3, marginRight: 10 }} />
+              <Icon name='pin' width={15} height={15} fill='#555' style={{ top: 3, marginRight: 10 }} />
               <View style={{ top: 3 }}>
                 <Text style={{ fontSize: 10 }}>
-                  {props.data.city}, {props.data.departament}.
+                  {props.data.city}, {props.data.departament}. {props.data.country}.
                 </Text>
-                <Text style={{ fontSize: 10 }}>
-                  {props.data.country}.
-                </Text>
+               
               </View>
             </View>
           </View>
@@ -94,15 +99,21 @@ function CardMedics(props) {
         </View>
         <TouchableOpacity
           onPress={() => setViewMore(!ViewMore)}
-          style={{ alignSelf: "flex-end" }}
+          style={{ alignSelf: "flex-end", flexDirection:"row",  backgroundColor:"#ccc", marginTop:5, paddingVertical:2, paddingHorizontal:6, borderRadius:8 }}
         >
-          <Text style={{ fontSize: 10, color: "#777" }}>
+
+
+
+          <Text style={{marginRight:5, fontSize: 12, lineHeight:15, color: color_grey_dark }}>
             {ViewMore ? t("seeLess") : t("seeMore")}
           </Text>
+
+          <Icon name={ViewMore?'arrow-ios-upward-outline':'arrow-ios-downward-outline'} width={15} height={15} fill={color_grey_dark} />
+
         </TouchableOpacity>
         <View style={{ flexDirection: "row", justifyContent: "space-around", top: 10, }}>
-          <TouchableOpacity onPress={() => props.goToScreen("MedicsView", props.data)} style={{ height: 30, borderRadius: 15, margin: 2, backgroundColor: "orange", paddingHorizontal: 10, }}>
-            <Text style={{ lineHeight: 28, textAlign: "center", color: "#000" }}>{t("watch")}</Text>
+          <TouchableOpacity onPress={() => props.goToScreen("MedicsView", props.data)} style={{ paddingVertical:2.5, width:"60%", borderRadius:20,  backgroundColor: "orange", }}>
+            <Text style={{ lineHeight: 28, fontWeight:"bold", fontSize:14, textAlign: "center", color: "#000" }}>{t("watch")}</Text>
           </TouchableOpacity>
         </View>
         {/* 

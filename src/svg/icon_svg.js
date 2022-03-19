@@ -35,6 +35,8 @@ import Poweroutline from './power-outline.svg'
 import Searchoutline from './search-outline.svg'
 import Shoppingcartoutline from './shopping-cart-outline.svg'
 
+import Medic from './medic.svg'
+
 
 import Settings from './settings.svg'
 import Settingsoutline from './settings-outline.svg'
@@ -109,6 +111,12 @@ function Index(props) {
         return <Heart width={props.width} height={props.height} fill={props.fill} />;
       case 'heart-outline':
         return <Heartoutline width={props.width} height={props.height} fill={props.fill} />;
+
+
+
+        case "medic":
+          return <Medic width={props.width} height={props.height} fill={props.fill} />;
+          
       case "menu-outline":
         return <Menuoutline width={props.width} height={props.height} fill={props.fill} />;
       case "message-circle-outline":

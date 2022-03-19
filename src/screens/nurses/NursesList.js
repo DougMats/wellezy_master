@@ -1,56 +1,28 @@
-import React, { useState, useContext,useEffect } from 'react';
-import { ActivityIndicator, TextInput, View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, ScrollView, Dimensions, ActivityIndicator, TextInput, Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import Pagination from '../../components/filters/Pagination.js';
 import FilterSilver from '../../components/filters/Silver';
 import FilterGolden from '../../components/filters/Golden';
-import CardHotel from '../../components/cards/CardHotel.js';
+import CardNurse from '../../components/cards/CardNurse.js';
 import CardEmpty from '../../components/cards/CardEmpty.js';
-import { Icon } from 'react-native-eva-icons';
-import { hotels } from '../../services/connection.js';
-import { color_primary, color_grey_half, color_screen } from '../../styles/Colors.js';
-import UserContext from '../../../contexts/UserContext'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Menu from '../../components/generic/Menu';
+import MenuServices from '../../components/generic/MenuServices'
+import MenuVertical from '../../components/generic/MenuVertical.js';
 
-function Hotels(props) {
+import { Icon } from 'react-native-eva-icons';
+import { color_primary, color_grey_half, color_screen, color_white  } from '../../styles/Colors.js';
+import { nurses } from '../../services/connection.js';
+
+function NursesList(props) {
   const { t, i18n } = useTranslation();
-  //const { ourServices, setourServices } = useContext(UserContext);
   const [Load, setLoad] = useState(true);
   const [premium, setpremium] = useState(null);
   const [stars, setstars] = useState(null);
   const [search, setsearch] = useState(null);
   const [page, setpage] = useState(1);
   const [Data, setData] = useState(false);
-
-
-const listserices = [
-
-  {
-    "id": 7,
-    "name": "Home Recovery",
-    "image": ""
-  },
-  {
-    "id": 2,
-    "name": "Lodging",
-    "image": "tours.jpeg"
-  },
-  {
-    "id": 6,
-    "name": "Nurses",
-    "image": "nutrition.jpg"
-  },
-  {
-    "id": 8,
-    "name": "Specials",
-    "image": ""
-  },
-  {
-    "id": 1,
-    "name": "Transport",
-    "image": "traslado.jpg"
-  }
-]
+  const [vertical, setvertical] = useState(false);
 
   useEffect(() => {
     get()
@@ -62,7 +34,7 @@ const listserices = [
 
   async function get() {
     setLoad(true)
-    const res = await hotels.hotelsList(i18n.language, premium, stars, search, page)
+    const res = await nurses.nursesList(i18n.language, premium, stars, search, page)
     setData(res)
     setLoad(false)
   }
@@ -95,19 +67,22 @@ const listserices = [
     }
   }
 
+
+  function goToScreen(screen, data) {
+    props.navigation.navigate(screen, { randomCode: Math.random(), data })
+  }
+
+
+
   return (
-    <SafeAreaView style={{ flex:1, backgroundColor: color_screen}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
+    <ScrollView tickyHeaderIndices={[0]} scrollEventThrottle={16} horizontal={false}>
 
-
-      {/*
-      
-  
-    <View style={{ flex: 1 }}>
-
+    
+    <MenuServices id={props.route.params.data.id} goToScreen={goToScreen}/>
 
 
       <View style={styles.wrap}>
-
         <View style={styles.search}>
           <TextInput
             value={props.text}
@@ -123,9 +98,13 @@ const listserices = [
           <FilterSilver width={"45%"} icon="award" textUp="Clasificación" textDown="Premium" function={getPremium} />
           <FilterGolden width={"45%"} icon="star" textLeft="5 Estrellas" textRight="" function={getStars} />
         </View>
+        {/*         
+        <FilterSilver icon="award" textUp="Clasificación" textDown="Premium" function={getPremium} />
+        <FilterGolden icon="star" textLeft="5 Estrellas" textRight="" function={getStars} />
+        */}
       </View>
-
       {Load === true && <ActivityIndicator color={color_primary} size={40} />}
+
 
       <View style={{
         flexDirection: 'row',
@@ -136,28 +115,38 @@ const listserices = [
         flexWrap: 'wrap'
       }}>
 
-
-        {Load === false && Data.data.length !== 0 && Data.data.map((i, key) => {
-          return (
-            <CardHotel key={key} data={i} goToScreen={props.goToScreen} />
-          )
-        })
-        }
+      {Load === false && Data.data.length !== 0 && Data.data.map((i, key) => {
+        return (
+          <CardNurse key={key} data={i} goToScreen={goToScreen} />
+        )
+      })
+      }
       </View>
-
       {Load === false && Data.data.length === 0 && <CardEmpty />}
-      {!Load && Data.last_page > 1 &&
+      {Load === false && Data.last_page > 1 &&
         <Pagination page={page} lastPage={Data.last_page} getPage={getPage} />
       }
-    </View>
-        */}
-    </SafeAreaView>
+
+</ScrollView>
+
+<Menu props={props} option={3} />
+      {vertical === true &&
+        <MenuVertical
+          width={280}
+          show={vertical}
+          action={setvertical}
+          goToScreen={goToScreen}
+        />
+      }
+
+
+</SafeAreaView>
   )
 }
-export default React.memo(Hotels);
+
+export default React.memo(NursesList);
 const styles = StyleSheet.create({
   wrap: {
-    marginTop:-25,
     flexDirection: "column",
     width: "100%",
     alignSelf: "center",
@@ -175,4 +164,4 @@ const styles = StyleSheet.create({
     borderBottomColor: color_grey_half,
     borderBottomWidth: 1
   }
-})
+});

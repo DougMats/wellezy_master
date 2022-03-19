@@ -15,7 +15,7 @@ import { Icon } from 'react-native-eva-icons';
 import Toast from 'react-native-simple-toast';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import imagesWizardData from '../components/form/imagesWizardData.js'
+import imagesWizardData from './imagesWizardData.js'
 import PhotoUpload from 'react-native-photo-upload'
 import axios from 'axios'
 import { serverCrm, base_url } from '../../../Env'
