@@ -116,7 +116,9 @@ function MedicsList(props) {
         // }
 
       >
-        <View style={styles.wrap}>
+
+
+<View style={styles.wrap}>
           <View style={styles.search}>
             <TextInput
               value={props.text}
@@ -127,9 +129,20 @@ function MedicsList(props) {
             />
             <Icon name='search-outline' fill={color_grey_half} width={30} height={30} />
           </View>
-          <FilterSilver icon="award" textUp="Clasificación" textDown="Premium" function={filterByPremium} />
-          <FilterGolden icon="star" textLeft="5 Estrellas" textRight="" function={filterByEstrellas} />
+          <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
+            <FilterSilver width={"45%"} icon="award" textUp="Clasificación" textDown="Premium" function={filterByPremium} />
+            <FilterGolden width={"45%"} icon="star" textLeft="5 Estrellas" textRight="" function={filterByEstrellas} />
+          </View>
         </View>
+
+
+
+
+
+       
+
+
+
         <View
           style={{
             width: "100%",

@@ -1,27 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { services } from '../../services/connection.js';
+import { connect } from 'react-redux'
 
-function DashboardServices(props) {
+const mapStateToProps = (state) => {
+  return {
+    list: state.servicesReducer.list
+  }
+}
+
+function DashboardServices({ list, navigation }) {
   const { t, i18n } = useTranslation();
 
-  let randomCode
-  if (props.route.params) { randomCode = props.route.params.randomCode }
-  else { randomCode = 1 }
-
-  useEffect(() => {
-    get();
-  }, [randomCode]);
-
-  async function get() {
-    try {
-      const res = await services.servicesList(i18n.language)
-        let data = res[0]
-        props.navigation.navigate( data.screen, { randomCode: Math.random(), data })
-    }
-    catch (error) { }
-  }
+    let data = list[0]
+    navigation.navigate(data.screen, { randomCode: Math.random(), data })
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white", justifyContent: "center", alignItems: "center" }}>
@@ -29,4 +21,5 @@ function DashboardServices(props) {
     </SafeAreaView>
   )
 }
-export default DashboardServices;
+
+export default connect(mapStateToProps, null)(DashboardServices);

@@ -1,53 +1,33 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { ScrollView, StatusBar, Dimensions, View, Text, TouchableOpacity } from 'react-native'
 import IconSvg from '../../svg/icon_svg'
 import { useTranslation } from 'react-i18next';
-import { services } from '../../services/connection'
-import {
-  color_primary,
-  color_secondary,
-  color_tertiary,
-  color_white,
-  color_white_a,
-  color_black,
-  color_black_a,
-  color_grey_light,
-  color_grey_half,
-  color_grey_dark,
-  color_transparent,
-  color_screen,
-  color_fifth
-} from '../../styles/Colors'
-import { get } from 'lodash';
-
+import { color_white, color_grey_half, color_screen, color_fifth} from '../../styles/Colors'
+import { connect } from 'react-redux'
 
 const windowWidth = Dimensions.get('window').width;
 const Width = windowWidth / 12
 
-function MenuServices(props) {
-  const { t, i18n } = useTranslation();
-  const [ourServices, setourServices] = useState([]);
-
-  let id
-  if (props.id) { id = props.id }
-  else { id = 0 }
-
-  useEffect(() => {
-    get()
-  }, [])
-
-  async function get(){
-    const res = await services.servicesList(i18n.language)
-    setourServices(res)
+const mapStateToProps = (state) => {
+  return {
+    list: state.servicesReducer.list
   }
+}
 
+function MenuServices({list, idReceived, goToScreen}) {
+  const { t, i18n } = useTranslation();
+  
+  let id
+  if (idReceived) { id = idReceived }
+  else { id = 0 }
+  
   return (
     <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
       <StatusBar backgroundColor={color_screen} barStyle='dark-content' translucent={false} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {ourServices.map((i, key) => {
+        {list.map((i, key) => {
           return (
-            <TouchableOpacity key={key} onPress={() => props.goToScreen(i.screen, i)}
+            <TouchableOpacity key={key} onPress={() => goToScreen(i.screen, i)}
               style={{
                 minWidth: Width * 4,
                 maxWidth: Width * 6,
@@ -70,7 +50,7 @@ function MenuServices(props) {
                   lineHeight: 25,
                   fontWeight: "bold",
                   marginLeft: 5,
-                  color: props.id === i.id ? color_fifth : color_grey_half
+                  color: id === i.id ? color_fifth : color_grey_half
                 }}
               >{i.name}</Text>
             </TouchableOpacity>
@@ -81,4 +61,5 @@ function MenuServices(props) {
   )
 }
 
-export default React.memo(MenuServices);
+export default connect(mapStateToProps, null)(MenuServices);
+//export default React.memo(MenuServices);

@@ -14,7 +14,8 @@ import ScoreStars from '../../components/stars/ScoreStars'
 import Pagination from '../../components/filters/Pagination'
 
 import { file_server1 } from '../../../Env'
-import { hotels, specials } from '../../services/connection.js'
+import { hotels, nurses, specials } from '../../services/connection.js'
+
 import {
   extractDate,
   InitialsName,
@@ -27,6 +28,7 @@ import {
   globalStatusValoration,
   letterCounter
 } from '../../components/Logic.js'
+
 import {
   color_primary,
   color_secondary,
@@ -45,16 +47,36 @@ import {
   color_star
 } from '../../styles/Colors'
 
+
+import MenuView from '../additionalServices/sections/Menu'
+import SectionGeneral from '../additionalServices/sections/SectionGeneral'
+import SectionInfo from '../additionalServices/sections/SectionInfo'
+import SectionImages from '../additionalServices/sections/SectionImages'
+import SectionOpinions from '../additionalServices/sections/SectionOpinions.js'
+import SectionOffers from '../additionalServices/sections/SectionOffers.js'
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 function NurseView(props) {
   const { t, i18n } = useTranslation();
   const { navigation } = props
-  const [data, setdata] = useState(null);
+  const [data, setdata] = useState(props.route.params.data);
   const [Load, setLoad] = useState(false);
   const [vertical, setvertical] = useState(false);
+
+  const [label, setlabel] = useState(1);
+  const [labelList, setlabelList] = useState([
+    { id: 1, name: "General" },
+    { id: 2, name: "Info" },
+    { id: 3, name: "Fotos" },
+    { id: 4, name: "Opiniones" },
+    { id: 5, name: "Ofertas" },
+    //{ id: 6, name: "Habitaiones" }
+  ]);
+
+
+
 
   let randomCode
   if (props.route.params) {
@@ -80,9 +102,91 @@ function NurseView(props) {
   }
 
 
+
+  console.log("----------------------", props.route.params.data)
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
       <StatusBar /* translucent*/ barStyle='dark-content' backgroundColor={"transparent"} />
+      
+      <ScrollView
+        scrollEventThrottle={16}
+        horizontal={false}
+        stickyHeaderIndices={[5]}
+      // onScroll={event => {
+      //   const y = event.nativeEvent.contentOffset.y;
+      //   if (y >= windowWidth / 1.5 + 70) {
+      //     setsticky(true)
+      //   }
+      //   else{
+      //     if (y < windowWidth / 1.5 + 70) {
+      //       setsticky(false)
+      //     }
+      //   }
+      // }}
+      >
+
+        <TouchableOpacity onPress={() => setvertical(true)}
+          style={{ position: "absolute", top: 15, right: 15, zIndex: 999, backgroundColor: "rgba(255,255,255,0.2)", width: 35, height: 35, borderRadius: 35, justifyContent: "center", alignItems: "center" }}>
+          <Icon name="more-vertical-outline" width={30} height={30} fill={color_white} />
+        </TouchableOpacity>
+
+        <View style={styles.upperOptionsWrapLeft}>
+          <TouchableOpacity style={{ marginVertical: 10 }}>
+            <Icon name={"star-outline"} width={25} height={25} fill={color_white} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginVertical: 10 }}>
+            <Icon name={"heart-outline"} width={25} height={25} fill={color_white} />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginVertical: 10 }}>
+            <Icon name={"smiling-face-outline"} width={25} height={25} fill={color_white} />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity onPress={() => goToScreen("Reservation", data)}
+          style={styles.upperBtn}>
+          <Text style={styles.upperBtnText}>Reservation</Text>
+        </TouchableOpacity>
+
+        <View style={styles.banner}>
+          <Image
+            //source={{ uri: data.img }}
+            source={{ uri: `${file_server1}/img/wellezy/nurses/${props.route.params.data.img}` }}
+            style={styles.img} />
+        </View>
+
+        <View style={styles.titleWrap}>
+          <Text style={styles.title}>{data.name}</Text>
+        </View>
+
+        <MenuView data={labelList} set={setlabel} value={label} />
+        {Load && <ActivityIndicator size={40} color={color_fifth} />}
+        {/*
+          {Load === false && label === 1 && <SectionGeneral  data={data} setlabel={setlabel} />}
+          {Load === false && label === 2 && <SectionInfo     data={data} setlabel={setlabel} />}
+          {Load === false && label === 3 && <SectionImages   data={data} setlabel={setlabel} />}
+          {Load === false && label === 4 && <SectionOpinions data={data} setlabel={setlabel} />}
+          {Load === false && label === 5 && <SectionOffers   data={data} setlabel={setlabel} goToScreen={goToScreen}/>}
+        */}
+        <View style={{ height: 80 }}></View>
+      </ScrollView>
+      <Menu props={props} option={7} />
+      {vertical === true &&
+        <MenuVertical
+          width={280}
+          show={vertical}
+          action={setvertical}
+          goToScreen={goToScreen}
+        />
+      }
+    </SafeAreaView>
+  )
+
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
+      <StatusBar /* translucent*/ barStyle='dark-content' backgroundColor={"transparent"} />
+
       <ScrollView
         scrollEventThrottle={16}
         horizontal={false}
@@ -168,17 +272,17 @@ function NurseView(props) {
 
 
         <Text
-            style={{
-              lineHeight: 50,
-              textAlign: "center",
-              fontSize: 20,
-              width: "100%",
-              fontWeight: "bold",
-              color: color_primary,
-              textTransform: "capitalize"
-            }}
-          >{props.route.params.data.title}. {props.route.params.data.surname} {props.route.params.data.name}
-          </Text>
+          style={{
+            lineHeight: 50,
+            textAlign: "center",
+            fontSize: 20,
+            width: "100%",
+            fontWeight: "bold",
+            color: color_primary,
+            textTransform: "capitalize"
+          }}
+        >{props.route.params.data.title}. {props.route.params.data.surname} {props.route.params.data.name}
+        </Text>
 
 
 
@@ -216,7 +320,7 @@ function NurseView(props) {
 }}>
   </LinearGradient> */}
         <View>
-  
+
         </View>
 
         <View style={{
@@ -553,5 +657,67 @@ function NurseView(props) {
 // }
 
 
+
+
+const styles = StyleSheet.create({
+  upperOptionsWrapLeft: {
+    padding: 15,
+    position: "absolute",
+    zIndex: 9999,
+    flexDirection: "column"
+  },
+  upperBtn: {
+    position: "absolute",
+    zIndex: 999,
+    top: windowWidth / 1.5 - 50,
+    right: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: color_fifth,
+    borderColor: color_white,
+    borderWidth: 1,
+    borderRadius: 5,
+    width: windowWidth / 3,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  upperBtnText: {
+    marginLeft: 5,
+    color: color_white,
+    fontWeight: "bold",
+    fontSize: 14
+  },
+  banner: {
+    backgroundColor: color_grey_light,
+    width: windowWidth,
+    alignSelf: "center",
+    height: windowWidth / 1.5,
+    overflow: "hidden",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  img: {
+    width: null,
+    height: null,
+    flex: 1,
+    resizeMode: "cover"
+  },
+  titleWrap: {
+    backgroundColor: color_white,
+    height: 80,
+    justifyContent: "flex-end",
+    marginTop: -25,
+    zIndex: -1,
+  },
+  title: {
+    lineHeight: 50,
+    textAlign: "center",
+    fontSize: 24,
+    width: "100%",
+    fontWeight: "bold",
+    color: color_primary,
+    textTransform: "capitalize"
+  },
+});
 
 export default React.memo(NurseView);

@@ -32,9 +32,14 @@ import Head from './components/Head.js'
 import Menu from '../../components/generic/Menu';
 
 import HorizontalMenu from './components/HorizontalMenu.js'
+
+
+
+/* pages */
 import ProfileInfo from './pages/ProfileInfo.js';
-import ProfileConfig from './pages/ProfileConfig.js';
 import ProfileNotifications from './pages/ProfileNotifications.js';
+import ProfileConfig from './pages/ProfileConfig.js';
+
 import ProfileFavorites from './pages/ProfileFavorites.js';
 import ProfileShares from './pages/ProfileShares.js'
 
@@ -56,6 +61,8 @@ function Profile(props) {
   const [modal, setmodal] = useState(false);
   const [mmsg, setmmsg] = useState("");
 
+
+
   const HorizontalMenuClient = [
     { value: 1, icon: 'person', counter: 0 },
     { value: 2, icon: 'bell', counter: notificationsList.filter(obj => obj.view === 0).length },
@@ -67,17 +74,22 @@ function Profile(props) {
     // { value: 6, icon: 'heart', counter: 10 }
   ]
 
+
   const HorizontalMenuMedic = [
     { value: 1, icon: 'person', counter: 0 },
-    { value: 2, icon: 'bell', counter: 0 },
+    { value: 2, icon: 'bell', counter: notificationsList.filter(obj => obj.view === 0).length  },
     { value: 3, icon: 'settings', counter: 0 },
     // { value: 2,  icon: 'activity', counter: 0 },
     // { value: 3,  icon: 'folder-add-outline', counter: 0 },
     // { value: 6,  icon: 'settings-outline', counter: 0 }
   ];
 
+
+
+
   const [HorizontalMenuList, setHorizontalMenuList] = useState([]);
   const [dataPacket, setdataPacket] = useState(null);
+
 
 
   let randomCode
@@ -86,9 +98,20 @@ function Profile(props) {
 
   useEffect(() => {
     get()
+
     if (userDetails.rol === "client") { setHorizontalMenuList(HorizontalMenuClient) }
     else if (userDetails.rol === "medic") { setHorizontalMenuList(HorizontalMenuMedic) }
+
+
+    if (props.route.params.data) {
+      setPage(props.route.params.data)
+    }
+    else {
+      setPage(1)
+    }
+
   }, [randomCode]);
+
 
   useEffect(() => {
     if (modal) {
@@ -103,7 +126,7 @@ function Profile(props) {
     setLoad(true)
     const res = await profile.getProfile(userDetails.id, userDetails.rol)
     setdata(res)
-    const noti = await notifications.GetNews(i18n.language, userDetails.id, userDetails.rol)
+    const noti = await notifications.getNews(i18n.language, userDetails.id, userDetails.rol)
     setnotificationsList(noti)
     setLoad(false)
   }
@@ -127,6 +150,15 @@ function Profile(props) {
   function goToScreen(screen, data) {
     props.navigation.navigate(screen, { randomCode: Math.random(), data })
   }
+
+
+
+  function goToScreenData(noti){
+    const screen = `${noti.type_event}View`
+    const data = { id: noti.id_event }
+    goToScreen(screen, data)
+  }
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color_screen }}>
@@ -185,11 +217,12 @@ function Profile(props) {
 
         {!Load && Page === 2 &&
           <ProfileNotifications
-            goToScreen={goToScreen}
+            data={notificationsList}
+            goToScreen={goToScreenData}
           />
         }
 
-{!Load && Page === 3 &&
+        {!Load && Page === 3 &&
           <ProfileConfig
             data={data}
             goToScreen={goToScreen}
@@ -198,11 +231,8 @@ function Profile(props) {
 
 
 
-
-
         {/*
           1157-41709.jpg profile daniel correa
-        
           {!Load && Page === 3 && <ProfileConfig goToScreen={goToScreen} />}
         */}
       </ScrollView>

@@ -7,7 +7,7 @@ function Index(props) {
   const [count, setcount] = useState(0);
   useEffect(() => {
     async function get() {
-      const res = await notifications.GetNews(props.lang, props.user, props.rol)
+      const res = await notifications.getNews(props.lang, props.user, props.rol)
       const total = res.filter(obj => obj.view === 0).length
       setcount(total)
     }
@@ -17,7 +17,7 @@ function Index(props) {
 
   return (
     <TouchableOpacity
-    onPress={()=>props.goToScreen('Profile', 5 )}
+    onPress={()=>props.goToScreen('Profile', 2 )}
       style={{
         width: 35,
         height: 35,

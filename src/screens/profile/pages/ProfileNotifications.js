@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native'
-import { profile, } from '../../../services/connection.js';
+import { profile, notifications } from '../../../services/connection.js';
 import { Icon } from 'react-native-eva-icons';
 import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,21 +20,38 @@ import {
   color_fifth,
 } from '../../../styles/Colors'
 
+
+
 function ProfileNotifications(props) {
   const { t, i18n } = useTranslation();
   return (
     <View style={{paddingTop: 10}}>
       {props.data.length === 0 ?
-        <View>
-          <Text>empty</Text>
+        <View style={{
+          marginTop:100,
+          borderWidth:1.5,
+          width:"80%",
+          alignSelf:"center",
+          justifyContent:"center",
+          alignItems:"center",
+          paddingVertical:25,
+          borderRadius:20,
+          borderColor: color_grey_half,
+          borderStyle:"dashed"
+        }}>
+          <Text style={{
+            color:color_grey_half,
+            fontSize:16,
+            fontWeight:"bold"
+          }}>No tienes notificaciones...!</Text>
         </View>
         :
         props.data.map((i, key) => {
           return (
-            <Notificaction key={key} data={i} goToScreenData={props.goToScreenData} update={props.update}/>
+            <Notificaction key={key} data={i} goToScreen={props.goToScreen} update={props.update}/>
           )
         })
-      }
+      } 
     </View>
   )
 }
@@ -100,27 +117,21 @@ const styles = StyleSheet.create({
   //   fontWeight: "800",
   //   color: color_grey_half
   // }
-
 })
-
 
 const Notificaction = (props) => {
   const { t, i18n } = useTranslation();
   const [itsOpen, setitsOpen] = useState(false);
   const [itsRead, setitsRead] = useState(props.data.view === 1 ? true : false);
-
   return (
-    <TouchableOpacity onPress={() => props.goToScreenData(props.data)}
+    <TouchableOpacity onPress={() => props.goToScreen(props.data)}
       style={{...styles.notifiation, borderWidth: itsRead ? 1 : 0, shadowColor: itsRead ? "transparent" : "#000", elevation: itsRead ? 0 : 5}}
     >
-
       <View style={{padding: 5,flexDirection: "row"}}>
         {!itsRead && <View style={{ borderRadius: 15, width: 15, height: 15, backgroundColor: "#2ECC71", position: "absolute", top: 10, right: 5, zIndex: 9 }}></View>}
-       
         <View style={{ width: "15%", alignItems: "center", }}>
           <Image style={{ width: 50, height: 50, borderRadius: 50, resizeMode: "cover" }} source={{ uri: props.data.img }} />
         </View>
-
         <View style={{width: "60%",paddingLeft: 10,flexDirection: "column"}}>
           <Text style={{textTransform:"capitalize",fontSize: 16,color: color_fifth,fontWeight: "bold"}}>{props.data.title}</Text>
           <Text style={{ textAlign: "justify", fontSize: 14, color: color_grey_half }}>
@@ -132,13 +143,12 @@ const Notificaction = (props) => {
             }
           </Text>
         </View>
-
         <View style={{
           width: "25%",
           alignItems: "center",
           justifyContent: "space-around"
         }}>
-          <TouchableOpacity onPress={() => [props.update(props.data.id),setitsOpen(!itsOpen)]} style={styles.btnFoot} >
+          <TouchableOpacity onPress={() => [props.update(props.data.id), setitsOpen(!itsOpen)]} style={styles.btnFoot} >
             <Icon name={itsOpen ? 'close' : 'more-vertical'} width={25} height={25} fill={"silver"} />
           </TouchableOpacity>
           <Text style={{ fontSize: 12, color: color_grey_half }}>{props.data.created_at.split(" ")[1]}</Text>

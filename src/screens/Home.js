@@ -10,14 +10,37 @@ import { useTranslation } from 'react-i18next';
 import JitsiMeet, { JitsiMeetView } from 'react-native-jitsi-meet';
 
 
-function Home(props) {
+//functions https
+import { services } from '../services/connection'
 
 
 
-  /* ------ */
+//actions from store
+import {connect} from 'react-redux'
+import  { getList } from '../store/services/action'
+
+
+
+// const mapStateToProps = (state) => {
+//     return {
+//         list : state.servicesReducer.list,
+//     }
+// }
+
+
+
+
+
+
+function Home({ getList, props }) {
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
+  const [isSplashing, setIsSplashing] = useState(true)
+  const { setUserDetails } = useContext(UserContext)
+  const userDetails = useContext(UserContext)
+
+  const { t, i18n } = useTranslation();
 
 
   useEffect(() => {
@@ -39,11 +62,6 @@ function Home(props) {
     };
   }, []);
 
-
-
-
-
-
   useEffect(() => {
     if (appStateVisible !== "active") {
       console.log("se salio, colgar llamada", appStateVisible) //userDetails.name, 
@@ -52,22 +70,8 @@ function Home(props) {
       console.log("*** in the app ", appStateVisible)
     }
   }, [appStateVisible]);
-  /* ------ */
 
 
-
-
-
-
-
-
-
-
-
-  const [isSplashing, setIsSplashing] = useState(true)
-  const { setUserDetails } = useContext(UserContext)
-  const userDetails = useContext(UserContext)
-  const { t, i18n } = useTranslation();
 
   const _retrieveData = async () => {
     try {
@@ -86,6 +90,13 @@ function Home(props) {
     } catch (error) { }
   };
 
+  function change() {
+    if (userDetails.userDetails.email !== null) {
+      const lng = userDetails.userDetails.language
+      i18n.changeLanguage(lng);
+    }
+  }
+
   useEffect(() => {
     if (Platform.OS === 'android') {
       RequestPermission().then(_ => {
@@ -96,6 +107,20 @@ function Home(props) {
     change()
   }, [])
 
+
+
+
+
+  async function  loadReducer(){
+    
+    const listServices = await services.servicesList(i18n.language)
+    getList(listServices)
+  }
+
+
+
+
+
   if (isSplashing) {
     setTimeout(() => {
       setIsSplashing(false)
@@ -103,12 +128,6 @@ function Home(props) {
     return <Splash />
   }
 
-  function change() {
-    if (userDetails.userDetails.email !== null) {
-      const lng = userDetails.userDetails.language
-      i18n.changeLanguage(lng);
-    }
-  }
 
   if (isSplashing === false) {
     if (userDetails.userDetails.email === null) {
@@ -116,6 +135,7 @@ function Home(props) {
     }
     else {
       if (userDetails.userDetails.email !== null) {
+        loadReducer()
         return (
           <Dashboard {...props} />
         )
@@ -123,4 +143,7 @@ function Home(props) {
     }
   }
 }
-export default Home;
+
+
+//export default Home;
+export default connect(null, {getList})(Home);

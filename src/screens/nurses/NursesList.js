@@ -79,7 +79,7 @@ function NursesList(props) {
     <ScrollView tickyHeaderIndices={[0]} scrollEventThrottle={16} horizontal={false}>
 
     
-    <MenuServices id={props.route.params.data.id} goToScreen={goToScreen}/>
+    <MenuServices idReceived={props.route.params.data.id} goToScreen={goToScreen}/>
 
 
       <View style={styles.wrap}>
@@ -126,6 +126,8 @@ function NursesList(props) {
       {Load === false && Data.last_page > 1 &&
         <Pagination page={page} lastPage={Data.last_page} getPage={getPage} />
       }
+
+<View style={{height:80}}></View>
 
 </ScrollView>
 

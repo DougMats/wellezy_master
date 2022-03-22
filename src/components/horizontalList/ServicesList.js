@@ -3,23 +3,39 @@ import { StyleSheet, FlatList, View, TouchableOpacity, Text, Image, Dimensions }
 import { color_white, color_grey_dark } from '../../styles/Colors.js'
 import { useTranslation } from 'react-i18next';
 import { file_server1 } from '../../../Env'
-import { services } from '../../services/connection.js'
+//import { services } from '../../services/connection.js'
+
+import { connect } from 'react-redux'
+
+//import {selectCurrentAmount} from '../../store/amount/reducer'
+
 const windowWidth = Dimensions.get('window').width / 12;
-function ServicesList(props) {
+
+
+const mapStateToProps = (state) => {
+  return {
+    list: state.servicesReducer.list,
+    //amount : selectCurrentAmount(state)
+  }
+}
+
+
+
+
+
+
+function ServicesList({ list, goToScreen }) {
   const { t, i18n } = useTranslation();
-
   const [ourServices, setourServices] = useState([]);
-
   const [open, setopen] = useState(false);
 
+  // useEffect(async () => {
+  //   const res = await services.servicesList(i18n.language)
+  //   setourServices(res)
+  // }, [])
 
-  useEffect(async () => {
-    const res = await services.servicesList(i18n.language)
-    setourServices(res)
-  }, [])
+  const renderItem = ({ item }) => (<Card data={item} goToScreen={goToScreen} />);
 
-
-  const renderItem = ({ item }) => (<Card data={item} goToScreen={props.goToScreen} />);
   return (
     <View
       style={{
@@ -28,29 +44,42 @@ function ServicesList(props) {
         paddingHorizontal: windowWidth / 2,
         //height:open? null:240
       }}>
+
       <View style={styles.head}>
         <Text style={styles.title}>{t("ourServices")}</Text>
+
+        {list.length !== 0 &&  list.length > 8 &&
         <TouchableOpacity
           onPress={() => setopen(!open)}
           style={styles.btn}>
-          <Text style={styles.btnText}>{open? t("seeLess"): t("seeMore")}</Text>
+          <Text style={styles.btnText}>{open ? t("seeLess") : t("seeMore")}</Text>
         </TouchableOpacity>
+        }
+
       </View>
 
-      <FlatList
-        horizontal={false}
-        numColumns={2}
-        data={ourServices}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-        }} />
+      {list.length!== 0 && 
+        <FlatList
+          horizontal={false}
+          numColumns={2}
+          //data={ourServices}
+          data={list}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          columnWrapperStyle={{
+            justifyContent: "space-between",
+          }}
+        />
+      }
 
     </View>
   )
 }
-export default ServicesList;
+
+
+//export default ServicesList;
+export default connect(mapStateToProps, null)(ServicesList);
+
 const styles = StyleSheet.create({
   head: {
     flexDirection: "row",
@@ -101,6 +130,7 @@ const styles = StyleSheet.create({
     textTransform: "capitalize"
   }
 })
+
 const Card = (props) => {
   return (
     <TouchableOpacity onPress={() => props.goToScreen(props.data.screen, props.data)} style={styles.card}>

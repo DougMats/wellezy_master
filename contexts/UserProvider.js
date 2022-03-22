@@ -31,6 +31,7 @@ const UserProvider = ({ children }) => {
 
   const obj = { userDetails, setUserDetails}
 
+  
   return (
     <UserContext.Provider value={obj}>
       {children}
